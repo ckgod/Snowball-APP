@@ -3,7 +3,7 @@ package ckgod.snowball.invest.feature.home
 import cafe.adriel.voyager.core.model.StateScreenModel
 import cafe.adriel.voyager.core.model.screenModelScope
 import ckgod.snowball.invest.domain.model.Portfolio
-import ckgod.snowball.invest.domain.model.StockPhase
+import ckgod.snowball.invest.domain.model.TradePhase
 import ckgod.snowball.invest.domain.model.StockSummary
 import ckgod.snowball.invest.feature.home.model.HomeEvent
 import ckgod.snowball.invest.feature.home.model.HomeSideEffect
@@ -124,7 +124,7 @@ class HomeScreenModel : StateScreenModel<HomeState>(HomeState()) {
                     dailyChangeRate = 2.5,
                     tValue = 12.0,
                     totalDivision = 40,
-                    phase = StockPhase.FIRST_HALF,
+                    phase = TradePhase.FIRST_HALF,
                     avgPrice = 52.10,
                     quantity = 50,
                     profitRate = 5.95,
@@ -140,7 +140,7 @@ class HomeScreenModel : StateScreenModel<HomeState>(HomeState()) {
                     dailyChangeRate = -1.2,
                     tValue = 25.1,
                     totalDivision = 40,
-                    phase = StockPhase.BACK_HALF,
+                    phase = TradePhase.BACK_HALF,
                     avgPrice = 30.20,
                     quantity = 100,
                     profitRate = -4.80,
@@ -156,7 +156,7 @@ class HomeScreenModel : StateScreenModel<HomeState>(HomeState()) {
                     dailyChangeRate = 1.8,
                     tValue = 8.9,
                     totalDivision = 40,
-                    phase = StockPhase.EXHAUSTED,
+                    phase = TradePhase.EXHAUSTED,
                     avgPrice = 58.50,
                     quantity = 30,
                     profitRate = 6.50,

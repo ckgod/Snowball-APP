@@ -14,7 +14,7 @@ data class StockSummary(
     val tValue: Double,                       // 현재 T값
     val totalDivision: Int,                // 전체 분할 수 (예: 40)
     val starPercent: Double,               // 별 %
-    val phase: StockPhase,                 // 현재 구간 (전반전, 후반전 등)
+    val phase: TradePhase,                 // 현재 구간 (전반전, 후반전 등)
 
     // 내 계좌 상태
     val avgPrice: Double,                  // 평균 단가
@@ -25,12 +25,20 @@ data class StockSummary(
     val totalInvested: Double,             // 누적 투자 금액
 )
 
-/**
- * 전략 진행 구간
- */
-enum class StockPhase(val displayName: String) {
+enum class TradePhase(val displayName: String) {
     FIRST_HALF("전반전"),
     BACK_HALF("후반전"),
     QUARTER_MODE("쿼터모드"),
-    EXHAUSTED("자금소진")
+    EXHAUSTED("자금소진");
+
+    companion object {
+        /**
+         * 서버에서 받은 문자열을 TradePhase enum으로 변환
+         * @param displayName 서버에서 받은 문자열 (예: "전반전", "후반전")
+         * @return 매칭되는 TradePhase, 없으면 FIRST_HALF 반환
+         */
+        fun fromDisplayName(displayName: String): TradePhase {
+            return entries.find { it.displayName == displayName } ?: FIRST_HALF
+        }
+    }
 }
