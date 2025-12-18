@@ -74,8 +74,10 @@ fun CustomPullToRefresh(
                 available: Offset,
                 source: NestedScrollSource
             ): Offset {
-                // 이미 최상단에 있고, 아래로 당길 때
-                if (available.y > 0 && !isRefreshing) {
+                val isDraggingDown = available.y > 0
+                val isUserInput = source == NestedScrollSource.UserInput
+
+                if (isDraggingDown && isUserInput && !isRefreshing) {
                     scope.launch {
                         val newOffset = (offsetY.value + available.y * 0.5f)
                             .coerceAtMost(refreshThreshold * 1.5f)
@@ -88,20 +90,24 @@ fun CustomPullToRefresh(
 
             override suspend fun onPreFling(available: Velocity): Velocity {
                 // 손을 뗐을 때
-                if (offsetY.value >= refreshThreshold && !isRefreshing) {
-                    // threshold까지 당겼으면 새로고침 시작
-                    // offsetY를 약간 위로 올려서 indicator 위치 조정
-                    offsetY.animateTo(
-                        targetValue = 120f,
-                        animationSpec = tween(durationMillis = 200)
-                    )
-                    onRefresh()
-                } else if (offsetY.value > 0 && !isRefreshing) {
-                    // threshold 미만이면 원위치
-                    offsetY.animateTo(
-                        targetValue = 0f,
-                        animationSpec = tween(durationMillis = 200)
-                    )
+                if (offsetY.value > 0) {
+                    if (offsetY.value >= refreshThreshold && !isRefreshing) {
+                        // threshold까지 당겼으면 새로고침 시작
+                        // offsetY를 약간 위로 올려서 indicator 위치 조정
+                        onRefresh()
+                        offsetY.animateTo(
+                            targetValue = 120f,
+                            animationSpec = tween(durationMillis = 200)
+                        )
+                    } else if (offsetY.value > 0 && !isRefreshing) {
+                        // threshold 미만이면 원위치
+                        offsetY.animateTo(
+                            targetValue = 0f,
+                            animationSpec = tween(durationMillis = 200)
+                        )
+                    }
+
+                    return available
                 }
                 return Velocity.Zero
             }
@@ -123,7 +129,7 @@ fun CustomPullToRefresh(
 
         if (offsetY.value > 0) {
             val alpha = (offsetY.value / refreshThreshold).coerceIn(0f, 1f)
-            val indicatorOffsetY = (offsetY.value / 2).roundToInt()
+            val indicatorOffsetY = (offsetY.value * 0.5f).roundToInt()
 
             CircularProgressIndicator(
                 modifier = Modifier
