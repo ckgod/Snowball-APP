@@ -29,7 +29,8 @@ enum class TradePhase(val displayName: String) {
     FIRST_HALF("전반전"),
     BACK_HALF("후반전"),
     QUARTER_MODE("쿼터모드"),
-    EXHAUSTED("자금소진");
+    EXHAUSTED("자금소진"),
+    UNKNOWN("알 수 없음");
 
     companion object {
         /**
@@ -38,7 +39,7 @@ enum class TradePhase(val displayName: String) {
          * @return 매칭되는 TradePhase, 없으면 FIRST_HALF 반환
          */
         fun fromDisplayName(displayName: String): TradePhase {
-            return entries.find { it.displayName == displayName } ?: FIRST_HALF
+            return entries.find { it.displayName == displayName } ?: UNKNOWN
         }
     }
 }

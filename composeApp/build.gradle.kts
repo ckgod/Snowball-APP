@@ -1,4 +1,5 @@
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+import java.util.Properties
 
 plugins {
     alias(libs.plugins.kotlinMultiplatform)
@@ -7,6 +8,16 @@ plugins {
     alias(libs.plugins.composeCompiler)
     alias(libs.plugins.kotlinx.serialization)
 }
+
+val localProperties = Properties().apply {
+    val localPropertiesFile = rootProject.file("local.properties")
+    if (localPropertiesFile.exists()) {
+        localPropertiesFile.inputStream().use { load(it) }
+    }
+}
+
+val apiBaseUrl: String = localProperties.getProperty("api.base.url") ?: "http://0.0.0.0:8080"
+val apiKey: String = localProperties.getProperty("api.key") ?: ""
 
 kotlin {
     androidTarget {
@@ -80,6 +91,13 @@ android {
         targetSdk = libs.versions.android.targetSdk.get().toInt()
         versionCode = 1
         versionName = "1.0"
+
+        buildConfigField("String", "API_BASE_URL", "\"$apiBaseUrl\"")
+        buildConfigField("String", "API_KEY", "\"$apiKey\"")
+    }
+
+    buildFeatures {
+        buildConfig = true
     }
     packaging {
         resources {

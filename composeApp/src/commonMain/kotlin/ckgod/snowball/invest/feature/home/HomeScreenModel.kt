@@ -2,9 +2,7 @@ package ckgod.snowball.invest.feature.home
 
 import cafe.adriel.voyager.core.model.StateScreenModel
 import cafe.adriel.voyager.core.model.screenModelScope
-import ckgod.snowball.invest.domain.model.Portfolio
-import ckgod.snowball.invest.domain.model.TradePhase
-import ckgod.snowball.invest.domain.model.StockSummary
+import ckgod.snowball.invest.domain.repository.PortfolioRepository
 import ckgod.snowball.invest.feature.home.model.HomeEvent
 import ckgod.snowball.invest.feature.home.model.HomeSideEffect
 import ckgod.snowball.invest.feature.home.model.HomeState
@@ -15,7 +13,9 @@ import kotlinx.coroutines.launch
 /**
  * 홈 화면의 ScreenModel (MVI 패턴)
  */
-class HomeScreenModel : StateScreenModel<HomeState>(HomeState()) {
+class HomeScreenModel(
+    private val portfolioRepository: PortfolioRepository
+) : StateScreenModel<HomeState>(HomeState()) {
 
     private val _sideEffect = Channel<HomeSideEffect>()
     val sideEffect = _sideEffect.receiveAsFlow()
@@ -38,20 +38,29 @@ class HomeScreenModel : StateScreenModel<HomeState>(HomeState()) {
 
     /**
      * 포트폴리오 데이터 로드
-     * TODO: 실제 API 호출로 대체 필요
      */
     private fun loadPortfolio() {
         screenModelScope.launch {
             mutableState.value = state.value.copy(isLoading = true, error = null)
 
             try {
-                // TODO: Repository에서 실제 데이터 가져오기
-                val portfolio = getMockPortfolio()
+                val result = portfolioRepository.getPortfolioStatus()
 
-                mutableState.value = state.value.copy(
-                    isLoading = false,
-                    portfolio = portfolio,
-                    error = null
+                result.fold(
+                    onSuccess = { portfolio ->
+                        mutableState.value = state.value.copy(
+                            isLoading = false,
+                            portfolio = portfolio,
+                            error = null
+                        )
+                    },
+                    onFailure = { exception ->
+                        mutableState.value = state.value.copy(
+                            isLoading = false,
+                            portfolio = null,
+                            error = "error: ${exception.message}"
+                        )
+                    }
                 )
             } catch (e: Exception) {
                 mutableState.value = state.value.copy(
@@ -73,13 +82,25 @@ class HomeScreenModel : StateScreenModel<HomeState>(HomeState()) {
             mutableState.value = state.value.copy(isRefreshing = true, error = null)
 
             try {
-                // TODO: Repository에서 실제 데이터 가져오기
-                val portfolio = getMockPortfolio()
+                val result = portfolioRepository.getPortfolioStatus()
 
-                mutableState.value = state.value.copy(
-                    isRefreshing = false,
-                    portfolio = portfolio,
-                    error = null
+                result.fold(
+                    onSuccess = { portfolio ->
+                        mutableState.value = state.value.copy(
+                            isRefreshing = false,
+                            portfolio = portfolio,
+                            error = null
+                        )
+                    },
+                    onFailure = { exception ->
+                        mutableState.value = state.value.copy(
+                            isRefreshing = false,
+                            error = exception.message ?: "데이터를 불러오는데 실패했습니다."
+                        )
+                        _sideEffect.send(
+                            HomeSideEffect.ShowErrorToast(exception.message ?: "오류가 발생했습니다.")
+                        )
+                    }
                 )
             } catch (e: Exception) {
                 mutableState.value = state.value.copy(
@@ -107,65 +128,5 @@ class HomeScreenModel : StateScreenModel<HomeState>(HomeState()) {
      */
     private fun dismissError() {
         mutableState.value = state.value.copy(error = null)
-    }
-
-    /**
-     * Mock 데이터 생성 (개발용)
-     * TODO: 실제 Repository로 대체
-     */
-    private fun getMockPortfolio(): Portfolio {
-        return Portfolio(
-            totalRealizedProfit = 1250.50,
-            stocks = listOf(
-                StockSummary(
-                    ticker = "TQQQ",
-                    fullName = "ProShares UltraPro QQQ",
-                    currentPrice = 55.20,
-                    dailyChangeRate = 2.5,
-                    tValue = 12.0,
-                    totalDivision = 40,
-                    phase = TradePhase.FIRST_HALF,
-                    avgPrice = 52.10,
-                    quantity = 50,
-                    profitRate = 5.95,
-                    profitAmount = 155.20,
-                    starPercent = 13.5,
-                    oneTimeAmount = 70.0,
-                    totalInvested = 2135.0,
-                ),
-                StockSummary(
-                    ticker = "SOXL",
-                    fullName = "Direxion Daily Semiconductor Bull 3X",
-                    currentPrice = 28.75,
-                    dailyChangeRate = -1.2,
-                    tValue = 25.1,
-                    totalDivision = 40,
-                    phase = TradePhase.BACK_HALF,
-                    avgPrice = 30.20,
-                    quantity = 100,
-                    profitRate = -4.80,
-                    profitAmount = -145.00,
-                    starPercent = 13.5,
-                    oneTimeAmount = 70.0,
-                    totalInvested = 2135.0,
-                ),
-                StockSummary(
-                    ticker = "UPRO",
-                    fullName = "ProShares UltraPro S&P500",
-                    currentPrice = 62.30,
-                    dailyChangeRate = 1.8,
-                    tValue = 8.9,
-                    totalDivision = 40,
-                    phase = TradePhase.EXHAUSTED,
-                    avgPrice = 58.50,
-                    quantity = 30,
-                    profitRate = 6.50,
-                    profitAmount = 114.00,
-                    starPercent = 13.5,
-                    oneTimeAmount = 70.0,
-                    totalInvested = 2135.0,
-                )
-            )
-        )
     }
 }

@@ -29,7 +29,7 @@ import ckgod.snowball.invest.feature.home.component.StockSummaryCard
 import ckgod.snowball.invest.feature.home.model.HomeEvent
 import ckgod.snowball.invest.feature.home.model.HomeState
 import ckgod.snowball.invest.ui.theme.getProfitColor
-import ckgod.snowball.invest.util.formatDecimal
+import org.koin.compose.koinInject
 
 object HomeTab : Tab {
     override val options: TabOptions
@@ -48,7 +48,7 @@ object HomeTab : Tab {
 
     @Composable
     override fun Content() {
-        val screenModel = remember { HomeScreenModel() }
+        val screenModel: HomeScreenModel = koinInject()
         val state by screenModel.state.collectAsState()
 
         HomeScreen(
@@ -100,9 +100,7 @@ private fun HomeScreen(
                     verticalArrangement = Arrangement.spacedBy(16.dp)
                 ) {
                     item {
-                        TotalProfitHeader(
-                            totalRealizedProfit = state.portfolio.totalRealizedProfit
-                        )
+                        TotalProfitHeader()
                     }
 
                     items(
@@ -124,7 +122,7 @@ private fun HomeScreen(
 
 
 @Composable
-private fun TotalProfitHeader(totalRealizedProfit: Double) {
+private fun TotalProfitHeader() {
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -140,9 +138,9 @@ private fun TotalProfitHeader(totalRealizedProfit: Double) {
             color = MaterialTheme.colorScheme.onPrimaryContainer
         )
         Spacer(modifier = Modifier.height(8.dp))
-        val isProfit = totalRealizedProfit >= 0
+        val isProfit = 1 >= 0
         Text(
-            text = "${if (isProfit) "+" else ""}$${totalRealizedProfit.formatDecimal()}",
+            text = "+$133.3",
             style = MaterialTheme.typography.headlineMedium,
             color = getProfitColor(isProfit),
             fontWeight = FontWeight.Bold
