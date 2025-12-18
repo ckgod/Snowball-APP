@@ -1,7 +1,6 @@
 package ckgod.snowball.invest.feature.home.component
 
 import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -72,9 +71,7 @@ fun StockSummaryCard(
     }
 }
 
-/**
- * (1) 상단: 종목 기본 정보 및 현재가
- */
+
 @Composable
 private fun StockBasicInfo(stock: StockSummary) {
     Row(
@@ -82,7 +79,6 @@ private fun StockBasicInfo(stock: StockSummary) {
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.Top
     ) {
-        // 좌측: 티커명 | 종목 풀네임
         Column {
             Text(
                 text = stock.ticker,
@@ -96,7 +92,6 @@ private fun StockBasicInfo(stock: StockSummary) {
             )
         }
 
-        // 우측: 현재가 | 전일 대비 등락률
         Column(horizontalAlignment = Alignment.End) {
             Text(
                 text = "$${stock.currentPrice.formatDecimal()}",
@@ -114,13 +109,10 @@ private fun StockBasicInfo(stock: StockSummary) {
     }
 }
 
-/**
- * (2) 중단: 전략 진행 상황
- */
+
 @Composable
 private fun StrategyProgress(stock: StockSummary) {
     Column(modifier = Modifier.fillMaxWidth()) {
-        // T값 진행률 바
         val progress = stock.tValue.toFloat() / stock.totalDivision.toFloat()
         LinearProgressIndicator(
             progress = { progress },
@@ -134,7 +126,6 @@ private fun StrategyProgress(stock: StockSummary) {
 
         Spacer(modifier = Modifier.height(8.dp))
 
-        // T값 정보 및 현재 구간
         Row(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceBetween,
@@ -146,7 +137,6 @@ private fun StrategyProgress(stock: StockSummary) {
                 color = MaterialTheme.colorScheme.onSurface
             )
 
-            // 현재 구간 뱃지
             Surface(
                 shape = RoundedCornerShape(12.dp),
                 color = getProgressColor().copy(alpha = 0.2f)
@@ -163,9 +153,7 @@ private fun StrategyProgress(stock: StockSummary) {
     }
 }
 
-/**
- * (3) 하단: 내 계좌 수익 현황
- */
+
 @Composable
 private fun AccountProfit(stock: StockSummary) {
     Row(
@@ -173,7 +161,6 @@ private fun AccountProfit(stock: StockSummary) {
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.Bottom
     ) {
-        // 좌측: 평단/수량
         Column {
             Text(
                 text = "평단 $${stock.avgPrice.formatDecimal()}",
@@ -187,7 +174,6 @@ private fun AccountProfit(stock: StockSummary) {
             )
         }
 
-        // 우측: 수익률/평가손익 (크고 명확하게)
         Column(horizontalAlignment = Alignment.End) {
             val isProfit = stock.profitRate >= 0
             Text(

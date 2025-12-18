@@ -1,5 +1,6 @@
 package ckgod.snowball.invest.util
 
+import kotlin.math.absoluteValue
 import kotlin.math.roundToInt
 
 /**
@@ -16,7 +17,7 @@ fun Double.formatDecimal(decimalPlaces: Int = 2): String {
 
     // 정수 부분과 소수 부분 분리
     val intPart = rounded.toInt()
-    val decPart = ((rounded - intPart) * multiplier).roundToInt()
+    val decPart = ((rounded - intPart) * multiplier).roundToInt().absoluteValue
 
     return when (decimalPlaces) {
         1 -> "$intPart.${decPart.toString().padStart(1, '0')}"
