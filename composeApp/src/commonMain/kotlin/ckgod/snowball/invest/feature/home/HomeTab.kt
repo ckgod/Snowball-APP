@@ -15,7 +15,6 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
-import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -29,6 +28,7 @@ import cafe.adriel.voyager.navigator.tab.TabOptions
 import ckgod.snowball.invest.feature.home.component.StockSummaryCard
 import ckgod.snowball.invest.feature.home.model.HomeEvent
 import ckgod.snowball.invest.feature.home.model.HomeState
+import ckgod.snowball.invest.ui.component.CustomPullToRefresh
 import ckgod.snowball.invest.ui.theme.getProfitColor
 import org.koin.compose.koinInject
 
@@ -64,10 +64,11 @@ private fun HomeScreen(
     state: HomeState,
     onEvent: (HomeEvent) -> Unit
 ) {
-    PullToRefreshBox(
+    CustomPullToRefresh(
         isRefreshing = state.isRefreshing,
         onRefresh = { onEvent(HomeEvent.Refresh) },
-        modifier = Modifier.fillMaxSize()
+        modifier = Modifier.fillMaxSize(),
+        indicatorColor = MaterialTheme.colorScheme.primary
     ) {
         Box(modifier = Modifier.fillMaxSize()) {
             when {
