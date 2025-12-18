@@ -1,6 +1,7 @@
 package ckgod.snowball.invest.feature.home.component
 
 import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -67,6 +68,19 @@ fun StockSummaryCard(
 
             // (3) 하단: 내 계좌 수익 현황
             AccountProfit(stock)
+
+            Spacer(modifier = Modifier.height(8.dp))
+
+            Spacer(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(2.dp)
+                    .background(color = MaterialTheme.colorScheme.surfaceVariant)
+            )
+
+            Spacer(modifier = Modifier.height(8.dp))
+
+            AccountHistory(stock)
         }
     }
 }
@@ -187,6 +201,41 @@ private fun AccountProfit(stock: StockSummary) {
                 style = MaterialTheme.typography.bodyLarge,
                 color = getProfitColor(isProfit),
                 fontWeight = FontWeight.Medium
+            )
+        }
+    }
+}
+
+@Composable
+fun AccountHistory(stock: StockSummary) {
+    Row(
+        modifier = Modifier.fillMaxWidth(),
+        horizontalArrangement = Arrangement.SpaceBetween,
+        verticalAlignment = Alignment.Bottom
+    ) {
+        Column {
+            Text(
+                text = "1회 매수액 $${stock.oneTimeAmount.formatDecimal()}",
+                style = MaterialTheme.typography.bodyMedium,
+                color = MaterialTheme.colorScheme.onSurfaceVariant
+            )
+            Text(
+                text = "매수 누적 $${stock.totalInvested.formatDecimal()}",
+                style = MaterialTheme.typography.bodyMedium,
+                color = MaterialTheme.colorScheme.onSurfaceVariant
+            )
+        }
+
+        Column(horizontalAlignment = Alignment.End) {
+            val isProfit = 0 >= 0 // TODO 실제 값으로 변경
+            Text(
+                text = "실현 손익: $0",
+                style = MaterialTheme.typography.bodyLarge,
+                color =
+                    if (0.0 == 0.0) {
+                        MaterialTheme.colorScheme.onSurfaceVariant
+                    } else getProfitColor(isProfit),
+                fontWeight = FontWeight.Bold
             )
         }
     }
