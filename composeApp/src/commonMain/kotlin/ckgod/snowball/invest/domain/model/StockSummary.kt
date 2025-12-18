@@ -11,8 +11,9 @@ data class StockSummary(
     val dailyChangeRate: Double,           // 전일 대비 등락률 (%)
 
     // 전략 상태
-    val tValue: Int,                       // 현재 T값
+    val tValue: Double,                       // 현재 T값
     val totalDivision: Int,                // 전체 분할 수 (예: 40)
+    val starPercent: Double,               // 별 %
     val phase: StockPhase,                 // 현재 구간 (전반전, 후반전 등)
 
     // 내 계좌 상태
@@ -20,7 +21,8 @@ data class StockSummary(
     val quantity: Int,                     // 보유 수량
     val profitRate: Double,                // 수익률 (%)
     val profitAmount: Double,              // 평가 손익 금액
-    val todayRealizedProfit: Double? = null // 오늘 실현 수익 (있을 경우)
+    val oneTimeAmount: Double,             // 1회 매수액
+    val totalInvested: Double,             // 누적 투자 금액
 )
 
 /**
@@ -28,7 +30,7 @@ data class StockSummary(
  */
 enum class StockPhase(val displayName: String) {
     FIRST_HALF("전반전"),
-    SECOND_HALF("후반전"),
-    QUARTER_STOP_LOSS("쿼터손절"),
-    UNKNOWN("알 수 없음")
+    BACK_HALF("후반전"),
+    QUARTER_MODE("쿼터모드"),
+    EXHAUSTED("자금소진")
 }

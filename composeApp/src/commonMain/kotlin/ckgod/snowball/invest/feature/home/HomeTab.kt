@@ -23,16 +23,15 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.navigator.tab.Tab
 import cafe.adriel.voyager.navigator.tab.TabOptions
 import ckgod.snowball.invest.feature.home.component.StockSummaryCard
 import ckgod.snowball.invest.feature.home.model.HomeEvent
+import ckgod.snowball.invest.feature.home.model.HomeState
 import ckgod.snowball.invest.ui.theme.getProfitColor
 import ckgod.snowball.invest.util.formatDecimal
 
 object HomeTab : Tab {
-
     override val options: TabOptions
         @Composable
         get() {
@@ -61,20 +60,18 @@ object HomeTab : Tab {
 
 @Composable
 private fun HomeScreen(
-    state: ckgod.snowball.invest.feature.home.model.HomeState,
+    state: HomeState,
     onEvent: (HomeEvent) -> Unit
 ) {
     Box(modifier = Modifier.fillMaxSize()) {
         when {
             state.isLoading -> {
-                // 로딩 상태
                 CircularProgressIndicator(
                     modifier = Modifier.align(Alignment.Center)
                 )
             }
 
             state.error != null -> {
-                // 에러 상태
                 Column(
                     modifier = Modifier
                         .fillMaxSize()
@@ -97,20 +94,17 @@ private fun HomeScreen(
             }
 
             state.portfolio != null -> {
-                // 데이터 표시
                 LazyColumn(
                     modifier = Modifier.fillMaxSize(),
                     contentPadding = PaddingValues(16.dp),
                     verticalArrangement = Arrangement.spacedBy(16.dp)
                 ) {
-                    // 상단: 총 실현 손익
                     item {
                         TotalProfitHeader(
                             totalRealizedProfit = state.portfolio.totalRealizedProfit
                         )
                     }
 
-                    // 종목 카드 리스트
                     items(
                         items = state.portfolio.stocks,
                         key = { it.ticker }
@@ -128,9 +122,7 @@ private fun HomeScreen(
     }
 }
 
-/**
- * 총 실현 손익 헤더
- */
+
 @Composable
 private fun TotalProfitHeader(totalRealizedProfit: Double) {
     Column(

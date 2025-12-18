@@ -68,14 +68,6 @@ fun StockSummaryCard(
 
             // (3) 하단: 내 계좌 수익 현황
             AccountProfit(stock)
-
-            // 오늘 실현 수익이 있다면 표시
-            stock.todayRealizedProfit?.let { profit ->
-                if (profit != 0.0) {
-                    Spacer(modifier = Modifier.height(8.dp))
-                    TodayRealizedProfit(profit)
-                }
-            }
         }
     }
 }
@@ -211,35 +203,5 @@ private fun AccountProfit(stock: StockSummary) {
                 fontWeight = FontWeight.Medium
             )
         }
-    }
-}
-
-/**
- * 오늘 실현 수익 표시 (옵션)
- */
-@Composable
-private fun TodayRealizedProfit(profit: Double) {
-    val isProfit = profit >= 0
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .background(
-                color = getProfitColor(isProfit).copy(alpha = 0.1f),
-                shape = RoundedCornerShape(8.dp)
-            )
-            .padding(8.dp),
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        Text(
-            text = "🎉 오늘 실현 수익: ",
-            style = MaterialTheme.typography.bodySmall,
-            color = MaterialTheme.colorScheme.onSurfaceVariant
-        )
-        Text(
-            text = "${if (isProfit) "+" else ""}$${profit.formatDecimal()}",
-            style = MaterialTheme.typography.bodySmall,
-            color = getProfitColor(isProfit),
-            fontWeight = FontWeight.Bold
-        )
     }
 }
