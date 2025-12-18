@@ -25,7 +25,7 @@ val appModule = module {
     }
 
     // ScreenModel
-    factory {
+    single {
         HomeScreenModel(
             portfolioRepository = get()
         )

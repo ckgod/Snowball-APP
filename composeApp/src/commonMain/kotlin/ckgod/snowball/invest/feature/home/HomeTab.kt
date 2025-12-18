@@ -15,6 +15,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
+import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -63,56 +64,62 @@ private fun HomeScreen(
     state: HomeState,
     onEvent: (HomeEvent) -> Unit
 ) {
-    Box(modifier = Modifier.fillMaxSize()) {
-        when {
-            state.isLoading -> {
-                CircularProgressIndicator(
-                    modifier = Modifier.align(Alignment.Center)
-                )
-            }
-
-            state.error != null -> {
-                Column(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(16.dp),
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                    verticalArrangement = Arrangement.Center
-                ) {
-                    Text(
-                        text = "오류가 발생했습니다",
-                        style = MaterialTheme.typography.titleMedium,
-                        color = MaterialTheme.colorScheme.error
-                    )
-                    Spacer(modifier = Modifier.height(8.dp))
-                    Text(
-                        text = state.error,
-                        style = MaterialTheme.typography.bodyMedium,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant
+    PullToRefreshBox(
+        isRefreshing = state.isRefreshing,
+        onRefresh = { onEvent(HomeEvent.Refresh) },
+        modifier = Modifier.fillMaxSize()
+    ) {
+        Box(modifier = Modifier.fillMaxSize()) {
+            when {
+                state.isLoading -> {
+                    CircularProgressIndicator(
+                        modifier = Modifier.align(Alignment.Center)
                     )
                 }
-            }
 
-            state.portfolio != null -> {
-                LazyColumn(
-                    modifier = Modifier.fillMaxSize(),
-                    contentPadding = PaddingValues(16.dp),
-                    verticalArrangement = Arrangement.spacedBy(16.dp)
-                ) {
-                    item {
-                        TotalProfitHeader()
-                    }
-
-                    items(
-                        items = state.portfolio.stocks,
-                        key = { it.ticker }
-                    ) { stock ->
-                        StockSummaryCard(
-                            stock = stock,
-                            onClick = {
-                                onEvent(HomeEvent.OnStockClick(stock.ticker))
-                            }
+                state.error != null -> {
+                    Column(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .padding(16.dp),
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                        verticalArrangement = Arrangement.Center
+                    ) {
+                        Text(
+                            text = "오류가 발생했습니다",
+                            style = MaterialTheme.typography.titleMedium,
+                            color = MaterialTheme.colorScheme.error
                         )
+                        Spacer(modifier = Modifier.height(8.dp))
+                        Text(
+                            text = state.error,
+                            style = MaterialTheme.typography.bodyMedium,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                        )
+                    }
+                }
+
+                state.portfolio != null -> {
+                    LazyColumn(
+                        modifier = Modifier.fillMaxSize(),
+                        contentPadding = PaddingValues(16.dp),
+                        verticalArrangement = Arrangement.spacedBy(16.dp)
+                    ) {
+                        item {
+                            TotalProfitHeader()
+                        }
+
+                        items(
+                            items = state.portfolio.stocks,
+                            key = { it.ticker }
+                        ) { stock ->
+                            StockSummaryCard(
+                                stock = stock,
+                                onClick = {
+                                    onEvent(HomeEvent.OnStockClick(stock.ticker))
+                                }
+                            )
+                        }
                     }
                 }
             }
