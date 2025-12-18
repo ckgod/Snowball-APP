@@ -15,7 +15,7 @@ object MyPageTab : Tab {
     override val options: TabOptions
         @Composable
         get() {
-            val title = "My Page"
+            val title = "백테스트"
 
             return remember {
                 TabOptions(
@@ -29,7 +29,7 @@ object MyPageTab : Tab {
     @Composable
     override fun Content() {
         Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-            Text("My Page Screen")
+            Text("백테스트 화면 (준비 중)")
         }
     }
 }

@@ -15,7 +15,7 @@ object SearchTab : Tab {
     override val options: TabOptions
         @Composable
         get() {
-            val title = "Search"
+            val title = "차트"
 
             return remember {
                 TabOptions(
@@ -29,7 +29,7 @@ object SearchTab : Tab {
     @Composable
     override fun Content() {
         Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-            Text("Search Screen")
+            Text("차트 화면 (준비 중)")
         }
     }
 }
