@@ -42,5 +42,7 @@ data class StockDto(
     @SerialName("totalInvested")
     val totalInvested: Double,
     @SerialName("exchangeRate")
-    val exchangeRate: Double
+    val exchangeRate: Double,
+    @SerialName("capital")
+    val capital: Double? = null
 )

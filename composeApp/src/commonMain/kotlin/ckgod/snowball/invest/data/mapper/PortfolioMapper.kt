@@ -28,6 +28,7 @@ fun StockDto.toDomain(): StockSummary {
         profitRate = profitRate,
         profitAmount = profitAmount,
         oneTimeAmount = oneTimeAmount,
-        totalInvested = totalInvested
+        totalInvested = totalInvested,
+        capital = capital
     )
 }

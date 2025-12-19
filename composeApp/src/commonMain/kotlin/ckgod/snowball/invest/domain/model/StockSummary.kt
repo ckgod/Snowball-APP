@@ -23,6 +23,7 @@ data class StockSummary(
     val profitAmount: Double,              // 평가 손익 금액
     val oneTimeAmount: Double,             // 1회 매수액
     val totalInvested: Double,             // 누적 투자 금액
+    val capital: Double? = null            // 원금
 )
 
 enum class TradePhase(val displayName: String) {
