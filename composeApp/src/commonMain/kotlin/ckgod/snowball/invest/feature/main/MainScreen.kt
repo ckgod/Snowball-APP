@@ -15,9 +15,9 @@ import cafe.adriel.voyager.navigator.tab.CurrentTab
 import cafe.adriel.voyager.navigator.tab.LocalTabNavigator
 import cafe.adriel.voyager.navigator.tab.Tab
 import cafe.adriel.voyager.navigator.tab.TabNavigator
+import ckgod.snowball.invest.feature.backtest.BacktestTab
+import ckgod.snowball.invest.feature.chart.ChartTab
 import ckgod.snowball.invest.feature.home.HomeTab
-import ckgod.snowball.invest.feature.mypage.MyPageTab
-import ckgod.snowball.invest.feature.search.SearchTab
 
 class MainScreen : Screen {
     @Composable
@@ -32,8 +32,8 @@ class MainScreen : Screen {
                 bottomBar = {
                     NavigationBar {
                         TabNavigationItem(HomeTab)
-                        TabNavigationItem(SearchTab)
-                        TabNavigationItem(MyPageTab)
+                        TabNavigationItem(ChartTab)
+                        TabNavigationItem(BacktestTab)
                     }
                 }
             )

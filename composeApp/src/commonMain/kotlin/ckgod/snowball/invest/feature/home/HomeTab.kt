@@ -30,19 +30,23 @@ import ckgod.snowball.invest.feature.home.model.HomeEvent
 import ckgod.snowball.invest.feature.home.model.HomeState
 import ckgod.snowball.invest.ui.component.CustomPullToRefresh
 import ckgod.snowball.invest.ui.theme.getProfitColor
+import org.jetbrains.compose.resources.painterResource
 import org.koin.compose.koinInject
+import snowball.composeapp.generated.resources.Res
+import snowball.composeapp.generated.resources.ic_home
 
 object HomeTab : Tab {
     override val options: TabOptions
         @Composable
         get() {
             val title = "투자 현황"
+            val icon = painterResource(Res.drawable.ic_home)
 
             return remember {
                 TabOptions(
                     index = 0u,
                     title = title,
-                    icon = null
+                    icon = icon
                 )
             }
         }

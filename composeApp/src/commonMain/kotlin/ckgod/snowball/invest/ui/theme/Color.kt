@@ -39,6 +39,23 @@ val SurfaceLight = Color(0xFFFFFFFF)          // 흰색
 val SurfaceVariantDark = Color(0xFF1E1E1E)    // 카드용
 val SurfaceVariantLight = Color(0xFFFAFAFA)   // 카드용
 
+// Surface Container Colors (NavigationBar 등)
+val SurfaceContainerDark = Color(0xFF1C1C1C)
+val SurfaceContainerLight = Color(0xFFEAEAEA)
+
+val SurfaceContainerHighDark = Color(0xFF2A2A2A)
+val SurfaceContainerHighLight = Color(0xFFE0E0E0)
+
+val SurfaceContainerHighestDark = Color(0xFF353535)
+val SurfaceContainerHighestLight = Color(0xFFD5D5D5)
+
+// Container Colors
+val SecondaryContainerDark = Color(0xFF2A2A2A)
+val SecondaryContainerLight = Color(0xFFE0E0E0)
+
+val TertiaryContainerDark = Color(0xFF2A2A2A)
+val TertiaryContainerLight = Color(0xFFE0E0E0)
+
 // Text Colors
 val OnBackgroundDark = Color(0xFFE0E0E0)      // 다크모드 텍스트
 val OnBackgroundLight = Color(0xFF212121)     // 라이트모드 텍스트
