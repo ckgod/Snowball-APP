@@ -150,11 +150,10 @@ private fun TotalProfitHeader() {
             color = MaterialTheme.colorScheme.onPrimaryContainer
         )
         Spacer(modifier = Modifier.height(8.dp))
-        val isProfit = 1 >= 0
         Text(
-            text = "+$133.3",
+            text = "$0",
             style = MaterialTheme.typography.headlineMedium,
-            color = getProfitColor(isProfit),
+            color = getProfitColor(0.0),
             fontWeight = FontWeight.Bold
         )
     }

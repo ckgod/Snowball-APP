@@ -80,11 +80,17 @@ fun SnowballTheme(
  * 확장 함수: 수익/손실 여부에 따른 색상 반환
  */
 @Composable
-fun getProfitColor(isProfit: Boolean, isDarkTheme: Boolean = isSystemInDarkTheme()): Color {
-    return if (isProfit) {
-        if (isDarkTheme) ProfitGreenLight else ProfitGreenDark
-    } else {
-        if (isDarkTheme) LossRedLight else LossRedDark
+fun getProfitColor(profit: Double, isDarkTheme: Boolean = isSystemInDarkTheme()): Color {
+    return when {
+        profit < 0 -> {
+            if (isDarkTheme) LossRedLight else LossRedDark
+        }
+        profit > 0 -> {
+            if (isDarkTheme) ProfitGreenLight else ProfitGreenDark
+        }
+        else -> {
+            if (isDarkTheme) OnSurfaceVariantDark else OnSurfaceVariantLight
+        }
     }
 }
 

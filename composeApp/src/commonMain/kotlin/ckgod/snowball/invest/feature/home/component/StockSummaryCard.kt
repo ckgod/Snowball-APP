@@ -116,7 +116,7 @@ private fun StockBasicInfo(stock: StockSummary) {
             Text(
                 text = "${if (isProfit) "+" else ""}${stock.dailyChangeRate.formatDecimal()}%",
                 style = MaterialTheme.typography.bodyMedium,
-                color = getProfitColor(isProfit),
+                color = getProfitColor(stock.dailyChangeRate),
                 fontWeight = FontWeight.Medium
             )
         }
@@ -193,13 +193,13 @@ private fun AccountProfit(stock: StockSummary) {
             Text(
                 text = "${if (isProfit) "+" else ""}${stock.profitRate.formatDecimal()}%",
                 style = MaterialTheme.typography.headlineSmall,
-                color = getProfitColor(isProfit),
+                color = getProfitColor(stock.profitRate),
                 fontWeight = FontWeight.Bold
             )
             Text(
                 text = "${if (isProfit) "+" else ""}$${stock.profitAmount.formatDecimal()}",
                 style = MaterialTheme.typography.bodyLarge,
-                color = getProfitColor(isProfit),
+                color = getProfitColor(stock.profitRate),
                 fontWeight = FontWeight.Medium
             )
         }
@@ -227,14 +227,10 @@ fun AccountHistory(stock: StockSummary) {
         }
 
         Column(horizontalAlignment = Alignment.End) {
-            val isProfit = 0 >= 0 // TODO 실제 값으로 변경
             Text(
                 text = "실현 손익: $0",
                 style = MaterialTheme.typography.bodyLarge,
-                color =
-                    if (0.0 == 0.0) {
-                        MaterialTheme.colorScheme.onSurfaceVariant
-                    } else getProfitColor(isProfit),
+                color = getProfitColor(0.0),
                 fontWeight = FontWeight.Bold
             )
         }
