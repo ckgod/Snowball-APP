@@ -35,7 +35,7 @@ fun CustomPullToRefresh(
     indicatorColor: Color = Color.Gray,
     content: @Composable () -> Unit
 ) {
-    val refreshThreshold = 160f
+    val refreshThreshold = 240f
     val indicatorSize = 20.dp
 
     val offsetY = remember { Animatable(0f) }
@@ -79,8 +79,16 @@ fun CustomPullToRefresh(
 
                 if (isDraggingDown && isUserInput && !isRefreshing) {
                     scope.launch {
-                        val newOffset = (offsetY.value + available.y * 0.5f)
-                            .coerceAtMost(refreshThreshold * 1.5f)
+                        val dragFactor = if (offsetY.value < refreshThreshold) {
+                            0.5f
+                        } else {
+                            val excess = offsetY.value - refreshThreshold
+                            val resistance = 1f + (excess / refreshThreshold) * 2f
+                            0.5f / resistance
+                        }
+
+                        val newOffset = (offsetY.value + available.y * dragFactor)
+                            .coerceAtMost(refreshThreshold * 3f)
                         offsetY.snapTo(newOffset)
                     }
                     return Offset(0f, available.y)
@@ -96,7 +104,7 @@ fun CustomPullToRefresh(
                         // offsetY를 약간 위로 올려서 indicator 위치 조정
                         onRefresh()
                         offsetY.animateTo(
-                            targetValue = 120f,
+                            targetValue = 180f,
                             animationSpec = tween(durationMillis = 200)
                         )
                     } else if (offsetY.value > 0 && !isRefreshing) {
