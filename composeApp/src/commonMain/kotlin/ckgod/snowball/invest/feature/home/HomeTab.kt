@@ -25,9 +25,11 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import cafe.adriel.voyager.navigator.tab.Tab
 import cafe.adriel.voyager.navigator.tab.TabOptions
+import ckgod.snowball.invest.feature.detail.StockDetailScreenHolder
 import ckgod.snowball.invest.feature.home.component.StockSummaryCard
 import ckgod.snowball.invest.feature.home.model.HomeEvent
 import ckgod.snowball.invest.feature.home.model.HomeState
+import ckgod.snowball.invest.feature.main.LocalMainNavigator
 import ckgod.snowball.invest.ui.component.CustomPullToRefresh
 import ckgod.snowball.invest.ui.theme.getProfitColor
 import org.jetbrains.compose.resources.painterResource
@@ -55,10 +57,14 @@ object HomeTab : Tab {
     override fun Content() {
         val screenModel: HomeScreenModel = koinInject()
         val state by screenModel.state.collectAsState()
+        val mainNavigator = LocalMainNavigator.current
 
         HomeScreen(
             state = state,
-            onEvent = screenModel::onEvent
+            onEvent = screenModel::onEvent,
+            onStockClick = { ticker ->
+                mainNavigator.push(StockDetailScreenHolder(ticker))
+            }
         )
     }
 }
@@ -66,7 +72,8 @@ object HomeTab : Tab {
 @Composable
 private fun HomeScreen(
     state: HomeState,
-    onEvent: (HomeEvent) -> Unit
+    onEvent: (HomeEvent) -> Unit,
+    onStockClick: (String) -> Unit = {}
 ) {
     CustomPullToRefresh(
         isRefreshing = state.isRefreshing,
@@ -121,7 +128,7 @@ private fun HomeScreen(
                             StockSummaryCard(
                                 stock = stock,
                                 onClick = {
-                                    onEvent(HomeEvent.OnStockClick(stock.ticker))
+                                    onStockClick(stock.ticker)
                                 }
                             )
                         }

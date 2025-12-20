@@ -5,64 +5,52 @@ package ckgod.snowball.invest.domain.model
  * 상세 화면의 타임라인에 표시될 데이터
  */
 sealed class HistoryItem {
-    abstract val dateTime: String  // ISO 8601 형식 문자열 (예: "2023-10-27T07:00:00")
+    abstract val dateTime: String // yyyyMMddHHmmss 형식
 
     /**
-     * 주문 내역
+     * 거래/주문 히스토리
      */
-    data class OrderHistory(
+    data class Trade(
         override val dateTime: String,
-        val type: OrderType,              // 주문 유형
-        val price: Double,                // 주문 가격
-        val quantity: Int,                // 주문 수량
-        val status: OrderStatus           // 주문 상태
+        val type: TradeType,
+        val orderType: OrderType,
+        val price: Double,
+        val quantity: Int,
+        val status: TradeStatus
     ) : HistoryItem()
 
     /**
-     * 체결 내역
+     * 일일 동기화 (수익 정산)
      */
-    data class ExecutionHistory(
+    data class Sync(
         override val dateTime: String,
-        val side: ExecutionSide,          // 매수/매도
-        val price: Double,                // 체결 가격
-        val quantity: Int,                // 체결 수량
-        val totalAmount: Double           // 총 체결 금액
+        val profit: Double,
+        val tValueUpdate: String // "11 -> 12"
     ) : HistoryItem()
+}
 
-    /**
-     * 정산 내역
-     */
-    data class SyncHistory(
-        override val dateTime: String,
-        val realizedProfit: Double,       // 실현 수익
-        val tValueChange: String          // T값 변화 (예: "11 → 12")
-    ) : HistoryItem()
+/**
+ * 거래 유형
+ */
+enum class TradeType(val displayName: String) {
+    BUY("매수"),
+    SELL("매도")
 }
 
 /**
  * 주문 유형
  */
 enum class OrderType(val displayName: String) {
-    BUY_LOC("매수(LOC)"),
-    BUY_LIMIT("매수(지정가)"),
-    SELL_LOC("매도(LOC)"),
-    SELL_LIMIT("매도(지정가)")
+    LOC("LOC"),
+    LIMIT("지정가"),
+    MOC("MOC")
 }
 
 /**
- * 주문 상태
+ * 거래 상태
  */
-enum class OrderStatus(val displayName: String) {
-    ACCEPTED("접수"),
+enum class TradeStatus(val displayName: String) {
+    ORDERED("주문"),
     FILLED("체결"),
-    UNFILLED("미체결"),
     CANCELLED("취소")
-}
-
-/**
- * 체결 방향
- */
-enum class ExecutionSide(val displayName: String) {
-    BUY("매수"),
-    SELL("매도")
 }

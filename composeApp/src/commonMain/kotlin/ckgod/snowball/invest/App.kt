@@ -1,7 +1,6 @@
 package ckgod.snowball.invest
 
 import androidx.compose.runtime.Composable
-import cafe.adriel.voyager.navigator.Navigator
 import ckgod.snowball.invest.di.appModule
 import ckgod.snowball.invest.feature.main.MainScreen
 import ckgod.snowball.invest.ui.theme.SnowballTheme
@@ -15,7 +14,7 @@ fun App() {
         modules(appModule)
     }) {
         SnowballTheme {
-            Navigator(MainScreen())
+            MainScreen()
         }
     }
 }
