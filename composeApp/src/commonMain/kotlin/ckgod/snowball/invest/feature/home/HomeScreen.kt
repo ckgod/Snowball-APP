@@ -18,67 +18,42 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import cafe.adriel.voyager.navigator.tab.Tab
-import cafe.adriel.voyager.navigator.tab.TabOptions
-import ckgod.snowball.invest.feature.detail.StockDetailScreenHolder
 import ckgod.snowball.invest.feature.home.component.StockSummaryCard
 import ckgod.snowball.invest.feature.home.model.HomeEvent
 import ckgod.snowball.invest.feature.home.model.HomeState
-import ckgod.snowball.invest.feature.main.LocalMainNavigator
 import ckgod.snowball.invest.ui.component.CustomPullToRefresh
 import ckgod.snowball.invest.ui.theme.getProfitColor
-import org.jetbrains.compose.resources.painterResource
-import org.koin.compose.koinInject
-import snowball.composeapp.generated.resources.Res
-import snowball.composeapp.generated.resources.ic_home
 
-object HomeTab : Tab {
-    override val options: TabOptions
-        @Composable
-        get() {
-            val title = "투자 현황"
-            val icon = painterResource(Res.drawable.ic_home)
+@Composable
+fun HomeScreen(
+    component: HomeComponent,
+    modifier: Modifier = Modifier
+) {
+    val state by component.state.collectAsState()
 
-            return remember {
-                TabOptions(
-                    index = 0u,
-                    title = title,
-                    icon = icon
-                )
-            }
-        }
-
-    @Composable
-    override fun Content() {
-        val screenModel: HomeScreenModel = koinInject()
-        val state by screenModel.state.collectAsState()
-        val mainNavigator = LocalMainNavigator.current
-
-        HomeScreen(
-            state = state,
-            onEvent = screenModel::onEvent,
-            onStockClick = { ticker ->
-                mainNavigator.push(StockDetailScreenHolder(ticker))
-            }
-        )
-    }
+    HomeScreenContent(
+        state = state,
+        onEvent = component::onEvent,
+        onStockClick = component::onStockClick,
+        modifier = modifier
+    )
 }
 
 @Composable
-private fun HomeScreen(
+internal fun HomeScreenContent(
     state: HomeState,
     onEvent: (HomeEvent) -> Unit,
-    onStockClick: (String) -> Unit = {}
+    onStockClick: (String) -> Unit,
+    modifier: Modifier = Modifier
 ) {
     CustomPullToRefresh(
         isRefreshing = state.isRefreshing,
         onRefresh = { onEvent(HomeEvent.Refresh) },
-        modifier = Modifier.fillMaxSize(),
+        modifier = modifier.fillMaxSize(),
         indicatorColor = MaterialTheme.colorScheme.primary
     ) {
         Box(modifier = Modifier.fillMaxSize()) {
@@ -138,7 +113,6 @@ private fun HomeScreen(
         }
     }
 }
-
 
 @Composable
 private fun TotalProfitHeader() {

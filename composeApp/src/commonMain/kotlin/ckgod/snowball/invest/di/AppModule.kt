@@ -4,7 +4,6 @@ import ckgod.snowball.invest.AppConfig
 import ckgod.snowball.invest.data.remote.HttpClientFactory
 import ckgod.snowball.invest.data.repository.PortfolioRepositoryImpl
 import ckgod.snowball.invest.domain.repository.PortfolioRepository
-import ckgod.snowball.invest.feature.home.HomeScreenModel
 import org.koin.dsl.module
 
 /**
@@ -21,13 +20,6 @@ val appModule = module {
         PortfolioRepositoryImpl(
             httpClient = get(),
             apiKey = AppConfig.API_KEY
-        )
-    }
-
-    // ScreenModel
-    single {
-        HomeScreenModel(
-            portfolioRepository = get()
         )
     }
 }
