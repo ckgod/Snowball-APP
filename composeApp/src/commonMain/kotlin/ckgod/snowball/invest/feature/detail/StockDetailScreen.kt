@@ -47,9 +47,7 @@ import org.jetbrains.compose.resources.painterResource
 import snowball.composeapp.generated.resources.Res
 import snowball.composeapp.generated.resources.ic_arrow_back
 
-/**
- * 종목 상세 화면
- */
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun StockDetailScreen(

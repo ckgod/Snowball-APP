@@ -3,6 +3,7 @@ package ckgod.snowball.invest.feature.main
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import cafe.adriel.voyager.navigator.Navigator
+import cafe.adriel.voyager.transitions.SlideTransition
 
 /**
  * 메인 화면 - 앱의 네비게이션을 관리
@@ -13,7 +14,7 @@ import cafe.adriel.voyager.navigator.Navigator
 fun MainScreen() {
     Navigator(screen = TabsScreen()) { navigator ->
         CompositionLocalProvider(LocalMainNavigator provides navigator) {
-            navigator.lastItem.Content()
+            SlideTransition(navigator)
         }
     }
 }
