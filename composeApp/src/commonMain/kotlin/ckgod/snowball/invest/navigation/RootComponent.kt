@@ -1,5 +1,6 @@
 package ckgod.snowball.invest.navigation
 
+import ckgod.snowball.invest.feature.detail.StockDetailComponent
 import com.arkivanov.decompose.ComponentContext
 import com.arkivanov.decompose.router.stack.ChildStack
 import com.arkivanov.decompose.router.stack.StackNavigation

@@ -10,7 +10,7 @@ import ckgod.snowball.invest.feature.backtest.DefaultBacktestComponent
 import ckgod.snowball.invest.feature.chart.DefaultChartComponent
 import ckgod.snowball.invest.feature.home.DefaultHomeComponent
 import ckgod.snowball.invest.navigation.DefaultRootComponent
-import ckgod.snowball.invest.navigation.DefaultStockDetailComponent
+import ckgod.snowball.invest.feature.detail.DefaultStockDetailComponent
 import ckgod.snowball.invest.navigation.DefaultMainComponent
 import org.koin.android.ext.koin.androidContext
 import org.koin.core.context.startKoin

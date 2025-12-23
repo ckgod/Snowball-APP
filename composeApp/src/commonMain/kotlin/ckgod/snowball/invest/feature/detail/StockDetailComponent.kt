@@ -1,4 +1,4 @@
-package ckgod.snowball.invest.navigation
+package ckgod.snowball.invest.feature.detail
 
 import com.arkivanov.decompose.ComponentContext
 import ckgod.snowball.invest.domain.model.HistoryItem

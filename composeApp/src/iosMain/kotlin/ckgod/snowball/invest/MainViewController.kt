@@ -10,7 +10,7 @@ import ckgod.snowball.invest.feature.chart.DefaultChartComponent
 import ckgod.snowball.invest.feature.home.DefaultHomeComponent
 import ckgod.snowball.invest.navigation.DefaultMainComponent
 import ckgod.snowball.invest.navigation.DefaultRootComponent
-import ckgod.snowball.invest.navigation.DefaultStockDetailComponent
+import ckgod.snowball.invest.feature.detail.DefaultStockDetailComponent
 import com.arkivanov.decompose.DefaultComponentContext
 import com.arkivanov.decompose.ExperimentalDecomposeApi
 import com.arkivanov.decompose.extensions.compose.stack.animation.predictiveback.PredictiveBackGestureOverlay
