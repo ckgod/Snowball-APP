@@ -28,4 +28,13 @@ dependencyResolutionManagement {
     }
 }
 
-include(":composeApp")
+include(":app")
+include(":core:domain")
+include(":core:data")
+include(":core:ui")
+include(":core:common")
+include(":feature:home")
+include(":feature:chart")
+include(":feature:backtest")
+include(":feature:detail")
+include(":navigation")
