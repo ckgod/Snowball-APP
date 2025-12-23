@@ -28,6 +28,8 @@ fun MainViewController(): UIViewController {
     val backDispatcher = BackDispatcher()
 
     val lifecycle = LifecycleRegistry()
+    lifecycle.attachToDecomposeLifecycle()
+
     val rootComponent = DefaultRootComponent(
         componentContext = DefaultComponentContext(lifecycle = lifecycle, backHandler = backDispatcher),
         mainComponentFactory = { ctx, output ->
