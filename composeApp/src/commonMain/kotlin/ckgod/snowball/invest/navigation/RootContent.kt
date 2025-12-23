@@ -4,12 +4,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
-import com.arkivanov.decompose.extensions.compose.stack.Children
-import com.arkivanov.decompose.extensions.compose.stack.animation.predictiveback.predictiveBackAnimation
-import com.arkivanov.decompose.extensions.compose.stack.animation.slide
-import com.arkivanov.decompose.extensions.compose.stack.animation.stackAnimation
 import ckgod.snowball.invest.feature.detail.StockDetailScreen
 import ckgod.snowball.invest.feature.detail.model.StockDetailEvent
+import com.arkivanov.decompose.extensions.compose.stack.Children
 
 @Composable
 fun RootContent(
@@ -19,9 +16,8 @@ fun RootContent(
     Children(
         stack = component.childStack,
         modifier = modifier,
-        animation = predictiveBackAnimation(
+        animation = backAnimation(
             backHandler = component.backHandler,
-            fallbackAnimation = stackAnimation(slide()),
             onBack = component::onBackClicked
         )
     ) { child ->
