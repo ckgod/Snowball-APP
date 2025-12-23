@@ -14,7 +14,7 @@ class PortfolioRepositoryImpl(
 
     override suspend fun getPortfolioStatus(): Result<Portfolio> {
         return try {
-            val response = httpClient.get("/ckapi/v1/main/status").body<PortfolioResponse>()
+            val response = httpClient.get("/sb/home/status").body<PortfolioResponse>()
 
             Result.success(response.toDomain())
         } catch (e: Exception) {
