@@ -6,12 +6,14 @@ package ckgod.snowball.invest.domain.model
  */
 sealed class HistoryItem {
     abstract val dateTime: String // yyyyMMddHHmmss 형식
+    abstract val displayTime: String // HH:mm 형식 (UI 표시용)
 
     /**
      * 거래/주문 히스토리
      */
     data class Trade(
         override val dateTime: String,
+        override val displayTime: String,
         val type: TradeType,
         val orderType: OrderType,
         val price: Double,
@@ -24,6 +26,7 @@ sealed class HistoryItem {
      */
     data class Sync(
         override val dateTime: String,
+        override val displayTime: String,
         val profit: Double,
         val tValueUpdate: String // "11 -> 12"
     ) : HistoryItem()
@@ -50,7 +53,7 @@ enum class OrderType(val displayName: String) {
  * 거래 상태
  */
 enum class TradeStatus(val displayName: String) {
-    ORDERED("주문"),
+    PENDING("주문"),
     FILLED("체결"),
-    CANCELLED("취소")
+    CANCELED("취소")
 }

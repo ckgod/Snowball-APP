@@ -39,7 +39,7 @@ import ckgod.snowball.invest.domain.model.HistoryItem
 import ckgod.snowball.invest.domain.model.TradeStatus
 import ckgod.snowball.invest.domain.model.TradeType
 import ckgod.snowball.invest.feature.detail.model.StockDetailEvent
-import ckgod.snowball.invest.feature.detail.model.StockDetailState
+import ckgod.snowball.invest.domain.model.StockDetailState
 import ckgod.snowball.invest.ui.theme.getProfitColor
 import ckgod.snowball.invest.ui.theme.getProgressColor
 import ckgod.snowball.invest.util.formatDecimal
@@ -278,7 +278,7 @@ private fun StrategyDashboard(state: StockDetailState) {
                 )
                 InfoItem(
                     label = "다음 매수가",
-                    value = "$${state.nextBuyPrice.formatDecimal()}"
+                    value = "$${state.nextBuyStarPrice.formatDecimal()}"
                 )
             }
 
@@ -286,7 +286,7 @@ private fun StrategyDashboard(state: StockDetailState) {
 
             InfoItem(
                 label = "다음 매도가",
-                value = "$${state.nextSellPrice.formatDecimal()}"
+                value = "$${state.nextSellStarPrice.formatDecimal()}"
             )
         }
     }
@@ -321,13 +321,6 @@ private fun InfoItem(
  */
 @Composable
 private fun DateHeader(dateString: String) {
-    // yyyyMMdd 형식을 yyyy.MM.dd로 변환
-    val formattedDate = if (dateString.length == 8) {
-        "${dateString.substring(0, 4)}.${dateString.substring(4, 6)}.${dateString.substring(6, 8)}"
-    } else {
-        dateString
-    }
-
     Box(
         modifier = Modifier
             .fillMaxWidth()
@@ -335,7 +328,7 @@ private fun DateHeader(dateString: String) {
             .padding(vertical = 12.dp)
     ) {
         Text(
-            text = formattedDate,
+            text = dateString,
             style = MaterialTheme.typography.titleSmall,
             fontWeight = FontWeight.Bold,
             color = MaterialTheme.colorScheme.onBackground
@@ -348,13 +341,6 @@ private fun DateHeader(dateString: String) {
  */
 @Composable
 private fun HistoryItemRow(item: HistoryItem) {
-    // yyyyMMddHHmmss 형식에서 HH:mm 추출
-    val timeString = if (item.dateTime.length >= 12) {
-        "${item.dateTime.substring(8, 10)}:${item.dateTime.substring(10, 12)}"
-    } else {
-        "00:00"
-    }
-
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -362,9 +348,8 @@ private fun HistoryItemRow(item: HistoryItem) {
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically
     ) {
-        // 시간
         Text(
-            text = timeString,
+            text = item.displayTime,
             style = MaterialTheme.typography.bodyMedium,
             color = MaterialTheme.colorScheme.onSurfaceVariant,
             modifier = Modifier.width(48.dp)
@@ -419,7 +404,7 @@ private fun StatusBadge(item: HistoryItem) {
     val (text, color) = when (item) {
         is HistoryItem.Trade -> {
             when (item.status) {
-                TradeStatus.ORDERED -> "주문" to MaterialTheme.colorScheme.onSurfaceVariant
+                TradeStatus.PENDING -> "주문" to MaterialTheme.colorScheme.onSurfaceVariant
                 TradeStatus.FILLED -> {
                     val tradeColor = when (item.type) {
                         TradeType.BUY -> getProgressColor()
@@ -427,7 +412,7 @@ private fun StatusBadge(item: HistoryItem) {
                     }
                     "체결" to tradeColor
                 }
-                TradeStatus.CANCELLED -> "취소" to MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.5f)
+                TradeStatus.CANCELED -> "취소" to MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.5f)
             }
         }
         is HistoryItem.Sync -> "정산" to getProgressColor()

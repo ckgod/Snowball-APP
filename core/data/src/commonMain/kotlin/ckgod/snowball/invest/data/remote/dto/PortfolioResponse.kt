@@ -44,5 +44,11 @@ data class StockDto(
     @SerialName("exchangeRate")
     val exchangeRate: Double,
     @SerialName("capital")
-    val capital: Double? = null
+    val capital: Double? = null,
+    @SerialName("nextSellStarPrice")
+    val nextSellStarPrice: Double? = null,
+    @SerialName("nextSellTargetPrice")
+    val nextSellTargetPrice: Double? = null,
+    @SerialName("nextBuyStarPrice")
+    val nextBuyStarPrice: Double? = null,
 )

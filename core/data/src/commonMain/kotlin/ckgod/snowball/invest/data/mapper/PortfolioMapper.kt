@@ -29,6 +29,9 @@ fun StockDto.toDomain(): StockSummary {
         profitAmount = profitAmount,
         oneTimeAmount = oneTimeAmount,
         totalInvested = totalInvested,
-        capital = capital
+        capital = capital,
+        nextSellStarPrice = nextSellStarPrice,
+        nextSellTargetPrice = nextSellTargetPrice,
+        nextBuyStarPrice = nextBuyStarPrice,
     )
 }
