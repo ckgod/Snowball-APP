@@ -7,18 +7,14 @@ import ckgod.snowball.invest.domain.repository.PortfolioRepository
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
 import io.ktor.client.request.get
-import io.ktor.client.request.header
 
 class PortfolioRepositoryImpl(
-    private val httpClient: HttpClient,
-    private val apiKey: String
+    private val httpClient: HttpClient
 ) : PortfolioRepository {
 
     override suspend fun getPortfolioStatus(): Result<Portfolio> {
         return try {
-            val response = httpClient.get("/ckapi/v1/main/status") {
-                header("x-api-key", apiKey)
-            }.body<PortfolioResponse>()
+            val response = httpClient.get("/ckapi/v1/main/status").body<PortfolioResponse>()
 
             Result.success(response.toDomain())
         } catch (e: Exception) {

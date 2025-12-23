@@ -7,15 +7,17 @@ import io.ktor.client.plugins.logging.LogLevel
 import io.ktor.client.plugins.logging.Logger
 import io.ktor.client.plugins.logging.Logging
 import io.ktor.client.plugins.logging.SIMPLE
+import io.ktor.client.request.header
 import io.ktor.serialization.kotlinx.json.json
 import kotlinx.serialization.json.Json
 
 object HttpClientFactory {
 
-    fun create(baseUrl: String): HttpClient {
+    fun create(baseUrl: String, apiKey: String): HttpClient {
         return HttpClient {
             defaultRequest {
                 url(baseUrl)
+                header("x-api-key", apiKey)
             }
 
             install(ContentNegotiation) {

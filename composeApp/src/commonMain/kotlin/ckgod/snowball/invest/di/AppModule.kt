@@ -12,14 +12,14 @@ import org.koin.dsl.module
 val appModule = module {
     // HttpClient
     single {
-        HttpClientFactory.create(AppConfig.API_BASE_URL)
+        HttpClientFactory.create(
+            baseUrl = AppConfig.API_BASE_URL,
+            apiKey = AppConfig.API_KEY
+        )
     }
 
     // Repository
     single<PortfolioRepository> {
-        PortfolioRepositoryImpl(
-            httpClient = get(),
-            apiKey = AppConfig.API_KEY
-        )
+        PortfolioRepositoryImpl(httpClient = get())
     }
 }
