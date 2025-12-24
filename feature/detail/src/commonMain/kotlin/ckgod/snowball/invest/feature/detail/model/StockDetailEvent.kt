@@ -5,5 +5,4 @@ package ckgod.snowball.invest.feature.detail.model
  */
 sealed class StockDetailEvent {
     data object BackClick : StockDetailEvent()
-    data object Refresh : StockDetailEvent()
 }
