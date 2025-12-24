@@ -1,15 +1,9 @@
 package ckgod.snowball.invest.data.remote.dto
 
+import ckgod.snowball.invest.domain.model.StockSummary
+import ckgod.snowball.invest.domain.model.TradePhase
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
-
-@Serializable
-data class PortfolioResponse(
-    @SerialName("total")
-    val totalCount: Int,
-    @SerialName("statusList")
-    val stocks: List<StockDto>
-)
 
 @Serializable
 data class StockDto(
@@ -51,4 +45,27 @@ data class StockDto(
     val nextSellTargetPrice: Double? = null,
     @SerialName("nextBuyStarPrice")
     val nextBuyStarPrice: Double? = null,
-)
+) {
+    fun toDomain(): StockSummary {
+        return StockSummary(
+            ticker = ticker,
+            fullName = fullName ?: ticker,
+            currentPrice = currentPrice,
+            dailyChangeRate = dailyChangeRate,
+            tValue = tValue,
+            totalDivision = totalDivision,
+            starPercent = starPercent,
+            phase = TradePhase.fromDisplayName(phase),
+            avgPrice = avgPrice,
+            quantity = quantity,
+            profitRate = profitRate,
+            profitAmount = profitAmount,
+            oneTimeAmount = oneTimeAmount,
+            totalInvested = totalInvested,
+            capital = capital,
+            nextSellStarPrice = nextSellStarPrice,
+            nextSellTargetPrice = nextSellTargetPrice,
+            nextBuyStarPrice = nextBuyStarPrice,
+        )
+    }
+}

@@ -1,7 +1,6 @@
 package ckgod.snowball.invest.data.repository
 
-import ckgod.snowball.invest.data.mapper.toDomain
-import ckgod.snowball.invest.data.remote.dto.StockDetailResponse
+import ckgod.snowball.invest.data.remote.response.StockDetailResponse
 import ckgod.snowball.invest.domain.model.StockDetailState
 import ckgod.snowball.invest.domain.repository.StockDetailRepository
 import io.ktor.client.HttpClient
