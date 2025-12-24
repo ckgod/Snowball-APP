@@ -7,6 +7,7 @@ package ckgod.snowball.invest.domain.model
 sealed class HistoryItem {
     abstract val dateTime: String // yyyyMMddHHmmss 형식
     abstract val displayTime: String // HH:mm 형식 (UI 표시용)
+    abstract val orderNo: String
 
     /**
      * 거래/주문 히스토리
@@ -14,6 +15,7 @@ sealed class HistoryItem {
     data class Trade(
         override val dateTime: String,
         override val displayTime: String,
+        override val orderNo: String,
         val type: TradeType,
         val orderType: OrderType,
         val price: Double,
@@ -27,6 +29,7 @@ sealed class HistoryItem {
     data class Sync(
         override val dateTime: String,
         override val displayTime: String,
+        override val orderNo: String,
         val profit: Double,
         val tValueUpdate: String // "11 -> 12"
     ) : HistoryItem()

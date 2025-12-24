@@ -96,20 +96,23 @@ fun StockDetailScreen(
                 contentPadding = PaddingValues(16.dp),
                 verticalArrangement = Arrangement.spacedBy(16.dp)
             ) {
-                item {
+                item(key = "summary_header") {
                     SummaryHeader(state.stock)
                 }
 
-                item {
+                item(key = "strategy_dashboard") {
                     StrategyDashboard(state.stock)
                 }
 
-                state.historyItems.forEach { (date, items) ->
-                    stickyHeader {
+                state.historyItems.entries.forEach { (date, historyList) ->
+                    stickyHeader(key = "header_$date") {
                         DateHeader(date)
                     }
 
-                    items(items) { item ->
+                    items(
+                        items = historyList,
+                        key = { item -> item.orderNo }
+                    ) { item ->
                         HistoryItemRow(item)
                     }
                 }

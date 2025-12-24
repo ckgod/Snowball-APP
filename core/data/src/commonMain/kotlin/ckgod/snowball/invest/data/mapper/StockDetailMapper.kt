@@ -25,6 +25,7 @@ fun StockDetailResponse.toDomain(): StockDetailState {
             HistoryItem.Trade(
                 dateTime = dateTime,
                 displayTime = displayTime,
+                orderNo = history.orderNo,
                 type = history.orderSide,
                 orderType = history.orderType,
                 price = history.orderPrice,
