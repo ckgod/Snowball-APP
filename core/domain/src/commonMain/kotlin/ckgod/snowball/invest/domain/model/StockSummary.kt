@@ -5,28 +5,29 @@ package ckgod.snowball.invest.domain.model
  * 메인 화면의 종목 카드에 표시될 데이터
  */
 data class StockSummary(
-    val ticker: String = "",                    // 티커명 (예: TQQQ)
-    val fullName: String = "",                  // 종목 풀네임
-    val currentPrice: Double = 0.0,              // 현재가
-    val dailyChangeRate: Double = 0.0,           // 전일 대비 등락률 (%)
+    val ticker: String = "",                          // 티커명 (예: TQQQ)
+    val fullName: String = "",                        // 종목 풀네임
+    val currentPrice: Double = 0.0,                   // 현재가
+    val dailyChangeRate: Double = 0.0,                // 전일 대비 등락률 (%)
 
     // 전략 상태
-    val tValue: Double = 0.0,                       // 현재 T값
-    val totalDivision: Int = 40,                // 전체 분할 수 (예: 40)
-    val starPercent: Double = 0.0,               // 별 %
-    val phase: TradePhase = TradePhase.FIRST_HALF,                 // 현재 구간 (전반전, 후반전 등)
+    val tValue: Double = 0.0,                         // 현재 T값
+    val totalDivision: Int = 40,                      // 전체 분할 수 (예: 40)
+    val starPercent: Double = 0.0,                    // 별 %
+    val phase: TradePhase = TradePhase.FIRST_HALF,    // 현재 구간 (전반전, 후반전 등)
 
     // 내 계좌 상태
-    val avgPrice: Double = 0.0,                  // 평균 단가
-    val quantity: Int = 0,                     // 보유 수량
-    val profitRate: Double = 0.0,                // 수익률 (%)
-    val profitAmount: Double = 0.0,              // 평가 손익 금액
-    val oneTimeAmount: Double = 0.0,             // 1회 매수액
-    val totalInvested: Double = 0.0,             // 누적 투자 금액
-    val capital: Double? = null,            // 원금
+    val avgPrice: Double = 0.0,                       // 평균 단가
+    val quantity: Int = 0,                            // 보유 수량
+    val profitRate: Double = 0.0,                     // 수익률 (%)
+    val profitAmount: Double = 0.0,                   // 평가 손익 금액
+    val oneTimeAmount: Double = 0.0,                  // 1회 매수액
+    val totalInvested: Double = 0.0,                  // 누적 투자 금액
+    val capital: Double? = null,                      // 원금
     val nextSellStarPrice: Double? = null,
     val nextSellTargetPrice: Double? = null,
-    val nextBuyStarPrice: Double? = null
+    val nextBuyStarPrice: Double? = null,
+    val realizedProfit: Double = 0.0
 )
 
 enum class TradePhase(val displayName: String) {

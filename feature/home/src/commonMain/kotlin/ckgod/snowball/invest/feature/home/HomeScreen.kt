@@ -27,6 +27,7 @@ import ckgod.snowball.invest.feature.home.model.HomeEvent
 import ckgod.snowball.invest.feature.home.model.HomeState
 import ckgod.snowball.invest.ui.component.CustomPullToRefresh
 import ckgod.snowball.invest.ui.theme.getProfitColor
+import ckgod.snowball.invest.util.formatDecimal
 
 @Composable
 fun HomeScreen(
@@ -93,7 +94,10 @@ internal fun HomeScreenContent(
                         verticalArrangement = Arrangement.spacedBy(16.dp)
                     ) {
                         item {
-                            TotalProfitHeader()
+                            val sumProfit = state.portfolio.stocks.sumOf {
+                                it.realizedProfit
+                            }
+                            TotalProfitHeader(sumProfit)
                         }
 
                         items(
@@ -115,7 +119,7 @@ internal fun HomeScreenContent(
 }
 
 @Composable
-private fun TotalProfitHeader() {
+private fun TotalProfitHeader(profit: Double) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -132,9 +136,9 @@ private fun TotalProfitHeader() {
         )
         Spacer(modifier = Modifier.height(8.dp))
         Text(
-            text = "$0",
+            text = "${if (profit > 0.0) "+" else ""}$${profit.formatDecimal()}",
             style = MaterialTheme.typography.headlineMedium,
-            color = getProfitColor(0.0),
+            color = getProfitColor(profit),
             fontWeight = FontWeight.Bold
         )
     }

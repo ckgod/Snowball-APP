@@ -42,12 +42,11 @@ fun SummaryHeader(state: StockSummary) {
 
             Spacer(modifier = Modifier.height(4.dp))
 
-            // TODO 총 실현 손익 금액
             Text(
-                text = "$0",
+                text = "${if (state.realizedProfit > 0) "+" else ""}$${state.realizedProfit.formatDecimal()}",
                 style = MaterialTheme.typography.displaySmall,
                 fontWeight = FontWeight.Bold,
-                color = getProfitColor(0.0)
+                color = getProfitColor(state.realizedProfit)
             )
 
             Spacer(modifier = Modifier.height(16.dp))

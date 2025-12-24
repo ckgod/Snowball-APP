@@ -227,10 +227,11 @@ fun AccountHistory(stock: StockSummary) {
         }
 
         Column(horizontalAlignment = Alignment.End) {
+            val isProfit = stock.realizedProfit > 0
             Text(
-                text = "실현 손익: $0",
+                text = "실현 손익: ${if (isProfit) "+" else ""}$${stock.realizedProfit.formatDecimal()}",
                 style = MaterialTheme.typography.bodyLarge,
-                color = getProfitColor(0.0),
+                color = getProfitColor(stock.realizedProfit),
                 fontWeight = FontWeight.Bold
             )
         }

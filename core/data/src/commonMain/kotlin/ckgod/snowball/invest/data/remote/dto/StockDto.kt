@@ -45,6 +45,8 @@ data class StockDto(
     val nextSellTargetPrice: Double? = null,
     @SerialName("nextBuyStarPrice")
     val nextBuyStarPrice: Double? = null,
+    @SerialName("realizedProfit")
+    val realizedProfit: Double,
 ) {
     fun toDomain(): StockSummary {
         return StockSummary(
@@ -66,6 +68,7 @@ data class StockDto(
             nextSellStarPrice = nextSellStarPrice,
             nextSellTargetPrice = nextSellTargetPrice,
             nextBuyStarPrice = nextBuyStarPrice,
+            realizedProfit = realizedProfit
         )
     }
 }
