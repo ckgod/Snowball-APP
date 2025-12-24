@@ -38,18 +38,7 @@ fun StockDetailResponse.toDomain(): StockDetailState {
         }
 
     return StockDetailState(
-        ticker = status.ticker,
-        currentPrice = status.currentPrice,
-        profitRate = status.profitRate,
-        profitAmount = status.profitAmount,
-        quantity = status.quantity,
-        avgPrice = status.avgPrice,
-        tValue = status.tValue,
-        division = status.totalDivision,
-        oneTimeAmount = status.oneTimeAmount,
-        nextBuyStarPrice = status.nextBuyStarPrice ?: 0.0,
-        nextSellStarPrice = status.nextSellStarPrice ?: 0.0,
-        nextSellTargetPrice = status.nextSellTargetPrice ?: 0.0,
+        stock = status.toDomain(),
         historyItems = historyItems,
         isLoading = false,
         error = null

@@ -36,7 +36,6 @@ class DefaultStockDetailComponent(
 
     private val _state = MutableStateFlow(
         StockDetailState(
-            ticker = ticker,
             isLoading = true
         )
     )

@@ -20,11 +20,12 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import ckgod.snowball.invest.domain.model.StockDetailState
+import ckgod.snowball.invest.domain.model.StockSummary
 import ckgod.snowball.invest.ui.theme.getProgressColor
 import ckgod.snowball.invest.util.formatDecimal
 
 @Composable
-fun StrategyDashboard(state: StockDetailState) {
+fun StrategyDashboard(state: StockSummary) {
     Card(
         modifier = Modifier.fillMaxWidth(),
         elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
@@ -52,12 +53,12 @@ fun StrategyDashboard(state: StockDetailState) {
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
-                    text = "${state.tValue} / ${state.division}",
+                    text = "${state.tValue} / ${state.totalDivision}",
                     style = MaterialTheme.typography.titleSmall,
                     color = MaterialTheme.colorScheme.onSurface
                 )
                 Text(
-                    text = "${((state.tValue.toDouble() / state.division) * 100).toInt()}%",
+                    text = "${((state.tValue / state.totalDivision) * 100).toInt()}%",
                     style = MaterialTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
@@ -66,7 +67,7 @@ fun StrategyDashboard(state: StockDetailState) {
             Spacer(modifier = Modifier.height(8.dp))
 
             LinearProgressIndicator(
-                progress = { state.tValue.toFloat() / state.division.toFloat() },
+                progress = { state.tValue.toFloat() / state.totalDivision.toFloat() },
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(12.dp)
@@ -74,37 +75,10 @@ fun StrategyDashboard(state: StockDetailState) {
                 color = getProgressColor(),
                 trackColor = MaterialTheme.colorScheme.surfaceContainerHighest,
             )
-
-            Spacer(modifier = Modifier.height(20.dp))
-
-            // 정보 그리드
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween
-            ) {
-                InfoItem(
-                    label = "1회 매수액",
-                    value = "$${state.oneTimeAmount.formatDecimal()}"
-                )
-                InfoItem(
-                    label = "다음 매수가",
-                    value = "$${state.nextBuyStarPrice.formatDecimal()}"
-                )
-            }
-
-            Spacer(modifier = Modifier.height(12.dp))
-
-            InfoItem(
-                label = "다음 매도가",
-                value = "$${state.nextSellStarPrice.formatDecimal()}"
-            )
         }
     }
 }
 
-/**
- * 정보 아이템
- */
 @Composable
 private fun InfoItem(
     label: String,

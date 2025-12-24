@@ -62,7 +62,7 @@ fun StockDetailScreen(
             TopAppBar(
                 title = {
                     Text(
-                        text = state.ticker,
+                        text = state.stock.ticker,
                         style = MaterialTheme.typography.titleLarge,
                         fontWeight = FontWeight.Bold
                     )
@@ -96,17 +96,14 @@ fun StockDetailScreen(
                 contentPadding = PaddingValues(16.dp),
                 verticalArrangement = Arrangement.spacedBy(16.dp)
             ) {
-                // 1. Summary Header
                 item {
-                    SummaryHeader(state)
+                    SummaryHeader(state.stock)
                 }
 
-                // 2. Strategy Dashboard
                 item {
-                    StrategyDashboard(state)
+                    StrategyDashboard(state.stock)
                 }
 
-                // 3. History Timeline with sticky headers
                 state.historyItems.forEach { (date, items) ->
                     stickyHeader {
                         DateHeader(date)
