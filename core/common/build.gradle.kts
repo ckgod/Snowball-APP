@@ -12,7 +12,7 @@ kotlin {
 
     sourceSets {
         commonMain.dependencies {
-            // 순수 Kotlin 유틸리티만
+            implementation(libs.bignum)
         }
     }
 }
