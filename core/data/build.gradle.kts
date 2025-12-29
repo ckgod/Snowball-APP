@@ -1,7 +1,7 @@
 plugins {
-    alias(libs.plugins.kotlinMultiplatform)
+    alias(libs.plugins.kotlin.multiplatform)
     alias(libs.plugins.androidLibrary)
-    alias(libs.plugins.kotlinx.serialization)
+    alias(libs.plugins.kotlin.serialization)
 }
 
 kotlin {
@@ -14,6 +14,7 @@ kotlin {
     sourceSets {
         commonMain.dependencies {
             implementation(projects.core.domain)
+            implementation(projects.snowballModels)
 
             // Ktor
             implementation(libs.ktor.client.core)
