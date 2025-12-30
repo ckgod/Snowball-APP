@@ -17,11 +17,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import ckgod.snowball.invest.domain.model.HistoryItem
-import ckgod.snowball.invest.domain.model.TradeStatus
-import ckgod.snowball.invest.domain.model.TradeType
 import ckgod.snowball.invest.ui.theme.getProfitColor
 import ckgod.snowball.invest.ui.theme.getProgressColor
 import ckgod.snowball.invest.util.formatDecimal
+import com.ckgod.snowball.model.OrderSide
+import com.ckgod.snowball.model.TradeStatus
 
 @Composable
 fun HistoryItemRow(item: HistoryItem) {
@@ -41,65 +41,38 @@ fun HistoryItemRow(item: HistoryItem) {
 
         Spacer(modifier = Modifier.width(12.dp))
 
-        // 메인 정보
         Column(modifier = Modifier.weight(1f)) {
-            when (item) {
-                is HistoryItem.Trade -> {
-                    Text(
-                        text = "${item.orderType.displayName} ${item.type.displayName}",
-                        style = MaterialTheme.typography.bodyMedium,
-                        fontWeight = FontWeight.Medium,
-                        color = MaterialTheme.colorScheme.onSurface
-                    )
-                    Text(
-                        text = "$${item.price.formatDecimal()} × ${item.quantity}ea",
-                        style = MaterialTheme.typography.bodySmall,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant
-                    )
-                }
-                is HistoryItem.Sync -> {
-                    Text(
-                        text = "일일 정산",
-                        style = MaterialTheme.typography.bodyMedium,
-                        fontWeight = FontWeight.Medium,
-                        color = MaterialTheme.colorScheme.onSurface
-                    )
-                    Text(
-                        text = "실현 손익 ${if (item.profit >= 0) "+" else ""}$${item.profit.formatDecimal()}",
-                        style = MaterialTheme.typography.bodySmall,
-                        color = getProfitColor(item.profit)
-                    )
-                }
-            }
+            Text(
+                text = "${item.orderType.displayName} ${item.orderSide.displayName}",
+                style = MaterialTheme.typography.bodyMedium,
+                fontWeight = FontWeight.Medium,
+                color = MaterialTheme.colorScheme.onSurface
+            )
+            Text(
+                text = "$${item.price.formatDecimal()} × ${item.quantity}ea",
+                style = MaterialTheme.typography.bodySmall,
+                color = MaterialTheme.colorScheme.onSurfaceVariant
+            )
         }
 
         Spacer(modifier = Modifier.width(12.dp))
 
-        // 상태 뱃지
         StatusBadge(item)
     }
 }
 
-/**
- * 상태 뱃지
- */
 @Composable
 private fun StatusBadge(item: HistoryItem) {
-    val (text, color) = when (item) {
-        is HistoryItem.Trade -> {
-            when (item.status) {
-                TradeStatus.PENDING -> "주문" to MaterialTheme.colorScheme.onSurfaceVariant
-                TradeStatus.FILLED -> {
-                    val tradeColor = when (item.type) {
-                        TradeType.BUY -> getProgressColor()
-                        TradeType.SELL -> getProfitColor(-1.0) // Red for sell
-                    }
-                    "체결" to tradeColor
-                }
-                TradeStatus.CANCELED -> "취소" to MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.5f)
+    val (text, color) = when (item.status) {
+        TradeStatus.PENDING -> "주문" to MaterialTheme.colorScheme.onSurfaceVariant
+        TradeStatus.FILLED -> {
+            val tradeColor = when (item.orderSide) {
+                OrderSide.BUY -> getProgressColor()
+                OrderSide.SELL -> getProfitColor(-1.0)
             }
+            "체결" to tradeColor
         }
-        is HistoryItem.Sync -> "정산" to getProgressColor()
+        TradeStatus.CANCELED -> "취소" to MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.5f)
     }
 
     Surface(

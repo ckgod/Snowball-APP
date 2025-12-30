@@ -1,9 +1,17 @@
 package ckgod.snowball.invest.domain.model
 
-/**
- * 전체 포트폴리오 정보
- */
+import com.ckgod.snowball.model.HomeTabResponse
+
 data class Portfolio(
-    val totalCount: Int,
-    val stocks: List<StockSummary>        // 투자 종목 리스트
-)
+    val stocks: List<StockSummary>
+) {
+    companion object {
+        fun from(response: HomeTabResponse): Portfolio {
+            return Portfolio(
+                response.statusList.map { status ->
+                    StockSummary.from(status)
+                }
+            )
+        }
+    }
+}

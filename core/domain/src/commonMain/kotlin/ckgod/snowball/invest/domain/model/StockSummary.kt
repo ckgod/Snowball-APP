@@ -1,5 +1,8 @@
 package ckgod.snowball.invest.domain.model
 
+import com.ckgod.snowball.model.InvestmentStatusResponse
+import com.ckgod.snowball.model.TradePhase
+
 /**
  * 투자 종목 요약 정보
  * 메인 화면의 종목 카드에 표시될 데이터
@@ -28,23 +31,28 @@ data class StockSummary(
     val nextSellTargetPrice: Double? = null,
     val nextBuyStarPrice: Double? = null,
     val realizedProfit: Double = 0.0
-)
-
-enum class TradePhase(val displayName: String) {
-    FIRST_HALF("전반전"),
-    BACK_HALF("후반전"),
-    QUARTER_MODE("쿼터모드"),
-    EXHAUSTED("자금소진"),
-    UNKNOWN("알 수 없음");
-
+) {
     companion object {
-        /**
-         * 서버에서 받은 문자열을 TradePhase enum으로 변환
-         * @param displayName 서버에서 받은 문자열 (예: "전반전", "후반전")
-         * @return 매칭되는 TradePhase, 없으면 FIRST_HALF 반환
-         */
-        fun fromDisplayName(displayName: String): TradePhase {
-            return entries.find { it.displayName == displayName } ?: UNKNOWN
-        }
+        fun from(response: InvestmentStatusResponse) = StockSummary(
+            ticker = response.ticker,
+            fullName = response.fullName ?: "",
+            currentPrice = response.currentPrice,
+            dailyChangeRate = response.dailyChangeRate,
+            tValue = response.tValue,
+            totalDivision = response.totalDivision,
+            starPercent = response.starPercent,
+            phase = response.phase,
+            avgPrice = response.avgPrice,
+            quantity = response.quantity,
+            profitRate = response.profitRate,
+            profitAmount = response.profitAmount,
+            oneTimeAmount = response.oneTimeAmount,
+            totalInvested = response.totalInvested,
+            capital = response.capital,
+            nextSellStarPrice = response.nextSellStarPrice,
+            nextSellTargetPrice = response.nextSellTargetPrice,
+            nextBuyStarPrice = response.nextBuyStarPrice,
+            realizedProfit = response.realizedProfit
+        )
     }
 }

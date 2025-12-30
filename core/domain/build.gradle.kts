@@ -13,7 +13,7 @@ kotlin {
 
     sourceSets {
         commonMain.dependencies {
-            // 순수 Kotlin만, 외부 의존성 없음
+            implementation(projects.snowballModels)
         }
     }
 }
