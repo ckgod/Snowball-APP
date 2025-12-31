@@ -13,7 +13,7 @@ kotlin {
 
     sourceSets {
         commonMain.dependencies {
-            implementation(projects.snowballModels)
+            api(projects.snowballModels)
         }
     }
 }

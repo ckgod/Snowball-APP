@@ -73,6 +73,13 @@ private fun StatusBadge(item: HistoryItem) {
             "체결" to tradeColor
         }
         TradeStatus.CANCELED -> "취소" to MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.5f)
+        TradeStatus.PARTIAL -> {
+            val tradeColor = when (item.orderSide) {
+                OrderSide.BUY -> getProgressColor()
+                OrderSide.SELL -> getProfitColor(-1.0)
+            }
+            "부분 체결" to tradeColor
+        }
     }
 
     Surface(
