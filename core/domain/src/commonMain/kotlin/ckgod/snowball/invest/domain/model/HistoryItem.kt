@@ -14,7 +14,9 @@ data class HistoryItem(
     val price: Double,
     val quantity: Int,
     val status: TradeStatus,
-    val crashRate: String? = null
+    val crashRate: String? = null,
+    val filledPrice: Double = 0.0,
+    val filledQuantity: Int = 0
 ) {
     companion object {
         fun from(response: TradeHistoryResponse): HistoryItem {
@@ -42,7 +44,9 @@ data class HistoryItem(
                 price = response.orderPrice,
                 quantity = response.orderQuantity,
                 status = response.tradeStatus,
-                crashRate = response.crashRate?.toString()
+                crashRate = response.crashRate?.toString(),
+                filledPrice = response.filledPrice,
+                filledQuantity = response.filledQuantity
             )
         }
     }

@@ -29,6 +29,17 @@ val ProgressBlue = Color(0xFF2196F3)
 val ProgressBlueDark = Color(0xFF1976D2)
 val ProgressBlueLight = Color(0xFF64B5F6)
 
+// Trading Side Colors (한국 주식시장 컨벤션)
+// 매수: 빨간색
+val BuyRed = LossRed
+val BuyRedDark = LossRedDark
+val BuyRedLight = LossRedLight
+
+// 매도: 파란색
+val SellBlue = ProgressBlue
+val SellBlueDark = ProgressBlueDark
+val SellBlueLight = ProgressBlueLight
+
 // Background Colors
 val BackgroundDark = Color(0xFF000000)        // 순수 검은색
 val BackgroundLight = Color(0xFFF5F5F5)       // 연한 회색

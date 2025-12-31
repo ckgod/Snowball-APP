@@ -101,3 +101,19 @@ fun getProfitColor(profit: Double, isDarkTheme: Boolean = isSystemInDarkTheme())
 fun getProgressColor(isDarkTheme: Boolean = isSystemInDarkTheme()): Color {
     return if (isDarkTheme) ProgressBlueLight else ProgressBlueDark
 }
+
+/**
+ * 확장 함수: 매수 색상 반환 (한국 주식시장 컨벤션 - Red)
+ */
+@Composable
+fun getBuySideColor(isDarkTheme: Boolean = isSystemInDarkTheme()): Color {
+    return if (isDarkTheme) BuyRedLight else BuyRedDark
+}
+
+/**
+ * 확장 함수: 매도 색상 반환 (한국 주식시장 컨벤션 - Blue)
+ */
+@Composable
+fun getSellSideColor(isDarkTheme: Boolean = isSystemInDarkTheme()): Color {
+    return if (isDarkTheme) SellBlueLight else SellBlueDark
+}
