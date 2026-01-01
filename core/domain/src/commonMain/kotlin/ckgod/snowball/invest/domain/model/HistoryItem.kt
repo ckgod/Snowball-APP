@@ -34,6 +34,7 @@ data class HistoryItem(
             val dateTime = datePart + formattedTime // "20251222180907"
 
             val displayTime = "${formattedTime.substring(0, 2)}:${formattedTime.substring(2, 4)}"
+            val crashRate = response.crashRate?.let { it * 100 }?.toInt()?.toString()
 
             return HistoryItem(
                 dateTime = dateTime,
@@ -44,7 +45,7 @@ data class HistoryItem(
                 price = response.orderPrice,
                 quantity = response.orderQuantity,
                 status = response.tradeStatus,
-                crashRate = response.crashRate?.toString(),
+                crashRate = crashRate,
                 filledPrice = response.filledPrice,
                 filledQuantity = response.filledQuantity
             )

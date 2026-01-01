@@ -21,11 +21,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import ckgod.snowball.invest.domain.model.StockDetailState
+import ckgod.snowball.invest.feature.detail.component.CrashProtectionAccordion
 import ckgod.snowball.invest.feature.detail.component.DateHeader
 import ckgod.snowball.invest.feature.detail.component.HistoryItemRow
+import ckgod.snowball.invest.feature.detail.component.HistoryListItem
 import ckgod.snowball.invest.feature.detail.component.StockDetailSkeleton
 import ckgod.snowball.invest.feature.detail.component.StrategyDashboard
 import ckgod.snowball.invest.feature.detail.component.SummaryHeader
+import ckgod.snowball.invest.feature.detail.component.toHistoryListItems
 import ckgod.snowball.invest.feature.detail.model.StockDetailEvent
 import org.jetbrains.compose.resources.painterResource
 import snowball.core.ui.generated.resources.Res
@@ -109,11 +112,26 @@ fun StockDetailScreen(
                         DateHeader(date)
                     }
 
+                    val listItems = historyList.toHistoryListItems()
+
                     items(
-                        items = historyList,
-                        key = { item -> item.orderNo }
-                    ) { item ->
-                        HistoryItemRow(item)
+                        items = listItems,
+                        key = { listItem ->
+                            when (listItem) {
+                                is HistoryListItem.Single -> listItem.item.orderNo
+                                is HistoryListItem.CrashProtectionGroup ->
+                                    "crash_group_${listItem.items.first().orderNo}"
+                            }
+                        }
+                    ) { listItem ->
+                        when (listItem) {
+                            is HistoryListItem.Single -> {
+                                HistoryItemRow(listItem.item)
+                            }
+                            is HistoryListItem.CrashProtectionGroup -> {
+                                CrashProtectionAccordion(items = listItem.items)
+                            }
+                        }
                     }
                 }
             }

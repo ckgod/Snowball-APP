@@ -1,5 +1,9 @@
 package ckgod.snowball.invest.feature.detail.component
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.expandVertically
+import androidx.compose.animation.shrinkVertically
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -14,6 +18,10 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -25,6 +33,8 @@ import org.jetbrains.compose.resources.painterResource
 import snowball.core.ui.generated.resources.Res
 import snowball.core.ui.generated.resources.ic_close
 import snowball.core.ui.generated.resources.ic_double_arrow_right
+import snowball.core.ui.generated.resources.ic_drop_down
+import snowball.core.ui.generated.resources.ic_drop_up
 import ckgod.snowball.invest.domain.model.HistoryItem
 import ckgod.snowball.invest.ui.theme.getBuySideColor
 import ckgod.snowball.invest.ui.theme.getSellSideColor
@@ -32,12 +42,6 @@ import ckgod.snowball.invest.util.formatDecimal
 import com.ckgod.snowball.model.OrderSide
 import com.ckgod.snowball.model.TradeStatus
 
-/**
- * MTS 전문 거래 내역 리스트 아이템 (콤팩트 디자인)
- * - 아이콘 없음, 텍스트와 색상만 사용
- * - 고밀도 레이아웃 (패딩 및 행간 최소화)
- * - 매수: Red, 매도: Blue
- */
 @Composable
 fun HistoryItemRow(item: HistoryItem) {
     val sideColor = if (item.orderSide == OrderSide.BUY) {
@@ -53,7 +57,6 @@ fun HistoryItemRow(item: HistoryItem) {
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.Top
     ) {
-        // 좌측: 시간
         Text(
             text = item.displayTime,
             style = MaterialTheme.typography.labelSmall,
@@ -64,12 +67,10 @@ fun HistoryItemRow(item: HistoryItem) {
 
         Spacer(modifier = Modifier.width(8.dp))
 
-        // 중앙: 주문 정보
         Column(
             modifier = Modifier.weight(1f),
             verticalArrangement = Arrangement.spacedBy(2.dp)
         ) {
-            // 첫 번째 줄: 매수/매도 + 주문 타입 뱃지
             Row(
                 horizontalArrangement = Arrangement.spacedBy(4.dp),
                 verticalAlignment = Alignment.CenterVertically
@@ -84,7 +85,6 @@ fun HistoryItemRow(item: HistoryItem) {
                     color = sideColor
                 )
 
-                // 주문 타입 뱃지 (각진 디자인)
                 Surface(
                     shape = RoundedCornerShape(2.dp),
                     color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.2f)
@@ -102,23 +102,15 @@ fun HistoryItemRow(item: HistoryItem) {
                 }
             }
 
-            // 두 번째 줄: 가격 정보
             PriceFlowText(item, sideColor)
         }
 
         Spacer(modifier = Modifier.width(8.dp))
 
-        // 우측: 상태 뱃지
         CompactStatusBadge(item, sideColor)
     }
 }
 
-/**
- * 주문가 -> 체결가 흐름 표시
- * - FILLED/PARTIAL: 주문가 → 체결가
- * - PENDING: 주문가만
- * - CANCELED: 주문가만 (희미하게)
- */
 @Composable
 private fun PriceFlowText(item: HistoryItem, sideColor: Color) {
     when (item.status) {
@@ -127,7 +119,6 @@ private fun PriceFlowText(item: HistoryItem, sideColor: Color) {
                 horizontalArrangement = Arrangement.spacedBy(2.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                // 주문가
                 Text(
                     text = "$${item.price.formatDecimal()}",
                     style = TextStyle(
@@ -137,7 +128,6 @@ private fun PriceFlowText(item: HistoryItem, sideColor: Color) {
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
 
-                // 화살표 아이콘
                 Icon(
                     painter = painterResource(Res.drawable.ic_double_arrow_right),
                     contentDescription = null,
@@ -145,7 +135,6 @@ private fun PriceFlowText(item: HistoryItem, sideColor: Color) {
                     tint = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.6f)
                 )
 
-                // 체결가 (강조)
                 Text(
                     text = "$${item.filledPrice.formatDecimal()}",
                     style = TextStyle(
@@ -156,7 +145,6 @@ private fun PriceFlowText(item: HistoryItem, sideColor: Color) {
                     color = sideColor
                 )
 
-                // 수량
                 Icon(
                     painter = painterResource(Res.drawable.ic_close),
                     contentDescription = null,
@@ -175,7 +163,6 @@ private fun PriceFlowText(item: HistoryItem, sideColor: Color) {
             }
         }
         TradeStatus.PENDING -> {
-            // 주문가만 표시
             Row(
                 horizontalArrangement = Arrangement.spacedBy(2.dp),
                 verticalAlignment = Alignment.CenterVertically
@@ -207,7 +194,6 @@ private fun PriceFlowText(item: HistoryItem, sideColor: Color) {
             }
         }
         TradeStatus.CANCELED -> {
-            // 취소된 주문 (희미하게)
             Row(
                 horizontalArrangement = Arrangement.spacedBy(2.dp),
                 verticalAlignment = Alignment.CenterVertically
@@ -241,11 +227,6 @@ private fun PriceFlowText(item: HistoryItem, sideColor: Color) {
     }
 }
 
-/**
- * 콤팩트 상태 뱃지
- * - 최소한의 크기
- * - 텍스트와 색상만 사용
- */
 @Composable
 private fun CompactStatusBadge(item: HistoryItem, sideColor: Color) {
     val (text, color) = when (item.status) {
@@ -267,5 +248,104 @@ private fun CompactStatusBadge(item: HistoryItem, sideColor: Color) {
             fontWeight = FontWeight.Medium,
             fontSize = 11.sp
         )
+    }
+}
+
+@Composable
+fun CrashProtectionAccordion(items: List<HistoryItem>) {
+    var isExpanded by remember { mutableStateOf(false) }
+
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .clickable { isExpanded = !isExpanded }
+    ) {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(vertical = 4.dp, horizontal = 8.dp),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.Top
+        ) {
+            Text(
+                text = items.firstOrNull()?.displayTime ?: "",
+                style = MaterialTheme.typography.labelSmall,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                modifier = Modifier.width(42.dp),
+                fontSize = 12.sp
+            )
+
+            Spacer(modifier = Modifier.width(8.dp))
+
+            Column(
+                modifier = Modifier.weight(1f),
+                verticalArrangement = Arrangement.spacedBy(2.dp)
+            ) {
+                Row(
+                    horizontalArrangement = Arrangement.spacedBy(4.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Text(
+                        text = "방어 매수",
+                        style = TextStyle(
+                            fontSize = 14.sp,
+                            fontWeight = FontWeight.Bold,
+                            lineHeight = 14.sp
+                        ),
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+
+                    Surface(
+                        shape = RoundedCornerShape(2.dp),
+                        color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.2f)
+                    ) {
+                        Text(
+                            text = "${items.size}건",
+                            modifier = Modifier.padding(horizontal = 5.dp, vertical = 2.dp),
+                            style = TextStyle(
+                                fontSize = 10.sp,
+                                lineHeight = 10.sp,
+                                fontWeight = FontWeight.Bold
+                            ),
+                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                        )
+                    }
+                }
+
+                val crashRates = items.mapNotNull { it.crashRate }.joinToString(", ") { "-${it}%" }
+
+                Text(
+                    text = crashRates,
+                    style = TextStyle(
+                        fontSize = 12.sp,
+                        lineHeight = 12.sp
+                    ),
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                )
+            }
+
+            Spacer(modifier = Modifier.width(8.dp))
+
+            Icon(
+                painter = painterResource(if (isExpanded) Res.drawable.ic_drop_up else Res.drawable.ic_drop_down),
+                contentDescription = if (isExpanded) "접기" else "펼치기",
+                modifier = Modifier.size(20.dp),
+                tint = MaterialTheme.colorScheme.onSurfaceVariant
+            )
+        }
+
+        AnimatedVisibility(
+            visible = isExpanded,
+            enter = expandVertically(),
+            exit = shrinkVertically()
+        ) {
+            Column(
+                modifier = Modifier.padding(start = 16.dp)
+            ) {
+                items.forEach { item ->
+                    HistoryItemRow(item)
+                }
+            }
+        }
     }
 }
