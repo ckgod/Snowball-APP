@@ -329,7 +329,7 @@ fun CrashProtectionAccordion(items: List<HistoryItem>) {
             Icon(
                 painter = painterResource(if (isExpanded) Res.drawable.ic_drop_up else Res.drawable.ic_drop_down),
                 contentDescription = if (isExpanded) "접기" else "펼치기",
-                modifier = Modifier.size(20.dp),
+                modifier = Modifier.size(24.dp),
                 tint = MaterialTheme.colorScheme.onSurfaceVariant
             )
         }
