@@ -29,6 +29,19 @@ val ProgressBlue = Color(0xFF2196F3)
 val ProgressBlueDark = Color(0xFF1976D2)
 val ProgressBlueLight = Color(0xFF64B5F6)
 
+// Phase Colors (전반전/후반전/쿼터모드)
+val PhaseMint = Color(0xFF00E676)
+val PhaseMintDark = Color(0xFF00C853)
+val PhaseMintLight = Color(0xFF69F0AE)
+
+val PhaseAmber = Color(0xFFFFAB00)
+val PhaseAmberDark = Color(0xFFFF9100)
+val PhaseAmberLight = Color(0xFFFFD740)
+
+val PhasePurple = Color(0xFFD500F9)
+val PhasePurpleDark = Color(0xFFAA00FF)
+val PhasePurpleLight = Color(0xFFE040FB)
+
 // Trading Side Colors (한국 주식시장 컨벤션)
 // 매수: 빨간색
 val BuyRed = LossRed

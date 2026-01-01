@@ -6,6 +6,7 @@ import androidx.compose.material3.darkColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
+import com.ckgod.snowball.model.TradePhase
 
 private val DarkColorScheme = darkColorScheme(
     primary = Grey80,
@@ -77,16 +78,18 @@ fun SnowballTheme(
 }
 
 /**
- * 확장 함수: 수익/손실 여부에 따른 색상 반환
+ * 확장 함수: 수익/손실 여부에 따른 색상 반환 (한국 주식시장 스타일)
+ * - 수익(상승): 빨간색
+ * - 손실(하락): 파란색
  */
 @Composable
 fun getProfitColor(profit: Double, isDarkTheme: Boolean = isSystemInDarkTheme()): Color {
     return when {
         profit < 0 -> {
-            if (isDarkTheme) LossRedLight else LossRedDark
+            if (isDarkTheme) SellBlueLight else SellBlueDark
         }
         profit > 0 -> {
-            if (isDarkTheme) ProfitGreenLight else ProfitGreenDark
+            if (isDarkTheme) BuyRedLight else BuyRedDark
         }
         else -> {
             if (isDarkTheme) OnSurfaceVariantDark else OnSurfaceVariantLight
@@ -100,6 +103,28 @@ fun getProfitColor(profit: Double, isDarkTheme: Boolean = isSystemInDarkTheme())
 @Composable
 fun getProgressColor(isDarkTheme: Boolean = isSystemInDarkTheme()): Color {
     return if (isDarkTheme) ProgressBlueLight else ProgressBlueDark
+}
+
+/**
+ * 확장 함수: 전략 단계별 위험도 색상 반환 (전반전 → 후반전 → 쿼터모드)
+ */
+@Composable
+fun getPhaseColor(phase: TradePhase, isDarkTheme: Boolean = isSystemInDarkTheme()): Color {
+    return when (phase) {
+        TradePhase.FIRST_HALF -> {
+            if (isDarkTheme) PhaseMintLight else PhaseMintDark
+        }
+        TradePhase.BACK_HALF -> {
+            if (isDarkTheme) PhaseAmberLight else PhaseAmberDark
+        }
+        TradePhase.QUARTER_MODE,
+        TradePhase.EXHAUSTED -> {
+            if (isDarkTheme) PhasePurpleLight else PhasePurpleDark
+        }
+        TradePhase.UNKNOWN -> {
+            if (isDarkTheme) OnSurfaceVariantDark else OnSurfaceVariantLight
+        }
+    }
 }
 
 /**

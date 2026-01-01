@@ -13,19 +13,18 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import ckgod.snowball.invest.domain.model.StockSummary
+import ckgod.snowball.invest.ui.component.AnimatedProgressIndicator
+import ckgod.snowball.invest.ui.theme.getPhaseColor
 import ckgod.snowball.invest.ui.theme.getProfitColor
-import ckgod.snowball.invest.ui.theme.getProgressColor
 import ckgod.snowball.invest.util.formatDecimal
 
 /**
@@ -128,14 +127,11 @@ private fun StockBasicInfo(stock: StockSummary) {
 private fun StrategyProgress(stock: StockSummary) {
     Column(modifier = Modifier.fillMaxWidth()) {
         val progress = stock.tValue.toFloat() / stock.totalDivision.toFloat()
-        LinearProgressIndicator(
-            progress = { progress },
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(8.dp)
-                .clip(RoundedCornerShape(4.dp)),
-            color = getProgressColor(),
+        AnimatedProgressIndicator(
+            progress = progress,
+            color = getPhaseColor(stock.phase),
             trackColor = MaterialTheme.colorScheme.surfaceVariant,
+            animationEnabled = false
         )
 
         Spacer(modifier = Modifier.height(8.dp))
@@ -153,13 +149,13 @@ private fun StrategyProgress(stock: StockSummary) {
 
             Surface(
                 shape = RoundedCornerShape(12.dp),
-                color = getProgressColor().copy(alpha = 0.2f)
+                color = getPhaseColor(stock.phase).copy(alpha = 0.2f)
             ) {
                 Text(
                     text = stock.phase.displayName,
                     modifier = Modifier.padding(horizontal = 12.dp, vertical = 4.dp),
                     style = MaterialTheme.typography.labelMedium,
-                    color = getProgressColor(),
+                    color = getPhaseColor(stock.phase),
                     fontWeight = FontWeight.Medium
                 )
             }

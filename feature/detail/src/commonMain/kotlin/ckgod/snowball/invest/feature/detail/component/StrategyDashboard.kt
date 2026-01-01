@@ -10,18 +10,17 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import ckgod.snowball.invest.domain.model.StockDetailState
 import ckgod.snowball.invest.domain.model.StockSummary
-import ckgod.snowball.invest.ui.theme.getProgressColor
+import ckgod.snowball.invest.ui.component.AnimatedProgressIndicator
+import ckgod.snowball.invest.ui.theme.getPhaseColor
 import ckgod.snowball.invest.util.formatDecimal
 
 @Composable
@@ -66,36 +65,14 @@ fun StrategyDashboard(state: StockSummary) {
 
             Spacer(modifier = Modifier.height(8.dp))
 
-            LinearProgressIndicator(
-                progress = { state.tValue.toFloat() / state.totalDivision.toFloat() },
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(12.dp)
-                    .clip(RoundedCornerShape(6.dp)),
-                color = getProgressColor(),
+            AnimatedProgressIndicator(
+                progress = state.tValue.toFloat() / state.totalDivision.toFloat(),
+                color = getPhaseColor(state.phase),
                 trackColor = MaterialTheme.colorScheme.surfaceContainerHighest,
+                height = 12.dp,
+                cornerRadius = 6.dp,
+                animationKey = "strategy_dashboard_${state.ticker}"
             )
         }
-    }
-}
-
-@Composable
-private fun InfoItem(
-    label: String,
-    value: String
-) {
-    Column {
-        Text(
-            text = label,
-            style = MaterialTheme.typography.bodySmall,
-            color = MaterialTheme.colorScheme.onSurfaceVariant
-        )
-        Spacer(modifier = Modifier.height(4.dp))
-        Text(
-            text = value,
-            style = MaterialTheme.typography.titleMedium,
-            fontWeight = FontWeight.SemiBold,
-            color = MaterialTheme.colorScheme.onSurface
-        )
     }
 }
