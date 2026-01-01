@@ -27,10 +27,6 @@ import ckgod.snowball.invest.ui.theme.getPhaseColor
 import ckgod.snowball.invest.ui.theme.getProfitColor
 import ckgod.snowball.invest.util.formatDecimal
 
-/**
- * 종목 요약 카드
- * 3단 구조로 정보를 체계적으로 표시
- */
 @Composable
 fun StockSummaryCard(
     stock: StockSummary,
@@ -55,17 +51,14 @@ fun StockSummaryCard(
                 .fillMaxWidth()
                 .padding(16.dp)
         ) {
-            // (1) 상단: 종목 기본 정보 및 현재가
             StockBasicInfo(stock)
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            // (2) 중단: 전략 진행 상황
             StrategyProgress(stock)
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            // (3) 하단: 내 계좌 수익 현황
             AccountProfit(stock)
 
             Spacer(modifier = Modifier.height(8.dp))
@@ -193,7 +186,7 @@ private fun AccountProfit(stock: StockSummary) {
                 fontWeight = FontWeight.Bold
             )
             Text(
-                text = "${if (isProfit) "+" else ""}$${stock.profitAmount.formatDecimal()}",
+                text = stock.profitAmount,
                 style = MaterialTheme.typography.bodyLarge,
                 color = getProfitColor(stock.profitRate),
                 fontWeight = FontWeight.Medium

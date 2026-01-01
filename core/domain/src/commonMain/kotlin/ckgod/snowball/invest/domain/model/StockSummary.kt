@@ -2,6 +2,7 @@ package ckgod.snowball.invest.domain.model
 
 import com.ckgod.snowball.model.InvestmentStatusResponse
 import com.ckgod.snowball.model.TradePhase
+import kotlin.math.abs
 
 /**
  * 투자 종목 요약 정보
@@ -23,7 +24,7 @@ data class StockSummary(
     val avgPrice: Double = 0.0,                       // 평균 단가
     val quantity: Int = 0,                            // 보유 수량
     val profitRate: Double = 0.0,                     // 수익률 (%)
-    val profitAmount: Double = 0.0,                   // 평가 손익 금액
+    val profitAmount: String = "$0",                   // 평가 손익 금액
     val oneTimeAmount: Double = 0.0,                  // 1회 매수액
     val totalInvested: Double = 0.0,                  // 누적 투자 금액
     val capital: Double? = null,                      // 원금
@@ -33,26 +34,33 @@ data class StockSummary(
     val realizedProfit: Double = 0.0
 ) {
     companion object {
-        fun from(response: InvestmentStatusResponse) = StockSummary(
-            ticker = response.ticker,
-            fullName = response.fullName ?: "",
-            currentPrice = response.currentPrice,
-            dailyChangeRate = response.dailyChangeRate,
-            tValue = response.tValue,
-            totalDivision = response.totalDivision,
-            starPercent = response.starPercent,
-            phase = response.phase,
-            avgPrice = response.avgPrice,
-            quantity = response.quantity,
-            profitRate = response.profitRate,
-            profitAmount = response.profitAmount,
-            oneTimeAmount = response.oneTimeAmount,
-            totalInvested = response.totalInvested,
-            capital = response.capital,
-            nextSellStarPrice = response.nextSellStarPrice,
-            nextSellTargetPrice = response.nextSellTargetPrice,
-            nextBuyStarPrice = response.nextBuyStarPrice,
-            realizedProfit = response.realizedProfit
-        )
+        fun from(response: InvestmentStatusResponse): StockSummary {
+            val profitAmount = when {
+                response.profitRate > 0.0 -> "+$${response.profitAmount}"
+                response.profitRate < 0.0 -> "-$${abs( response.profitAmount)}"
+                else -> "$${response.profitAmount}"
+            }
+            return StockSummary(
+                ticker = response.ticker,
+                fullName = response.fullName ?: "",
+                currentPrice = response.currentPrice,
+                dailyChangeRate = response.dailyChangeRate,
+                tValue = response.tValue,
+                totalDivision = response.totalDivision,
+                starPercent = response.starPercent,
+                phase = response.phase,
+                avgPrice = response.avgPrice,
+                quantity = response.quantity,
+                profitRate = response.profitRate,
+                profitAmount = profitAmount,
+                oneTimeAmount = response.oneTimeAmount,
+                totalInvested = response.totalInvested,
+                capital = response.capital,
+                nextSellStarPrice = response.nextSellStarPrice,
+                nextSellTargetPrice = response.nextSellTargetPrice,
+                nextBuyStarPrice = response.nextBuyStarPrice,
+                realizedProfit = response.realizedProfit
+            )
+        }
     }
 }

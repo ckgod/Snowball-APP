@@ -188,10 +188,10 @@ fun SummaryHeader(state: StockSummary) {
                     )
                     Spacer(modifier = Modifier.height(4.dp))
                     Text(
-                        text = "${if (state.profitAmount >= 0) "+" else ""}$${state.profitAmount.formatDecimal()}",
+                        text = state.profitAmount,
                         style = MaterialTheme.typography.bodyLarge,
                         fontWeight = FontWeight.Bold,
-                        color = getProfitColor(state.profitAmount)
+                        color = getProfitColor(state.profitRate)
                     )
                 }
             }
