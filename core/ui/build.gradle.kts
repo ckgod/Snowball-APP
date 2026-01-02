@@ -15,6 +15,7 @@ kotlin {
     sourceSets {
         commonMain.dependencies {
             implementation(projects.snowballModels)
+            implementation(projects.core.common)
 
             implementation(compose.runtime)
             implementation(compose.foundation)

@@ -29,6 +29,7 @@ kotlin {
             implementation(libs.decompose.compose)
 
             implementation(libs.koin.core)
+            implementation(libs.koin.compose)
 
             implementation(libs.kotlinx.coroutines.core)
         }

@@ -13,6 +13,7 @@ kotlin {
     sourceSets {
         commonMain.dependencies {
             implementation(libs.bignum)
+            implementation(libs.kotlinx.coroutines.core)
         }
     }
 }

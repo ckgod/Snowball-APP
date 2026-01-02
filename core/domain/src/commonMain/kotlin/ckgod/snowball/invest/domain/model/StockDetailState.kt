@@ -1,5 +1,6 @@
 package ckgod.snowball.invest.domain.model
 
+import ckgod.snowball.invest.util.CurrencyManager
 import com.ckgod.snowball.model.StockDetailResponse
 
 data class StockDetailState(
@@ -9,7 +10,10 @@ data class StockDetailState(
     val error: String? = null
 ) {
     companion object {
-        fun from(response: StockDetailResponse): StockDetailState {
+        fun from(
+            response: StockDetailResponse,
+            currencyManager: CurrencyManager
+        ): StockDetailState {
             val historyItems = response.histories
                 .map { history ->
                     HistoryItem.from(history)
@@ -20,7 +24,7 @@ data class StockDetailState(
                 }
 
             return StockDetailState(
-                stock = response.status?.let { StockSummary.from(it) } ?: StockSummary(),
+                stock = response.status?.let { StockSummary.from(it, currencyManager) } ?: StockSummary(),
                 historyItems = historyItems,
                 isLoading = false,
                 error = null

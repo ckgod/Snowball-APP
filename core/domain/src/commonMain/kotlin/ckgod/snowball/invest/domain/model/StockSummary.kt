@@ -1,5 +1,6 @@
 package ckgod.snowball.invest.domain.model
 
+import ckgod.snowball.invest.util.CurrencyManager
 import com.ckgod.snowball.model.InvestmentStatusResponse
 import com.ckgod.snowball.model.TradePhase
 import kotlin.math.abs
@@ -34,7 +35,12 @@ data class StockSummary(
     val realizedProfit: Double = 0.0
 ) {
     companion object {
-        fun from(response: InvestmentStatusResponse): StockSummary {
+        fun from(
+            response: InvestmentStatusResponse,
+            currencyManager: CurrencyManager
+        ): StockSummary {
+            response.exchangeRate?.let { currencyManager.updateExchangeRate(it) }
+
             val profitAmount = when {
                 response.profitRate > 0.0 -> "+$${response.profitAmount}"
                 response.profitRate < 0.0 -> "-$${abs( response.profitAmount)}"

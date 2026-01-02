@@ -25,9 +25,12 @@ import androidx.compose.ui.unit.dp
 import ckgod.snowball.invest.feature.home.component.StockSummaryCard
 import ckgod.snowball.invest.feature.home.model.HomeEvent
 import ckgod.snowball.invest.feature.home.model.HomeState
+import ckgod.snowball.invest.ui.component.CurrencyToggleSwitch
 import ckgod.snowball.invest.ui.component.CustomPullToRefresh
 import ckgod.snowball.invest.ui.theme.getProfitColor
+import ckgod.snowball.invest.util.CurrencyManager
 import ckgod.snowball.invest.util.formatDecimal
+import org.koin.compose.koinInject
 
 @Composable
 fun HomeScreen(
@@ -120,7 +123,10 @@ internal fun HomeScreenContent(
 
 @Composable
 private fun TotalProfitHeader(profit: Double) {
-    Column(
+    val currencyManager = koinInject<CurrencyManager>()
+    val currentCurrency by currencyManager.currencyType.collectAsState()
+
+    Box(
         modifier = Modifier
             .fillMaxWidth()
             .background(
@@ -129,17 +135,32 @@ private fun TotalProfitHeader(profit: Double) {
             )
             .padding(16.dp)
     ) {
-        Text(
-            text = "총 실현 손익",
-            style = MaterialTheme.typography.titleMedium,
-            color = MaterialTheme.colorScheme.onPrimaryContainer
-        )
-        Spacer(modifier = Modifier.height(8.dp))
-        Text(
-            text = "${if (profit > 0.0) "+" else ""}$${profit.formatDecimal()}",
-            style = MaterialTheme.typography.headlineMedium,
-            color = getProfitColor(profit),
-            fontWeight = FontWeight.Bold
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(end = 60.dp) // 토글 스위치 공간 확보
+        ) {
+            Text(
+                text = "총 실현 손익",
+                style = MaterialTheme.typography.titleMedium,
+                color = MaterialTheme.colorScheme.onPrimaryContainer
+            )
+            Spacer(modifier = Modifier.height(8.dp))
+            Text(
+                text = "${if (profit > 0.0) "+" else ""}$${profit.formatDecimal()}",
+                style = MaterialTheme.typography.headlineMedium,
+                color = getProfitColor(profit),
+                fontWeight = FontWeight.Bold
+            )
+        }
+
+        // 우측 상단에 토글 스위치 배치
+        CurrencyToggleSwitch(
+            modifier = Modifier.align(Alignment.TopEnd),
+            initialState = currentCurrency,
+            onToggleChange = { newCurrency ->
+                currencyManager.setKrwMode(newCurrency)
+            }
         )
     }
 }
