@@ -28,9 +28,9 @@ data class StockSummary(
     val oneTimeAmount: Double = 0.0,                  // 1회 매수액
     val totalInvested: Double = 0.0,                  // 누적 투자 금액
     val capital: Double? = null,                      // 원금
-    val nextSellStarPrice: Double? = null,
-    val nextSellTargetPrice: Double? = null,
-    val nextBuyStarPrice: Double? = null,
+    val nextSellStarPrice: Double? = null,            // 다음 LOC 매도가
+    val nextSellTargetPrice: Double? = null,          // 다음 지정가 매도가
+    val nextBuyStarPrice: Double? = null,             // 다음 LOC 매수가
     val realizedProfit: Double = 0.0
 ) {
     companion object {

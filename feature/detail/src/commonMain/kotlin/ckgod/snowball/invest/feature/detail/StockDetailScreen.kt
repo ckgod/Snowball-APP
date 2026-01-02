@@ -25,6 +25,7 @@ import ckgod.snowball.invest.feature.detail.component.CrashProtectionAccordion
 import ckgod.snowball.invest.feature.detail.component.DateHeader
 import ckgod.snowball.invest.feature.detail.component.HistoryItemRow
 import ckgod.snowball.invest.feature.detail.component.HistoryListItem
+import ckgod.snowball.invest.feature.detail.component.OrderPlanCard
 import ckgod.snowball.invest.feature.detail.component.StockDetailSkeleton
 import ckgod.snowball.invest.feature.detail.component.StrategyDashboard
 import ckgod.snowball.invest.feature.detail.component.SummaryHeader
@@ -105,6 +106,10 @@ fun StockDetailScreen(
 
                 item(key = "strategy_dashboard") {
                     StrategyDashboard(state.stock)
+                }
+
+                item(key = "order_plan_card") {
+                    OrderPlanCard(state.stock)
                 }
 
                 state.historyItems.entries.forEach { (date, historyList) ->
