@@ -1,5 +1,6 @@
 package ckgod.snowball.invest.util
 
+import ckgod.snowball.invest.domain.model.CurrencyType
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -34,8 +35,4 @@ class CurrencyManager {
     fun convertToUsd(krwAmount: Double): Double {
         return krwAmount / _exchangeRate.value
     }
-}
-
-enum class CurrencyType {
-    USD, KRW
 }

@@ -12,6 +12,8 @@ kotlin {
 
     sourceSets {
         commonMain.dependencies {
+            implementation(projects.core.domain)
+
             implementation(libs.bignum)
             implementation(libs.kotlinx.coroutines.core)
         }

@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -138,7 +139,6 @@ private fun TotalProfitHeader(profit: Double) {
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(end = 60.dp) // 토글 스위치 공간 확보
         ) {
             Text(
                 text = "총 실현 손익",
@@ -146,21 +146,25 @@ private fun TotalProfitHeader(profit: Double) {
                 color = MaterialTheme.colorScheme.onPrimaryContainer
             )
             Spacer(modifier = Modifier.height(8.dp))
-            Text(
-                text = "${if (profit > 0.0) "+" else ""}$${profit.formatDecimal()}",
-                style = MaterialTheme.typography.headlineMedium,
-                color = getProfitColor(profit),
-                fontWeight = FontWeight.Bold
-            )
-        }
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Text(
+                    text = "${if (profit > 0.0) "+" else ""}$${profit.formatDecimal()}",
+                    style = MaterialTheme.typography.headlineMedium,
+                    color = getProfitColor(profit),
+                    fontWeight = FontWeight.Bold
+                )
 
-        // 우측 상단에 토글 스위치 배치
-        CurrencyToggleSwitch(
-            modifier = Modifier.align(Alignment.TopEnd),
-            initialState = currentCurrency,
-            onToggleChange = { newCurrency ->
-                currencyManager.setKrwMode(newCurrency)
+                CurrencyToggleSwitch(
+                    initialState = currentCurrency,
+                    onToggleChange = { newCurrency ->
+                        currencyManager.setKrwMode(newCurrency)
+                    }
+                )
             }
-        )
+        }
     }
 }
