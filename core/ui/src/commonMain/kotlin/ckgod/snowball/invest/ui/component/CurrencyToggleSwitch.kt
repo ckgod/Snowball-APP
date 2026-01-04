@@ -31,7 +31,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import ckgod.snowball.invest.domain.model.CurrencyType
+import ckgod.snowball.invest.util.CurrencyType
 
 @Composable
 fun CurrencyToggleSwitch(

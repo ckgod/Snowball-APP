@@ -18,7 +18,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import ckgod.snowball.invest.domain.model.StockSummary
 import ckgod.snowball.invest.ui.theme.getProfitColor
-import ckgod.snowball.invest.util.formatDecimal
 
 @Composable
 fun SummaryHeader(state: StockSummary) {
@@ -43,7 +42,7 @@ fun SummaryHeader(state: StockSummary) {
             Spacer(modifier = Modifier.height(4.dp))
 
             Text(
-                text = "${if (state.realizedProfit > 0) "+" else ""}$${state.realizedProfit.formatDecimal()}",
+                text = state.realizedProfit,
                 style = MaterialTheme.typography.displaySmall,
                 fontWeight = FontWeight.Bold,
                 color = getProfitColor(state.realizedProfit)
@@ -63,7 +62,7 @@ fun SummaryHeader(state: StockSummary) {
                     )
                     Spacer(modifier = Modifier.height(4.dp))
                     Text(
-                        text = "$${state.capital}",
+                        text = "${state.capital}",
                         style = MaterialTheme.typography.titleLarge,
                         fontWeight = FontWeight.SemiBold,
                         color = MaterialTheme.colorScheme.onSurface
@@ -100,7 +99,7 @@ fun SummaryHeader(state: StockSummary) {
                     )
                     Spacer(modifier = Modifier.height(4.dp))
                     Text(
-                        text = "$${state.totalInvested}",
+                        text = "${state.totalInvested}",
                         style = MaterialTheme.typography.titleMedium,
                         fontWeight = FontWeight.SemiBold,
                         color = MaterialTheme.colorScheme.onSurface
@@ -119,7 +118,7 @@ fun SummaryHeader(state: StockSummary) {
                         verticalAlignment = Alignment.Bottom
                     ) {
                         Text(
-                            text = "$${state.oneTimeAmount.formatDecimal()}",
+                            text = state.oneTimeAmount,
                             style = MaterialTheme.typography.titleMedium,
                             fontWeight = FontWeight.SemiBold,
                             color = MaterialTheme.colorScheme.onSurface
@@ -152,7 +151,7 @@ fun SummaryHeader(state: StockSummary) {
                     )
                     Spacer(modifier = Modifier.height(4.dp))
                     Text(
-                        text = "$${state.currentPrice.formatDecimal()}",
+                        text = state.currentPrice,
                         style = MaterialTheme.typography.bodyLarge,
                         fontWeight = FontWeight.Bold,
                         color = MaterialTheme.colorScheme.onSurface
@@ -170,7 +169,7 @@ fun SummaryHeader(state: StockSummary) {
                     )
                     Spacer(modifier = Modifier.height(4.dp))
                     Text(
-                        text = "$${state.avgPrice.formatDecimal()}",
+                        text = state.avgPrice,
                         style = MaterialTheme.typography.bodyLarge,
                         fontWeight = FontWeight.Bold,
                         color = MaterialTheme.colorScheme.onSurface

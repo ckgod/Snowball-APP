@@ -4,17 +4,21 @@ import ckgod.snowball.invest.util.CurrencyManager
 import com.ckgod.snowball.model.HomeTabResponse
 
 data class Portfolio(
-    val stocks: List<StockSummary>
+    val stocks: List<StockSummary>,
+    val totalRealizedProfit: String = "$0"
 ) {
     companion object {
         fun from(
             response: HomeTabResponse,
             currencyManager: CurrencyManager
         ): Portfolio {
+            val totalProfit = response.statusList.sumOf { it.realizedProfit }
+
             return Portfolio(
-                response.statusList.map { status ->
-                    StockSummary.from(status, currencyManager)
-                }
+                stocks = response.statusList.map {
+                    StockSummary.from(it, currencyManager)
+                },
+                totalRealizedProfit = currencyManager.formatProfit(totalProfit)
             )
         }
     }

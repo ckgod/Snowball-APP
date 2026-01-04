@@ -97,6 +97,21 @@ fun getProfitColor(profit: Double, isDarkTheme: Boolean = isSystemInDarkTheme())
     }
 }
 
+@Composable
+fun getProfitColor(profit: String, isDarkTheme: Boolean = isSystemInDarkTheme()): Color {
+    return when {
+        profit.startsWith("-") -> {
+            if (isDarkTheme) SellBlueLight else SellBlueDark
+        }
+        profit.startsWith("+") -> {
+            if (isDarkTheme) BuyRedLight else BuyRedDark
+        }
+        else -> {
+            if (isDarkTheme) OnSurfaceVariantDark else OnSurfaceVariantLight
+        }
+    }
+}
+
 /**
  * 확장 함수: 진행 상태 색상 반환
  */

@@ -15,9 +15,7 @@ data class StockDetailState(
             currencyManager: CurrencyManager
         ): StockDetailState {
             val historyItems = response.histories
-                .map { history ->
-                    HistoryItem.from(history)
-                }
+                .map { history -> HistoryItem.from(history) }
                 .groupBy { item ->
                     val date = item.dateTime.take(8)
                     "${date.substring(0, 4)}.${date.substring(4, 6)}.${date.substring(6, 8)}"

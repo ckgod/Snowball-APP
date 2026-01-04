@@ -100,7 +100,7 @@ private fun StockBasicInfo(stock: StockSummary) {
 
         Column(horizontalAlignment = Alignment.End) {
             Text(
-                text = "$${stock.currentPrice.formatDecimal()}",
+                text = stock.currentPrice,
                 style = MaterialTheme.typography.titleMedium,
                 fontWeight = FontWeight.SemiBold
             )
@@ -166,7 +166,7 @@ private fun AccountProfit(stock: StockSummary) {
     ) {
         Column {
             Text(
-                text = "평단 $${stock.avgPrice.formatDecimal()}",
+                text = "평단 ${stock.avgPrice}",
                 style = MaterialTheme.typography.bodyMedium,
                 color = MaterialTheme.colorScheme.onSurfaceVariant
             )
@@ -204,21 +204,20 @@ fun AccountHistory(stock: StockSummary) {
     ) {
         Column {
             Text(
-                text = "1회 매수액 $${stock.oneTimeAmount.formatDecimal()}",
+                text = "1회 매수액 ${stock.oneTimeAmount}",
                 style = MaterialTheme.typography.bodyMedium,
                 color = MaterialTheme.colorScheme.onSurfaceVariant
             )
             Text(
-                text = "매수 누적 $${stock.totalInvested.formatDecimal()}",
+                text = "매수 누적 ${stock.totalInvested}",
                 style = MaterialTheme.typography.bodyMedium,
                 color = MaterialTheme.colorScheme.onSurfaceVariant
             )
         }
 
         Column(horizontalAlignment = Alignment.End) {
-            val isProfit = stock.realizedProfit > 0
             Text(
-                text = "실현 손익: ${if (isProfit) "+" else ""}$${stock.realizedProfit.formatDecimal()}",
+                text = "실현 손익: ${stock.realizedProfit}",
                 style = MaterialTheme.typography.bodyLarge,
                 color = getProfitColor(stock.realizedProfit),
                 fontWeight = FontWeight.Bold

@@ -112,9 +112,9 @@ private fun OrderSection(
     title: String,
     color: Color,
     firstPriceLabel: String,
-    firstPrice: Double?,
+    firstPrice: String?,
     secondPriceLabel: String,
-    secondPrice: Double?,
+    secondPrice: String?,
     modifier: Modifier = Modifier
 ) {
     Column(
@@ -153,7 +153,7 @@ private fun OrderSection(
                             fontSize = 11.sp
                         )
                         Text(
-                            text = "$${firstPrice.formatDecimal()}",
+                            text = firstPrice,
                             style = MaterialTheme.typography.titleMedium,
                             fontWeight = FontWeight.Bold,
                             color = color
@@ -173,7 +173,7 @@ private fun OrderSection(
                             fontSize = 11.sp
                         )
                         Text(
-                            text = "$${secondPrice.formatDecimal()}",
+                            text = secondPrice,
                             style = MaterialTheme.typography.titleMedium,
                             fontWeight = FontWeight.Bold,
                             color = color

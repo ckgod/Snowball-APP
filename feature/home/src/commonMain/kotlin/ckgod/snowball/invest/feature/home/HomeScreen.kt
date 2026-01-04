@@ -98,10 +98,7 @@ internal fun HomeScreenContent(
                         verticalArrangement = Arrangement.spacedBy(16.dp)
                     ) {
                         item {
-                            val sumProfit = state.portfolio.stocks.sumOf {
-                                it.realizedProfit
-                            }
-                            TotalProfitHeader(sumProfit)
+                            TotalProfitHeader(state.portfolio.totalRealizedProfit)
                         }
 
                         items(
@@ -123,7 +120,7 @@ internal fun HomeScreenContent(
 }
 
 @Composable
-private fun TotalProfitHeader(profit: Double) {
+private fun TotalProfitHeader(formattedProfit: String) {
     val currencyManager = koinInject<CurrencyManager>()
     val currentCurrency by currencyManager.currencyType.collectAsState()
 
@@ -152,9 +149,9 @@ private fun TotalProfitHeader(profit: Double) {
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
-                    text = "${if (profit > 0.0) "+" else ""}$${profit.formatDecimal()}",
+                    text = formattedProfit,
                     style = MaterialTheme.typography.headlineMedium,
-                    color = getProfitColor(profit),
+                    color = getProfitColor(formattedProfit),
                     fontWeight = FontWeight.Bold
                 )
 
