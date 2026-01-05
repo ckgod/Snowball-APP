@@ -29,14 +29,13 @@ data class Portfolio(
             response: HomeTabResponse,
             currencyType: CurrencyType = CurrencyType.USD
         ): Portfolio {
-            val totalProfit = response.statusList.sumOf { it.realizedProfit }
             val exchangeRate = response.statusList.firstOrNull()?.exchangeRate ?: 0.0
 
             return Portfolio(
                 stocks = response.statusList.map {
                     StockSummary.from(it, currencyType, exchangeRate)
                 },
-                totalRealizedProfitUsd = totalProfit,
+                totalRealizedProfitUsd = response.totalProfit,
                 currencyType = currencyType,
                 exchangeRate = exchangeRate
             )
