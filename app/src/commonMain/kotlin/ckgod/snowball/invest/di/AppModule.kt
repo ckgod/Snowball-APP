@@ -6,16 +6,12 @@ import ckgod.snowball.invest.data.repository.PortfolioRepositoryImpl
 import ckgod.snowball.invest.data.repository.StockDetailRepositoryImpl
 import ckgod.snowball.invest.domain.repository.PortfolioRepository
 import ckgod.snowball.invest.domain.repository.StockDetailRepository
-import ckgod.snowball.invest.util.CurrencyManager
+import ckgod.snowball.invest.domain.state.CurrencyStateHolder
 import org.koin.dsl.module
 
-/**
- * Koin DI 모듈
- */
 val appModule = module {
-    single { CurrencyManager() }
+    single { CurrencyStateHolder() }
 
-    // HttpClient
     single {
         HttpClientFactory.create(
             baseUrl = AppConfig.API_BASE_URL,
@@ -23,18 +19,15 @@ val appModule = module {
         )
     }
 
-    // Repository
     single<PortfolioRepository> {
         PortfolioRepositoryImpl(
-            httpClient = get(),
-            currencyManager = get()
+            httpClient = get()
         )
     }
 
     single<StockDetailRepository> {
         StockDetailRepositoryImpl(
-            httpClient = get(),
-            currencyManager = get()
+            httpClient = get()
         )
     }
 }

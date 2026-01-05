@@ -3,6 +3,7 @@ package ckgod.snowball.invest.feature.detail
 import com.arkivanov.decompose.ComponentContext
 import ckgod.snowball.invest.domain.model.StockDetailState
 import ckgod.snowball.invest.domain.repository.StockDetailRepository
+import ckgod.snowball.invest.domain.state.CurrencyStateHolder
 import com.arkivanov.essenty.lifecycle.doOnDestroy
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -32,6 +33,7 @@ class DefaultStockDetailComponent(
 ) : StockDetailComponent, ComponentContext by componentContext, KoinComponent {
 
     private val repository: StockDetailRepository = stockDetailRepository ?: get()
+    private val currencyStateHolder: CurrencyStateHolder = get()
     private val scope = CoroutineScope(SupervisorJob() + Dispatchers.Main.immediate)
 
     private val _state = MutableStateFlow(
@@ -48,6 +50,17 @@ class DefaultStockDetailComponent(
         }
 
         loadStockDetail()
+
+        scope.launch {
+            currencyStateHolder.currencyType.collect { newCurrencyType ->
+                _state.update { currentState ->
+                    currentState.copy(
+                        stock = currentState.stock.copy(currencyType = newCurrencyType),
+                        currencyType = newCurrencyType
+                    )
+                }
+            }
+        }
     }
 
     override fun onBackClick() {
@@ -58,12 +71,19 @@ class DefaultStockDetailComponent(
         scope.launch {
             _state.update { it.copy(isLoading = true, error = null) }
 
+            val currentCurrencyType = currencyStateHolder.currencyType.value
+
             val result = withContext(Dispatchers.IO) {
                 repository.getStockDetail(ticker)
             }
 
             result.onSuccess { stockDetail ->
-                _state.update { stockDetail }
+                _state.update {
+                    stockDetail.copy(
+                        stock = stockDetail.stock.copy(currencyType = currentCurrencyType),
+                        currencyType = currentCurrencyType
+                    )
+                }
             }
             .onFailure { error ->
                 _state.update {

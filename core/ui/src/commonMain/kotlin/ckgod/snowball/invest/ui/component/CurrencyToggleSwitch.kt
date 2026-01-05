@@ -31,15 +31,14 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import ckgod.snowball.invest.util.CurrencyType
 
 @Composable
 fun CurrencyToggleSwitch(
     modifier: Modifier = Modifier,
-    initialState: CurrencyType = CurrencyType.USD,
-    onToggleChange: (CurrencyType) -> Unit
+    isKrw: Boolean = false,
+    onToggleChange: (Boolean) -> Unit
 ) {
-    var selectedCurrency by remember(initialState) { mutableStateOf(initialState) }
+    var isKrwSelected by remember(isKrw) { mutableStateOf(isKrw) }
 
     val backgroundColor = Color(0xFF2C2C2E)
     val indicatorColor = Color(0xFF636366)
@@ -47,7 +46,7 @@ fun CurrencyToggleSwitch(
     val unselectedTextColor = Color(0xFF8E8E93)
 
     val animatedBias by animateFloatAsState(
-        targetValue = if (selectedCurrency == CurrencyType.USD) -1f else 1f,
+        targetValue = if (!isKrwSelected) -1f else 1f,
         animationSpec = spring(
             stiffness = Spring.StiffnessLow,
             dampingRatio = Spring.DampingRatioNoBouncy
@@ -67,8 +66,8 @@ fun CurrencyToggleSwitch(
                 interactionSource = remember { MutableInteractionSource() },
                 indication = null
             ) {
-                val newState = if (selectedCurrency == CurrencyType.USD) CurrencyType.KRW else CurrencyType.USD
-                selectedCurrency = newState
+                val newState = !isKrwSelected
+                isKrwSelected = newState
                 onToggleChange(newState)
             },
         contentAlignment = Alignment.Center
@@ -95,7 +94,7 @@ fun CurrencyToggleSwitch(
         ) {
             CurrencyText(
                 text = "$",
-                isSelected = selectedCurrency == CurrencyType.USD,
+                isSelected = !isKrwSelected,
                 selectedColor = selectedTextColor,
                 unselectedColor = unselectedTextColor,
                 modifier = Modifier.weight(1f)
@@ -103,7 +102,7 @@ fun CurrencyToggleSwitch(
 
             CurrencyText(
                 text = "원",
-                isSelected = selectedCurrency == CurrencyType.KRW,
+                isSelected = isKrwSelected,
                 selectedColor = selectedTextColor,
                 unselectedColor = unselectedTextColor,
                 modifier = Modifier.weight(1f)

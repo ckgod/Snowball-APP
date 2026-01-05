@@ -23,15 +23,13 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import ckgod.snowball.invest.domain.model.CurrencyType
 import ckgod.snowball.invest.feature.home.component.StockSummaryCard
 import ckgod.snowball.invest.feature.home.model.HomeEvent
 import ckgod.snowball.invest.feature.home.model.HomeState
 import ckgod.snowball.invest.ui.component.CurrencyToggleSwitch
 import ckgod.snowball.invest.ui.component.CustomPullToRefresh
 import ckgod.snowball.invest.ui.theme.getProfitColor
-import ckgod.snowball.invest.util.CurrencyManager
-import ckgod.snowball.invest.util.formatDecimal
-import org.koin.compose.koinInject
 
 @Composable
 fun HomeScreen(
@@ -44,6 +42,7 @@ fun HomeScreen(
         state = state,
         onEvent = component::onEvent,
         onStockClick = component::onStockClick,
+        onCurrencySwitch = component::onCurrencySwitch,
         modifier = modifier
     )
 }
@@ -53,6 +52,7 @@ internal fun HomeScreenContent(
     state: HomeState,
     onEvent: (HomeEvent) -> Unit,
     onStockClick: (String) -> Unit,
+    onCurrencySwitch: (CurrencyType) -> Unit,
     modifier: Modifier = Modifier
 ) {
     CustomPullToRefresh(
@@ -98,7 +98,11 @@ internal fun HomeScreenContent(
                         verticalArrangement = Arrangement.spacedBy(16.dp)
                     ) {
                         item {
-                            TotalProfitHeader(state.portfolio.totalRealizedProfit)
+                            TotalProfitHeader(
+                                formattedProfit = state.portfolio.totalRealizedProfit,
+                                currencyType = state.currencyType,
+                                onCurrencySwitch = onCurrencySwitch
+                            )
                         }
 
                         items(
@@ -120,10 +124,11 @@ internal fun HomeScreenContent(
 }
 
 @Composable
-private fun TotalProfitHeader(formattedProfit: String) {
-    val currencyManager = koinInject<CurrencyManager>()
-    val currentCurrency by currencyManager.currencyType.collectAsState()
-
+private fun TotalProfitHeader(
+    formattedProfit: String,
+    currencyType: CurrencyType,
+    onCurrencySwitch: (CurrencyType) -> Unit
+) {
     Box(
         modifier = Modifier
             .fillMaxWidth()
@@ -156,9 +161,9 @@ private fun TotalProfitHeader(formattedProfit: String) {
                 )
 
                 CurrencyToggleSwitch(
-                    initialState = currentCurrency,
-                    onToggleChange = { newCurrency ->
-                        currencyManager.setKrwMode(newCurrency)
+                    isKrw = currencyType == CurrencyType.KRW,
+                    onToggleChange = { isKrw ->
+                        onCurrencySwitch(if (isKrw) CurrencyType.KRW else CurrencyType.USD)
                     }
                 )
             }

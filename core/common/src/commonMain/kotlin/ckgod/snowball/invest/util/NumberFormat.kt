@@ -3,9 +3,6 @@ package ckgod.snowball.invest.util
 import com.ionspin.kotlin.bignum.decimal.BigDecimal
 import com.ionspin.kotlin.bignum.decimal.RoundingMode
 
-/**
- * Double을 소수점 N자리 문자열로 변환 (반올림)
- */
 fun Double.formatDecimal(decimalPlaces: Int = 2): String {
     return BigDecimal.fromDouble(this)
         .roundToDigitPositionAfterDecimalPoint(
@@ -15,8 +12,17 @@ fun Double.formatDecimal(decimalPlaces: Int = 2): String {
         .toPlainString()
 }
 
-fun Int.formatWithComma(): String {
-    return this.toString().reversed()
+fun Double.formatWithComma(): String {
+    val rounded = BigDecimal.fromDouble(this)
+        .roundToDigitPositionAfterDecimalPoint(
+            0,
+            RoundingMode.ROUND_HALF_AWAY_FROM_ZERO
+        )
+        .toPlainString()
+
+    val integerPart = rounded.split(".")[0]
+
+    return integerPart.reversed()
         .chunked(3)
         .joinToString(",")
         .reversed()
