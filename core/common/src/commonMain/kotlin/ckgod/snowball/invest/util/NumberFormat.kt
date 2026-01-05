@@ -14,3 +14,10 @@ fun Double.formatDecimal(decimalPlaces: Int = 2): String {
         )
         .toPlainString()
 }
+
+fun Int.formatWithComma(): String {
+    return this.toString().reversed()
+        .chunked(3)
+        .joinToString(",")
+        .reversed()
+}

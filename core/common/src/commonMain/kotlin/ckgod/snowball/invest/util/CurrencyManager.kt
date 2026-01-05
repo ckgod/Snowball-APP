@@ -28,8 +28,8 @@ class CurrencyManager {
         _currencyType.value = type
     }
 
-    fun convertToKrw(usdAmount: Double): Double {
-        return usdAmount * _exchangeRate.value
+    private fun convertToKrw(usdAmount: Double): Int {
+        return (usdAmount * _exchangeRate.value).toInt()
     }
 
     fun convertToUsd(krwAmount: Double): Double {
@@ -44,7 +44,7 @@ class CurrencyManager {
     fun formatPrice(usdAmount: Double): String {
         return when (_currencyType.value) {
             CurrencyType.USD -> "$${usdAmount.formatDecimal()}"
-            CurrencyType.KRW -> "${convertToKrw(usdAmount).formatDecimal(0)}원"
+            CurrencyType.KRW -> "${convertToKrw(usdAmount).formatWithComma()}원"
         }
     }
 
@@ -56,7 +56,7 @@ class CurrencyManager {
         }
         return when (_currencyType.value) {
             CurrencyType.USD -> "$prefix$${abs(usdAmount).formatDecimal()}"
-            CurrencyType.KRW -> "$prefix${convertToKrw(usdAmount).formatDecimal(0)}원"
+            CurrencyType.KRW -> "$prefix${abs(convertToKrw(usdAmount)).formatWithComma()}원"
         }
     }
 }

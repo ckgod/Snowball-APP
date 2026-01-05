@@ -20,6 +20,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import ckgod.snowball.invest.domain.model.StockSummary
 import ckgod.snowball.invest.ui.component.AnimatedProgressIndicator
@@ -85,7 +86,7 @@ private fun StockBasicInfo(stock: StockSummary) {
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.Top
     ) {
-        Column {
+        Column(modifier = Modifier.weight(1f, fill = false)) {
             Text(
                 text = stock.ticker,
                 style = MaterialTheme.typography.titleLarge,
@@ -94,7 +95,9 @@ private fun StockBasicInfo(stock: StockSummary) {
             Text(
                 text = stock.fullName,
                 style = MaterialTheme.typography.bodyMedium,
-                color = MaterialTheme.colorScheme.onSurfaceVariant
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis
             )
         }
 
