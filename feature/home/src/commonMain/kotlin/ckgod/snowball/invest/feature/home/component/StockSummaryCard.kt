@@ -61,7 +61,7 @@ fun StockSummaryCard(
             StockBasicInfo(
                 ticker = data.ticker,
                 fullName = data.fullName ?: data.ticker,
-                currentPrice = data.currentPrice.toDisplayProfit(currencyType, exchangeRate),
+                currentPrice = data.currentPrice.toDisplayPrice(currencyType, exchangeRate),
                 dailyChangeRate = data.dailyChangeRate.toDisplayProfitRate()
             )
 
