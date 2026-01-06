@@ -19,7 +19,6 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.koin.core.component.KoinComponent
-import org.koin.core.component.get
 
 interface HomeComponent {
     val state: StateFlow<HomeState>
@@ -32,12 +31,10 @@ interface HomeComponent {
 class DefaultHomeComponent(
     componentContext: ComponentContext,
     private val onStockSelected: (String) -> Unit,
-    portfolioRepository: PortfolioRepository? = null,
-    currencyRepository: CurrencyPreferencesRepository? = null
+    private val portfolioRepository: PortfolioRepository,
+    private val currencyRepository: CurrencyPreferencesRepository
 ) : HomeComponent, ComponentContext by componentContext, KoinComponent {
 
-    private val portfolioRepository: PortfolioRepository = portfolioRepository ?: get()
-    private val currencyPreferencesRepository: CurrencyPreferencesRepository = currencyRepository ?: get()
     private val scope = CoroutineScope(SupervisorJob() + Dispatchers.Main.immediate)
 
     private val _state = MutableStateFlow(HomeState())
@@ -54,13 +51,8 @@ class DefaultHomeComponent(
 
     private fun observeCurrencyChanges() {
         scope.launch {
-            currencyPreferencesRepository.currencyType.collect { currencyType ->
-                _state.update {
-                    it.copy(
-                        currencyType = currencyType,
-                        exchangeRate = if (currencyType == CurrencyType.KRW) 1380.0 else 0.0
-                    )
-                }
+            currencyRepository.currencyType.collect { currencyType ->
+                _state.update { it.copy(currencyType = currencyType) }
             }
         }
     }
@@ -75,7 +67,7 @@ class DefaultHomeComponent(
     }
 
     override fun onCurrencySwitch(type: CurrencyType) {
-        currencyPreferencesRepository.setCurrencyType(type)
+        currencyRepository.setCurrencyType(type)
     }
 
     override fun onStockClick(ticker: String) {

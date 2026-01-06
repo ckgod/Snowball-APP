@@ -12,6 +12,7 @@ import ckgod.snowball.invest.feature.home.DefaultHomeComponent
 import ckgod.snowball.invest.navigation.DefaultRootComponent
 import ckgod.snowball.invest.feature.detail.DefaultStockDetailComponent
 import ckgod.snowball.invest.navigation.DefaultMainComponent
+import org.koin.android.ext.android.get
 import org.koin.android.ext.koin.androidContext
 import org.koin.core.context.startKoin
 import org.koin.core.context.stopKoin
@@ -34,7 +35,9 @@ class MainActivity : ComponentActivity() {
                     homeComponentFactory = { homeContext, onStockSelected ->
                         DefaultHomeComponent(
                             componentContext = homeContext,
-                            onStockSelected = onStockSelected
+                            onStockSelected = onStockSelected,
+                            portfolioRepository = get(),
+                            currencyRepository = get(),
                         )
                     },
                     chartComponentFactory = { chartContext ->
@@ -50,7 +53,10 @@ class MainActivity : ComponentActivity() {
                 DefaultStockDetailComponent(
                     componentContext = context,
                     ticker = ticker,
-                    onBack = onBack
+                    onBack = onBack,
+                    stockDetailRepository = get(),
+                    currencyRepository = get(),
+                    groupTradeHistoriesByDateUseCase = get(),
                 )
             }
         )

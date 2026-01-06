@@ -17,6 +17,7 @@ import com.arkivanov.decompose.extensions.compose.stack.animation.predictiveback
 import com.arkivanov.essenty.backhandler.BackDispatcher
 import com.arkivanov.essenty.lifecycle.LifecycleRegistry
 import org.koin.core.context.startKoin
+import org.koin.mp.KoinPlatform.getKoin
 import platform.UIKit.UIViewController
 
 @OptIn(ExperimentalDecomposeApi::class)
@@ -38,7 +39,9 @@ fun MainViewController(): UIViewController {
                 homeComponentFactory = { homeCtx, onStockSelected ->
                     DefaultHomeComponent(
                         componentContext = homeCtx,
-                        onStockSelected = onStockSelected
+                        onStockSelected = onStockSelected,
+                        portfolioRepository = getKoin().get(),
+                        currencyRepository = getKoin().get()
                     )
                 },
                 chartComponentFactory = { chartCtx ->
@@ -54,7 +57,10 @@ fun MainViewController(): UIViewController {
             DefaultStockDetailComponent(
                 componentContext = ctx,
                 ticker = ticker,
-                onBack = onBack
+                onBack = onBack,
+                stockDetailRepository = getKoin().get(),
+                currencyRepository = getKoin().get(),
+                groupTradeHistoriesByDateUseCase = getKoin().get()
             )
         }
     )

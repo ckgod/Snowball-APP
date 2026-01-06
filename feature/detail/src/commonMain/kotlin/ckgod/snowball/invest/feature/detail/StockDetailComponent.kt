@@ -19,7 +19,6 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.koin.core.component.KoinComponent
-import org.koin.core.component.get
 import kotlin.onSuccess
 
 interface StockDetailComponent {
@@ -32,14 +31,11 @@ class DefaultStockDetailComponent(
     componentContext: ComponentContext,
     private val ticker: String,
     private val onBack: () -> Unit,
-    stockDetailRepository: StockDetailRepository? = null,
-    currencyRepository: CurrencyPreferencesRepository? = null,
-    groupTradeHistoriesByDateUseCase: GroupTradeHistoriesByDateUseCase? = null
+    private val stockDetailRepository: StockDetailRepository,
+    private val currencyRepository: CurrencyPreferencesRepository,
+    private val groupTradeHistoriesByDateUseCase: GroupTradeHistoriesByDateUseCase
 ) : StockDetailComponent, ComponentContext by componentContext, KoinComponent {
 
-    private val repository: StockDetailRepository = stockDetailRepository ?: get()
-    private val currencyPreferencesRepository: CurrencyPreferencesRepository = currencyRepository ?: get()
-    private val groupTradeHistoriesUseCase: GroupTradeHistoriesByDateUseCase = groupTradeHistoriesByDateUseCase ?: get()
     private val scope = CoroutineScope(SupervisorJob() + Dispatchers.Main.immediate)
 
     private val _state = MutableStateFlow(
@@ -58,7 +54,7 @@ class DefaultStockDetailComponent(
         loadStockDetail()
 
         scope.launch {
-            currencyPreferencesRepository.currencyType.collect { newCurrencyType ->
+            currencyRepository.currencyType.collect { newCurrencyType ->
                 _state.update { currentState ->
                     currentState.copy(
                         currencyType = newCurrencyType
@@ -76,16 +72,16 @@ class DefaultStockDetailComponent(
         scope.launch {
             _state.update { it.copy(isLoading = true, error = null) }
 
-            val currentCurrencyType = currencyPreferencesRepository.currencyType.value
+            val currentCurrencyType = currencyRepository.currencyType.value
 
             val result = withContext(Dispatchers.IO) {
-                repository.getStockDetail(ticker)
+                stockDetailRepository.getStockDetail(ticker)
             }
             result.onSuccess { response ->
                 _state.update {
                     it.copy(
                         stockDetail = response.status ?: InvestmentStatusResponse(),
-                        historyItems = groupTradeHistoriesUseCase(response.histories),
+                        historyItems = groupTradeHistoriesByDateUseCase(response.histories),
                         currencyType = currentCurrencyType,
                         exchangeRate = response.status?.exchangeRate ?: 0.0,
                         isLoading = false,
