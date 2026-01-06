@@ -3,8 +3,8 @@ package ckgod.snowball.invest.feature.detail
 import ckgod.snowball.invest.data.repository.StockDetailRepository
 import com.arkivanov.decompose.ComponentContext
 import ckgod.snowball.invest.feature.detail.model.StockDetailState
-import ckgod.snowball.invest.domain.state.CurrencyStateHolder
-import ckgod.snowball.invest.ui.extensions.toDisplayDate
+import ckgod.snowball.invest.data.repository.CurrencyPreferencesRepository
+import ckgod.snowball.invest.domain.usecase.GroupTradeHistoriesByDateUseCase
 import com.arkivanov.essenty.lifecycle.doOnDestroy
 import com.ckgod.snowball.model.InvestmentStatusResponse
 import kotlinx.coroutines.CoroutineScope
@@ -31,12 +31,15 @@ interface StockDetailComponent {
 class DefaultStockDetailComponent(
     componentContext: ComponentContext,
     private val ticker: String,
+    private val onBack: () -> Unit,
     stockDetailRepository: StockDetailRepository? = null,
-    private val onBack: () -> Unit
+    currencyRepository: CurrencyPreferencesRepository? = null,
+    groupTradeHistoriesByDateUseCase: GroupTradeHistoriesByDateUseCase? = null
 ) : StockDetailComponent, ComponentContext by componentContext, KoinComponent {
 
     private val repository: StockDetailRepository = stockDetailRepository ?: get()
-    private val currencyStateHolder: CurrencyStateHolder = get()
+    private val currencyPreferencesRepository: CurrencyPreferencesRepository = currencyRepository ?: get()
+    private val groupTradeHistoriesUseCase: GroupTradeHistoriesByDateUseCase = groupTradeHistoriesByDateUseCase ?: get()
     private val scope = CoroutineScope(SupervisorJob() + Dispatchers.Main.immediate)
 
     private val _state = MutableStateFlow(
@@ -55,7 +58,7 @@ class DefaultStockDetailComponent(
         loadStockDetail()
 
         scope.launch {
-            currencyStateHolder.currencyType.collect { newCurrencyType ->
+            currencyPreferencesRepository.currencyType.collect { newCurrencyType ->
                 _state.update { currentState ->
                     currentState.copy(
                         currencyType = newCurrencyType
@@ -73,7 +76,7 @@ class DefaultStockDetailComponent(
         scope.launch {
             _state.update { it.copy(isLoading = true, error = null) }
 
-            val currentCurrencyType = currencyStateHolder.currencyType.value
+            val currentCurrencyType = currencyPreferencesRepository.currencyType.value
 
             val result = withContext(Dispatchers.IO) {
                 repository.getStockDetail(ticker)
@@ -82,7 +85,7 @@ class DefaultStockDetailComponent(
                 _state.update {
                     it.copy(
                         stockDetail = response.status ?: InvestmentStatusResponse(),
-                        historyItems = response.histories.groupBy { history -> history.orderTime.toDisplayDate() },
+                        historyItems = groupTradeHistoriesUseCase(response.histories),
                         currencyType = currentCurrencyType,
                         exchangeRate = response.status?.exchangeRate ?: 0.0,
                         isLoading = false,

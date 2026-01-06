@@ -29,6 +29,7 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import ckgod.snowball.invest.ui.extensions.toDisplayPercent
 import org.jetbrains.compose.resources.painterResource
 import snowball.core.ui.generated.resources.Res
 import snowball.core.ui.generated.resources.ic_close
@@ -318,7 +319,7 @@ fun CrashProtectionAccordion(list: List<TradeHistoryResponse>, currencyType: Cur
                     }
                 }
 
-                val crashRates = list.mapNotNull { it.crashRate }.joinToString(", ") { "-${it}%" }
+                val crashRates = list.mapNotNull { it.crashRate?.toDisplayPercent() }.joinToString(", ") { "-${it}%" }
 
                 Text(
                     text = crashRates,

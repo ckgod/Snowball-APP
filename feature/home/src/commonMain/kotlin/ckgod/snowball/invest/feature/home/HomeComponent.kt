@@ -4,7 +4,7 @@ import com.arkivanov.decompose.ComponentContext
 import com.arkivanov.essenty.lifecycle.doOnDestroy
 import com.ckgod.snowball.model.CurrencyType
 import ckgod.snowball.invest.data.repository.PortfolioRepository
-import ckgod.snowball.invest.domain.state.CurrencyStateHolder
+import ckgod.snowball.invest.data.repository.CurrencyPreferencesRepository
 import ckgod.snowball.invest.feature.home.model.HomeEvent
 import ckgod.snowball.invest.feature.home.model.HomeState
 import kotlinx.coroutines.CoroutineScope
@@ -31,12 +31,13 @@ interface HomeComponent {
 
 class DefaultHomeComponent(
     componentContext: ComponentContext,
+    private val onStockSelected: (String) -> Unit,
     portfolioRepository: PortfolioRepository? = null,
-    private val onStockSelected: (String) -> Unit
+    currencyRepository: CurrencyPreferencesRepository? = null
 ) : HomeComponent, ComponentContext by componentContext, KoinComponent {
 
     private val portfolioRepository: PortfolioRepository = portfolioRepository ?: get()
-    private val currencyStateHolder: CurrencyStateHolder = get()
+    private val currencyPreferencesRepository: CurrencyPreferencesRepository = currencyRepository ?: get()
     private val scope = CoroutineScope(SupervisorJob() + Dispatchers.Main.immediate)
 
     private val _state = MutableStateFlow(HomeState())
@@ -48,15 +49,16 @@ class DefaultHomeComponent(
         }
 
         loadPortfolio(isRefresh = false)
+        observeCurrencyChanges()
+    }
 
+    private fun observeCurrencyChanges() {
         scope.launch {
-            currencyStateHolder.currencyType.collect { newCurrencyType ->
-                _state.update { currentState ->
-                    val data = currentState.data ?: return@update currentState.copy(currencyType = newCurrencyType)
-
-                    currentState.copy(
-                        data = data,
-                        currencyType = newCurrencyType
+            currencyPreferencesRepository.currencyType.collect { currencyType ->
+                _state.update {
+                    it.copy(
+                        currencyType = currencyType,
+                        exchangeRate = if (currencyType == CurrencyType.KRW) 1380.0 else 0.0
                     )
                 }
             }
@@ -73,7 +75,7 @@ class DefaultHomeComponent(
     }
 
     override fun onCurrencySwitch(type: CurrencyType) {
-        currencyStateHolder.setCurrencyType(type)
+        currencyPreferencesRepository.setCurrencyType(type)
     }
 
     override fun onStockClick(ticker: String) {
@@ -88,8 +90,6 @@ class DefaultHomeComponent(
                 _state.update { it.copy(isLoading = true, error = null) }
             }
 
-            val currentCurrencyType = currencyStateHolder.currencyType.value
-
             val result = withContext(Dispatchers.IO) {
                 portfolioRepository.getPortfolioStatus()
             }
@@ -101,8 +101,6 @@ class DefaultHomeComponent(
                             data = response,
                             isLoading = false,
                             isRefreshing = false,
-                            currencyType = currentCurrencyType,
-                            exchangeRate = response.statusList.firstOrNull()?.exchangeRate ?: 0.0,
                             error = null
                         )
                     }

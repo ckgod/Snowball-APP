@@ -1,15 +1,15 @@
-package ckgod.snowball.invest.domain.state
+package ckgod.snowball.invest.data.repository
 
 import com.ckgod.snowball.model.CurrencyType
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 
-class CurrencyStateHolder {
+class CurrencyPreferencesRepositoryImpl : CurrencyPreferencesRepository {
     private val _currencyType = MutableStateFlow(CurrencyType.USD)
-    val currencyType: StateFlow<CurrencyType> = _currencyType.asStateFlow()
+    override val currencyType: StateFlow<CurrencyType> = _currencyType.asStateFlow()
 
-    fun setCurrencyType(type: CurrencyType) {
+    override fun setCurrencyType(type: CurrencyType) {
         _currencyType.value = type
     }
 }
