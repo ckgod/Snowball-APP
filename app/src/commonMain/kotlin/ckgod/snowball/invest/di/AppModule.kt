@@ -4,8 +4,8 @@ import ckgod.snowball.invest.AppConfig
 import ckgod.snowball.invest.data.remote.HttpClientFactory
 import ckgod.snowball.invest.data.repository.PortfolioRepositoryImpl
 import ckgod.snowball.invest.data.repository.StockDetailRepositoryImpl
-import ckgod.snowball.invest.domain.repository.PortfolioRepository
-import ckgod.snowball.invest.domain.repository.StockDetailRepository
+import ckgod.snowball.invest.data.repository.PortfolioRepository
+import ckgod.snowball.invest.data.repository.StockDetailRepository
 import ckgod.snowball.invest.domain.state.CurrencyStateHolder
 import org.koin.dsl.module
 

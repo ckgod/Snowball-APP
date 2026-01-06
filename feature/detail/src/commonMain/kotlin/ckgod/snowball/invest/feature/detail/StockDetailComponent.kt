@@ -1,10 +1,12 @@
 package ckgod.snowball.invest.feature.detail
 
+import ckgod.snowball.invest.data.repository.StockDetailRepository
 import com.arkivanov.decompose.ComponentContext
-import ckgod.snowball.invest.domain.model.StockDetailState
-import ckgod.snowball.invest.domain.repository.StockDetailRepository
+import ckgod.snowball.invest.feature.detail.model.StockDetailState
 import ckgod.snowball.invest.domain.state.CurrencyStateHolder
+import ckgod.snowball.invest.ui.extensions.toDisplayDate
 import com.arkivanov.essenty.lifecycle.doOnDestroy
+import com.ckgod.snowball.model.InvestmentStatusResponse
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.IO
@@ -18,6 +20,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.get
+import kotlin.onSuccess
 
 interface StockDetailComponent {
     val state: StateFlow<StockDetailState>
@@ -55,7 +58,6 @@ class DefaultStockDetailComponent(
             currencyStateHolder.currencyType.collect { newCurrencyType ->
                 _state.update { currentState ->
                     currentState.copy(
-                        stock = currentState.stock.copy(currencyType = newCurrencyType),
                         currencyType = newCurrencyType
                     )
                 }
@@ -76,12 +78,15 @@ class DefaultStockDetailComponent(
             val result = withContext(Dispatchers.IO) {
                 repository.getStockDetail(ticker)
             }
-
-            result.onSuccess { stockDetail ->
+            result.onSuccess { response ->
                 _state.update {
-                    stockDetail.copy(
-                        stock = stockDetail.stock.copy(currencyType = currentCurrencyType),
-                        currencyType = currentCurrencyType
+                    it.copy(
+                        stockDetail = response.status ?: InvestmentStatusResponse(),
+                        historyItems = response.histories.groupBy { history -> history.orderTime.toDisplayDate() },
+                        currencyType = currentCurrencyType,
+                        exchangeRate = response.status?.exchangeRate ?: 0.0,
+                        isLoading = false,
+                        error = null,
                     )
                 }
             }

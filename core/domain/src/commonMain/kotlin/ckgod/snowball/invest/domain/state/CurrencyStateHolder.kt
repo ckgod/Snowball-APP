@@ -1,6 +1,6 @@
 package ckgod.snowball.invest.domain.state
 
-import ckgod.snowball.invest.domain.model.CurrencyType
+import com.ckgod.snowball.model.CurrencyType
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow

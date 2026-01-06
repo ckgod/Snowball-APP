@@ -23,17 +23,23 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import ckgod.snowball.invest.domain.model.StockSummary
 import ckgod.snowball.invest.ui.theme.getBuySideColor
 import ckgod.snowball.invest.ui.theme.getSellSideColor
-import ckgod.snowball.invest.util.formatDecimal
+import ckgod.snowball.invest.ui.extensions.formatDecimal
+import ckgod.snowball.invest.ui.extensions.toDisplayPrice
+import com.ckgod.snowball.model.CurrencyType
+import com.ckgod.snowball.model.InvestmentStatusResponse
 import org.jetbrains.compose.resources.painterResource
 import snowball.core.ui.generated.resources.Res
 import snowball.core.ui.generated.resources.ic_percent
 import snowball.core.ui.generated.resources.ic_star_filled
 
 @Composable
-fun OrderPlanCard(state: StockSummary) {
+fun OrderPlanCard(
+    data: InvestmentStatusResponse,
+    currencyType: CurrencyType,
+    exchangeRate: Double,
+) {
     Card(
         modifier = Modifier.fillMaxWidth(),
         elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
@@ -58,7 +64,7 @@ fun OrderPlanCard(state: StockSummary) {
                 )
 
                 Text(
-                    text = state.starPercent.formatDecimal(),
+                    text = data.starPercent.formatDecimal(),
                     style = MaterialTheme.typography.titleMedium,
                     fontWeight = FontWeight.Bold
                 )
@@ -83,9 +89,9 @@ fun OrderPlanCard(state: StockSummary) {
                     title = "다음 매수",
                     color = getBuySideColor(),
                     firstPriceLabel = "별% LOC",
-                    firstPrice = state.nextBuyStarPrice,
+                    firstPrice = data.nextBuyStarPrice.toDisplayPrice(currencyType, exchangeRate),
                     secondPriceLabel = "평단 LOC",
-                    secondPrice = state.avgPrice,
+                    secondPrice = data.avgPrice.toDisplayPrice(currencyType, exchangeRate),
                     modifier = Modifier
                         .weight(1f)
                         .fillMaxHeight()
@@ -95,9 +101,9 @@ fun OrderPlanCard(state: StockSummary) {
                     title = "다음 매도",
                     color = getSellSideColor(),
                     firstPriceLabel = "별% LOC",
-                    firstPrice = state.nextSellStarPrice,
+                    firstPrice = data.nextSellStarPrice.toDisplayPrice(currencyType, exchangeRate),
                     secondPriceLabel = "목표 지정가",
-                    secondPrice = state.nextSellTargetPrice,
+                    secondPrice = data.nextSellTargetPrice.toDisplayPrice(currencyType, exchangeRate),
                     modifier = Modifier
                         .weight(1f)
                         .fillMaxHeight()

@@ -23,12 +23,13 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import ckgod.snowball.invest.domain.model.CurrencyType
+import com.ckgod.snowball.model.CurrencyType
 import ckgod.snowball.invest.feature.home.component.StockSummaryCard
 import ckgod.snowball.invest.feature.home.model.HomeEvent
 import ckgod.snowball.invest.feature.home.model.HomeState
 import ckgod.snowball.invest.ui.component.CurrencyToggleSwitch
 import ckgod.snowball.invest.ui.component.CustomPullToRefresh
+import ckgod.snowball.invest.ui.extensions.toDisplayProfit
 import ckgod.snowball.invest.ui.theme.getProfitColor
 
 @Composable
@@ -43,7 +44,9 @@ fun HomeScreen(
         onEvent = component::onEvent,
         onStockClick = component::onStockClick,
         onCurrencySwitch = component::onCurrencySwitch,
-        modifier = modifier
+        modifier = modifier,
+        currencyType = state.currencyType,
+        exchangeRate = state.exchangeRate
     )
 }
 
@@ -53,7 +56,9 @@ internal fun HomeScreenContent(
     onEvent: (HomeEvent) -> Unit,
     onStockClick: (String) -> Unit,
     onCurrencySwitch: (CurrencyType) -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    currencyType: CurrencyType,
+    exchangeRate: Double
 ) {
     CustomPullToRefresh(
         isRefreshing = state.isRefreshing,
@@ -91,7 +96,7 @@ internal fun HomeScreenContent(
                     }
                 }
 
-                state.portfolio != null -> {
+                state.data != null -> {
                     LazyColumn(
                         modifier = Modifier.fillMaxSize(),
                         contentPadding = PaddingValues(16.dp),
@@ -99,22 +104,23 @@ internal fun HomeScreenContent(
                     ) {
                         item {
                             TotalProfitHeader(
-                                formattedProfit = state.portfolio.totalRealizedProfit,
+                                formattedProfit = state.data.totalProfit.toDisplayProfit(currencyType, exchangeRate),
                                 currencyType = state.currencyType,
                                 onCurrencySwitch = onCurrencySwitch
                             )
                         }
 
                         items(
-                            items = state.portfolio.stocks,
+                            items = state.data.statusList,
                             key = { it.ticker }
                         ) { stock ->
                             StockSummaryCard(
-                                stock = stock,
-                                onClick = {
-                                    onStockClick(stock.ticker)
-                                }
-                            )
+                                data = stock,
+                                currencyType = currencyType,
+                                exchangeRate = exchangeRate
+                            ) {
+                                onStockClick(stock.ticker)
+                            }
                         }
                     }
                 }

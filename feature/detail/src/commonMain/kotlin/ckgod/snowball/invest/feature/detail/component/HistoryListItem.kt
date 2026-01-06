@@ -1,14 +1,14 @@
 package ckgod.snowball.invest.feature.detail.component
 
-import ckgod.snowball.invest.domain.model.HistoryItem
+import com.ckgod.snowball.model.TradeHistoryResponse
 
 
 sealed class HistoryListItem {
-    data class Single(val item: HistoryItem) : HistoryListItem()
-    data class CrashProtectionGroup(val items: List<HistoryItem>) : HistoryListItem()
+    data class Single(val item: TradeHistoryResponse) : HistoryListItem()
+    data class CrashProtectionGroup(val items: List<TradeHistoryResponse>) : HistoryListItem()
 }
 
-fun List<HistoryItem>.toHistoryListItems(): List<HistoryListItem> {
+fun List<TradeHistoryResponse>.toHistoryListItems(): List<HistoryListItem> {
     val normalItems = filter { it.crashRate == null }
     val crashProtectionItems = filter { it.crashRate != null }
 

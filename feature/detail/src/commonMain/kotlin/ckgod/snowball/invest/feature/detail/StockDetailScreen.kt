@@ -20,7 +20,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import ckgod.snowball.invest.domain.model.StockDetailState
+import ckgod.snowball.invest.feature.detail.model.StockDetailState
 import ckgod.snowball.invest.feature.detail.component.CrashProtectionAccordion
 import ckgod.snowball.invest.feature.detail.component.DateHeader
 import ckgod.snowball.invest.feature.detail.component.HistoryItemRow
@@ -31,6 +31,7 @@ import ckgod.snowball.invest.feature.detail.component.StrategyDashboard
 import ckgod.snowball.invest.feature.detail.component.SummaryHeader
 import ckgod.snowball.invest.feature.detail.component.toHistoryListItems
 import ckgod.snowball.invest.feature.detail.model.StockDetailEvent
+import com.ckgod.snowball.model.CurrencyType
 import org.jetbrains.compose.resources.painterResource
 import snowball.core.ui.generated.resources.Res
 import snowball.core.ui.generated.resources.ic_arrow_back
@@ -49,7 +50,9 @@ fun StockDetailContent(
                 StockDetailEvent.BackClick -> component.onBackClick()
             }
         },
-        modifier = modifier
+        modifier = modifier,
+        currencyType = state.currencyType,
+        exchangeRate = state.exchangeRate
     )
 }
 
@@ -58,7 +61,9 @@ fun StockDetailContent(
 fun StockDetailScreen(
     state: StockDetailState,
     onEvent: (StockDetailEvent) -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    currencyType: CurrencyType,
+    exchangeRate: Double
 ) {
     Scaffold(
         modifier = modifier.fillMaxSize(),
@@ -66,7 +71,7 @@ fun StockDetailScreen(
             TopAppBar(
                 title = {
                     Text(
-                        text = state.stock.ticker,
+                        text = state.stockDetail.ticker,
                         style = MaterialTheme.typography.titleLarge,
                         fontWeight = FontWeight.Bold
                     )
@@ -101,15 +106,23 @@ fun StockDetailScreen(
                 verticalArrangement = Arrangement.spacedBy(16.dp)
             ) {
                 item(key = "summary_header") {
-                    SummaryHeader(state.stock)
+                    SummaryHeader(
+                        data = state.stockDetail,
+                        currencyType = currencyType,
+                        exchangeRate = exchangeRate
+                    )
                 }
 
                 item(key = "strategy_dashboard") {
-                    StrategyDashboard(state.stock)
+                    StrategyDashboard(data = state.stockDetail)
                 }
 
                 item(key = "order_plan_card") {
-                    OrderPlanCard(state.stock)
+                    OrderPlanCard(
+                        data = state.stockDetail,
+                        currencyType = currencyType,
+                        exchangeRate = exchangeRate,
+                    )
                 }
 
                 state.historyItems.entries.forEach { (date, historyList) ->
@@ -131,10 +144,18 @@ fun StockDetailScreen(
                     ) { listItem ->
                         when (listItem) {
                             is HistoryListItem.Single -> {
-                                HistoryItemRow(listItem.item)
+                                HistoryItemRow(
+                                    data = listItem.item,
+                                    currencyType = currencyType,
+                                    exchangeRate = exchangeRate,
+                                )
                             }
                             is HistoryListItem.CrashProtectionGroup -> {
-                                CrashProtectionAccordion(items = listItem.items)
+                                CrashProtectionAccordion(
+                                    list = listItem.items,
+                                    currencyType = currencyType,
+                                    exchangeRate = exchangeRate
+                                )
                             }
                         }
                     }

@@ -15,13 +15,13 @@ kotlin {
     sourceSets {
         commonMain.dependencies {
             implementation(projects.snowballModels)
-            implementation(projects.core.common)
 
             implementation(compose.runtime)
             implementation(compose.foundation)
             implementation(compose.material3)
             implementation(compose.ui)
             implementation(compose.components.resources)
+            implementation(libs.bignum)
         }
     }
 }

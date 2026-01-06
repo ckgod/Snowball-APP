@@ -2,8 +2,8 @@ package ckgod.snowball.invest.feature.home
 
 import com.arkivanov.decompose.ComponentContext
 import com.arkivanov.essenty.lifecycle.doOnDestroy
-import ckgod.snowball.invest.domain.model.CurrencyType
-import ckgod.snowball.invest.domain.repository.PortfolioRepository
+import com.ckgod.snowball.model.CurrencyType
+import ckgod.snowball.invest.data.repository.PortfolioRepository
 import ckgod.snowball.invest.domain.state.CurrencyStateHolder
 import ckgod.snowball.invest.feature.home.model.HomeEvent
 import ckgod.snowball.invest.feature.home.model.HomeState
@@ -52,17 +52,10 @@ class DefaultHomeComponent(
         scope.launch {
             currencyStateHolder.currencyType.collect { newCurrencyType ->
                 _state.update { currentState ->
-                    val portfolio = currentState.portfolio ?: return@update currentState.copy(currencyType = newCurrencyType)
-
-                    val updatedStocks = portfolio.stocks.map { stock ->
-                        stock.copy(currencyType = newCurrencyType)
-                    }
+                    val data = currentState.data ?: return@update currentState.copy(currencyType = newCurrencyType)
 
                     currentState.copy(
-                        portfolio = portfolio.copy(
-                            stocks = updatedStocks,
-                            currencyType = newCurrencyType
-                        ),
+                        data = data,
                         currencyType = newCurrencyType
                     )
                 }
@@ -102,20 +95,14 @@ class DefaultHomeComponent(
             }
 
             result
-                .onSuccess { portfolio ->
-                    val updatedStocks = portfolio.stocks.map { stock ->
-                        stock.copy(currencyType = currentCurrencyType)
-                    }
-
+                .onSuccess { response ->
                     _state.update {
                         it.copy(
+                            data = response,
                             isLoading = false,
                             isRefreshing = false,
-                            portfolio = portfolio.copy(
-                                stocks = updatedStocks,
-                                currencyType = currentCurrencyType
-                            ),
                             currencyType = currentCurrencyType,
+                            exchangeRate = response.statusList.firstOrNull()?.exchangeRate ?: 0.0,
                             error = null
                         )
                     }

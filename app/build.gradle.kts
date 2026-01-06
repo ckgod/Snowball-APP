@@ -42,7 +42,6 @@ kotlin {
             implementation(projects.core.domain)
             implementation(projects.core.data)
             implementation(projects.core.ui)
-            implementation(projects.core.common)
             implementation(projects.navigation)
             implementation(projects.feature.home)
             implementation(projects.feature.chart)

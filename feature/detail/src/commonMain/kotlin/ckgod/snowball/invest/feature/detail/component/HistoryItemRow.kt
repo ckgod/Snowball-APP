@@ -35,16 +35,22 @@ import snowball.core.ui.generated.resources.ic_close
 import snowball.core.ui.generated.resources.ic_double_arrow_right
 import snowball.core.ui.generated.resources.ic_drop_down
 import snowball.core.ui.generated.resources.ic_drop_up
-import ckgod.snowball.invest.domain.model.HistoryItem
 import ckgod.snowball.invest.ui.theme.getBuySideColor
 import ckgod.snowball.invest.ui.theme.getSellSideColor
-import ckgod.snowball.invest.util.formatDecimal
+import ckgod.snowball.invest.ui.extensions.toDisplayPrice
+import ckgod.snowball.invest.ui.extensions.toDisplayTime
+import com.ckgod.snowball.model.CurrencyType
 import com.ckgod.snowball.model.OrderSide
+import com.ckgod.snowball.model.TradeHistoryResponse
 import com.ckgod.snowball.model.TradeStatus
 
 @Composable
-fun HistoryItemRow(item: HistoryItem) {
-    val sideColor = if (item.orderSide == OrderSide.BUY) {
+fun HistoryItemRow(
+    data: TradeHistoryResponse,
+    currencyType: CurrencyType,
+    exchangeRate: Double
+) {
+    val sideColor = if (data.orderSide == OrderSide.BUY) {
         getBuySideColor()
     } else {
         getSellSideColor()
@@ -58,7 +64,7 @@ fun HistoryItemRow(item: HistoryItem) {
         verticalAlignment = Alignment.Top
     ) {
         Text(
-            text = item.displayTime,
+            text = data.orderTime.toDisplayTime(),
             style = MaterialTheme.typography.labelSmall,
             color = MaterialTheme.colorScheme.onSurfaceVariant,
             modifier = Modifier.width(42.dp),
@@ -76,7 +82,7 @@ fun HistoryItemRow(item: HistoryItem) {
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
-                    text = item.orderSide.displayName,
+                    text = data.orderSide.displayName,
                     style = TextStyle(
                         fontSize = 14.sp,
                         fontWeight = FontWeight.Bold,
@@ -90,7 +96,7 @@ fun HistoryItemRow(item: HistoryItem) {
                     color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.2f)
                 ) {
                     Text(
-                        text = item.orderType.displayName,
+                        text = data.orderType.displayName,
                         modifier = Modifier.padding(horizontal = 5.dp, vertical = 2.dp),
                         style = TextStyle(
                             fontSize = 10.sp,
@@ -102,25 +108,25 @@ fun HistoryItemRow(item: HistoryItem) {
                 }
             }
 
-            PriceFlowText(item, sideColor)
+            PriceFlowText(data, sideColor, currencyType, exchangeRate)
         }
 
         Spacer(modifier = Modifier.width(8.dp))
 
-        CompactStatusBadge(item, sideColor)
+        CompactStatusBadge(data, sideColor)
     }
 }
 
 @Composable
-private fun PriceFlowText(item: HistoryItem, sideColor: Color) {
-    when (item.status) {
+private fun PriceFlowText(data: TradeHistoryResponse, sideColor: Color, currencyType: CurrencyType, exchangeRate: Double) {
+    when (data.tradeStatus) {
         TradeStatus.FILLED, TradeStatus.PARTIAL -> {
             Row(
                 horizontalArrangement = Arrangement.spacedBy(2.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
-                    text = "$${item.price.formatDecimal()}",
+                    text = data.orderPrice.toDisplayPrice(currencyType, exchangeRate),
                     style = TextStyle(
                         fontSize = 12.sp,
                         lineHeight = 12.sp
@@ -136,7 +142,7 @@ private fun PriceFlowText(item: HistoryItem, sideColor: Color) {
                 )
 
                 Text(
-                    text = "$${item.filledPrice.formatDecimal()}",
+                    text = data.filledPrice.toDisplayPrice(currencyType, exchangeRate),
                     style = TextStyle(
                         fontSize = 13.sp,
                         fontWeight = FontWeight.SemiBold,
@@ -153,7 +159,7 @@ private fun PriceFlowText(item: HistoryItem, sideColor: Color) {
                 )
 
                 Text(
-                    text = "${item.filledQuantity}",
+                    text = "${data.filledQuantity}",
                     style = TextStyle(
                         fontSize = 12.sp,
                         lineHeight = 12.sp
@@ -168,7 +174,7 @@ private fun PriceFlowText(item: HistoryItem, sideColor: Color) {
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
-                    text = "$${item.price.formatDecimal()}",
+                    text = data.orderPrice.toDisplayPrice(currencyType, exchangeRate),
                     style = TextStyle(
                         fontSize = 12.sp,
                         lineHeight = 12.sp
@@ -184,7 +190,7 @@ private fun PriceFlowText(item: HistoryItem, sideColor: Color) {
                 )
 
                 Text(
-                    text = "${item.quantity}",
+                    text = "${data.orderQuantity}",
                     style = TextStyle(
                         fontSize = 12.sp,
                         lineHeight = 12.sp
@@ -199,7 +205,7 @@ private fun PriceFlowText(item: HistoryItem, sideColor: Color) {
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
-                    text = "$${item.price.formatDecimal()}",
+                    text = data.orderPrice.toDisplayPrice(currencyType, exchangeRate),
                     style = TextStyle(
                         fontSize = 12.sp,
                         lineHeight = 12.sp
@@ -215,7 +221,7 @@ private fun PriceFlowText(item: HistoryItem, sideColor: Color) {
                 )
 
                 Text(
-                    text = "${item.quantity}",
+                    text = "${data.orderQuantity}",
                     style = TextStyle(
                         fontSize = 12.sp,
                         lineHeight = 12.sp
@@ -228,8 +234,8 @@ private fun PriceFlowText(item: HistoryItem, sideColor: Color) {
 }
 
 @Composable
-private fun CompactStatusBadge(item: HistoryItem, sideColor: Color) {
-    val (text, color) = when (item.status) {
+private fun CompactStatusBadge(data: TradeHistoryResponse, sideColor: Color) {
+    val (text, color) = when (data.tradeStatus) {
         TradeStatus.PENDING -> "주문" to MaterialTheme.colorScheme.onSurfaceVariant
         TradeStatus.FILLED -> "체결" to sideColor
         TradeStatus.CANCELED -> "취소" to MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.5f)
@@ -252,7 +258,7 @@ private fun CompactStatusBadge(item: HistoryItem, sideColor: Color) {
 }
 
 @Composable
-fun CrashProtectionAccordion(items: List<HistoryItem>) {
+fun CrashProtectionAccordion(list: List<TradeHistoryResponse>, currencyType: CurrencyType, exchangeRate: Double) {
     var isExpanded by remember { mutableStateOf(false) }
 
     Column(
@@ -268,7 +274,7 @@ fun CrashProtectionAccordion(items: List<HistoryItem>) {
             verticalAlignment = Alignment.Top
         ) {
             Text(
-                text = items.firstOrNull()?.displayTime ?: "",
+                text = list.firstOrNull()?.orderTime?.toDisplayTime() ?: "",
                 style = MaterialTheme.typography.labelSmall,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                 modifier = Modifier.width(42.dp),
@@ -300,7 +306,7 @@ fun CrashProtectionAccordion(items: List<HistoryItem>) {
                         color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.2f)
                     ) {
                         Text(
-                            text = "${items.size}건",
+                            text = "${list.size}건",
                             modifier = Modifier.padding(horizontal = 5.dp, vertical = 2.dp),
                             style = TextStyle(
                                 fontSize = 10.sp,
@@ -312,7 +318,7 @@ fun CrashProtectionAccordion(items: List<HistoryItem>) {
                     }
                 }
 
-                val crashRates = items.mapNotNull { it.crashRate }.joinToString(", ") { "-${it}%" }
+                val crashRates = list.mapNotNull { it.crashRate }.joinToString(", ") { "-${it}%" }
 
                 Text(
                     text = crashRates,
@@ -342,8 +348,8 @@ fun CrashProtectionAccordion(items: List<HistoryItem>) {
             Column(
                 modifier = Modifier.padding(start = 16.dp)
             ) {
-                items.forEach { item ->
-                    HistoryItemRow(item)
+                list.forEach { item ->
+                    HistoryItemRow(item, currencyType, exchangeRate)
                 }
             }
         }

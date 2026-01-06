@@ -22,17 +22,23 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import ckgod.snowball.invest.domain.model.StockSummary
 import ckgod.snowball.invest.ui.component.AnimatedProgressIndicator
 import ckgod.snowball.invest.ui.theme.getPhaseColor
 import ckgod.snowball.invest.ui.theme.getProfitColor
-import ckgod.snowball.invest.util.formatDecimal
+import ckgod.snowball.invest.ui.extensions.toDisplayPrice
+import ckgod.snowball.invest.ui.extensions.toDisplayProfit
+import ckgod.snowball.invest.ui.extensions.toDisplayProfitRate
+import com.ckgod.snowball.model.CurrencyType
+import com.ckgod.snowball.model.InvestmentStatusResponse
+import com.ckgod.snowball.model.TradePhase
 
 @Composable
 fun StockSummaryCard(
-    stock: StockSummary,
+    data: InvestmentStatusResponse,
+    modifier: Modifier = Modifier,
+    currencyType: CurrencyType,
+    exchangeRate: Double,
     onClick: () -> Unit,
-    modifier: Modifier = Modifier
 ) {
     Card(
         modifier = modifier
@@ -52,15 +58,29 @@ fun StockSummaryCard(
                 .fillMaxWidth()
                 .padding(16.dp)
         ) {
-            StockBasicInfo(stock)
+            StockBasicInfo(
+                ticker = data.ticker,
+                fullName = data.fullName ?: data.ticker,
+                currentPrice = data.currentPrice.toDisplayProfit(currencyType, exchangeRate),
+                dailyChangeRate = data.dailyChangeRate.toDisplayProfitRate()
+            )
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            StrategyProgress(stock)
+            StrategyProgress(
+                tValue = data.tValue,
+                totalDivision = data.totalDivision,
+                phase = data.phase
+            )
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            AccountProfit(stock)
+            AccountProfit(
+                avgPrice = data.avgPrice.toDisplayPrice(currencyType, exchangeRate),
+                quantity = data.quantity,
+                profitRate = data.profitRate.toDisplayProfitRate(),
+                profitAmount = data.profitAmount.toDisplayProfit(currencyType, exchangeRate)
+            )
 
             Spacer(modifier = Modifier.height(8.dp))
 
@@ -73,14 +93,23 @@ fun StockSummaryCard(
 
             Spacer(modifier = Modifier.height(8.dp))
 
-            AccountHistory(stock)
+            AccountHistory(
+                oneTimeAmount = data.oneTimeAmount.toDisplayPrice(currencyType, exchangeRate),
+                totalInvested = data.totalInvested.toDisplayPrice(currencyType, exchangeRate),
+                realizedProfit = data.realizedProfit.toDisplayProfit(currencyType, exchangeRate)
+            )
         }
     }
 }
 
 
 @Composable
-private fun StockBasicInfo(stock: StockSummary) {
+private fun StockBasicInfo(
+    ticker: String,
+    fullName: String,
+    currentPrice: String,
+    dailyChangeRate: String
+) {
     Row(
         modifier = Modifier.fillMaxWidth(),
         horizontalArrangement = Arrangement.SpaceBetween,
@@ -88,12 +117,12 @@ private fun StockBasicInfo(stock: StockSummary) {
     ) {
         Column(modifier = Modifier.weight(1f, fill = false)) {
             Text(
-                text = stock.ticker,
+                text = ticker,
                 style = MaterialTheme.typography.titleLarge,
                 fontWeight = FontWeight.Bold
             )
             Text(
-                text = stock.fullName,
+                text = fullName,
                 style = MaterialTheme.typography.bodyMedium,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                 maxLines = 1,
@@ -103,15 +132,14 @@ private fun StockBasicInfo(stock: StockSummary) {
 
         Column(horizontalAlignment = Alignment.End) {
             Text(
-                text = stock.currentPrice,
+                text = currentPrice,
                 style = MaterialTheme.typography.titleMedium,
                 fontWeight = FontWeight.SemiBold
             )
-            val isProfit = stock.dailyChangeRate >= 0
             Text(
-                text = "${if (isProfit) "+" else ""}${stock.dailyChangeRate.formatDecimal()}%",
+                text = dailyChangeRate,
                 style = MaterialTheme.typography.bodyMedium,
-                color = getProfitColor(stock.dailyChangeRate),
+                color = getProfitColor(dailyChangeRate),
                 fontWeight = FontWeight.Medium
             )
         }
@@ -120,12 +148,16 @@ private fun StockBasicInfo(stock: StockSummary) {
 
 
 @Composable
-private fun StrategyProgress(stock: StockSummary) {
+private fun StrategyProgress(
+    tValue: Double,
+    totalDivision: Int,
+    phase: TradePhase
+) {
     Column(modifier = Modifier.fillMaxWidth()) {
-        val progress = stock.tValue.toFloat() / stock.totalDivision.toFloat()
+        val progress = tValue.toFloat() / totalDivision.toFloat()
         AnimatedProgressIndicator(
             progress = progress,
-            color = getPhaseColor(stock.phase),
+            color = getPhaseColor(phase),
             trackColor = MaterialTheme.colorScheme.surfaceVariant,
             animationEnabled = false
         )
@@ -138,20 +170,20 @@ private fun StrategyProgress(stock: StockSummary) {
             verticalAlignment = Alignment.CenterVertically
         ) {
             Text(
-                text = "T-Value: ${stock.tValue} / ${stock.totalDivision}",
+                text = "T-Value: $tValue / $totalDivision",
                 style = MaterialTheme.typography.bodyMedium,
                 color = MaterialTheme.colorScheme.onSurface
             )
 
             Surface(
                 shape = RoundedCornerShape(12.dp),
-                color = getPhaseColor(stock.phase).copy(alpha = 0.2f)
+                color = getPhaseColor(phase).copy(alpha = 0.2f)
             ) {
                 Text(
-                    text = stock.phase.displayName,
+                    text = phase.displayName,
                     modifier = Modifier.padding(horizontal = 12.dp, vertical = 4.dp),
                     style = MaterialTheme.typography.labelMedium,
-                    color = getPhaseColor(stock.phase),
+                    color = getPhaseColor(phase),
                     fontWeight = FontWeight.Medium
                 )
             }
@@ -161,7 +193,12 @@ private fun StrategyProgress(stock: StockSummary) {
 
 
 @Composable
-private fun AccountProfit(stock: StockSummary) {
+private fun AccountProfit(
+    avgPrice: String,
+    quantity: Int,
+    profitRate: String,
+    profitAmount: String
+) {
     Row(
         modifier = Modifier.fillMaxWidth(),
         horizontalArrangement = Arrangement.SpaceBetween,
@@ -169,29 +206,28 @@ private fun AccountProfit(stock: StockSummary) {
     ) {
         Column {
             Text(
-                text = "평단 ${stock.avgPrice}",
+                text = "평단 $avgPrice",
                 style = MaterialTheme.typography.bodyMedium,
                 color = MaterialTheme.colorScheme.onSurfaceVariant
             )
             Text(
-                text = "보유 ${stock.quantity}주",
+                text = "보유 ${quantity}주",
                 style = MaterialTheme.typography.bodyMedium,
                 color = MaterialTheme.colorScheme.onSurfaceVariant
             )
         }
 
         Column(horizontalAlignment = Alignment.End) {
-            val isProfit = stock.profitRate >= 0
             Text(
-                text = "${if (isProfit) "+" else ""}${stock.profitRate.formatDecimal()}%",
+                text = profitRate,
                 style = MaterialTheme.typography.headlineSmall,
-                color = getProfitColor(stock.profitRate),
+                color = getProfitColor(profitRate),
                 fontWeight = FontWeight.Bold
             )
             Text(
-                text = stock.profitAmount,
+                text = profitAmount,
                 style = MaterialTheme.typography.bodyLarge,
-                color = getProfitColor(stock.profitRate),
+                color = getProfitColor(profitAmount),
                 fontWeight = FontWeight.Medium
             )
         }
@@ -199,7 +235,11 @@ private fun AccountProfit(stock: StockSummary) {
 }
 
 @Composable
-fun AccountHistory(stock: StockSummary) {
+fun AccountHistory(
+    oneTimeAmount: String,
+    totalInvested: String,
+    realizedProfit: String,
+) {
     Row(
         modifier = Modifier.fillMaxWidth(),
         horizontalArrangement = Arrangement.SpaceBetween,
@@ -207,12 +247,12 @@ fun AccountHistory(stock: StockSummary) {
     ) {
         Column {
             Text(
-                text = "1회 매수액 ${stock.oneTimeAmount}",
+                text = "1회 매수액 $oneTimeAmount",
                 style = MaterialTheme.typography.bodyMedium,
                 color = MaterialTheme.colorScheme.onSurfaceVariant
             )
             Text(
-                text = "매수 누적 ${stock.totalInvested}",
+                text = "매수 누적 $totalInvested",
                 style = MaterialTheme.typography.bodyMedium,
                 color = MaterialTheme.colorScheme.onSurfaceVariant
             )
@@ -220,9 +260,9 @@ fun AccountHistory(stock: StockSummary) {
 
         Column(horizontalAlignment = Alignment.End) {
             Text(
-                text = "실현 손익: ${stock.realizedProfit}",
+                text = "실현 손익: $realizedProfit",
                 style = MaterialTheme.typography.bodyLarge,
-                color = getProfitColor(stock.realizedProfit),
+                color = getProfitColor(realizedProfit),
                 fontWeight = FontWeight.Bold
             )
         }

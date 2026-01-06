@@ -17,7 +17,6 @@ kotlin {
             implementation(projects.core.domain)
             implementation(projects.core.data)
             implementation(projects.core.ui)
-            implementation(projects.core.common)
 
             implementation(compose.runtime)
             implementation(compose.foundation)
