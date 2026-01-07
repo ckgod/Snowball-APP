@@ -16,8 +16,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import ckgod.snowball.invest.ui.component.AnimatedProgressIndicator
-import ckgod.snowball.invest.ui.theme.getPhaseColor
+import ckgod.snowball.invest.ui.component.GradientProgressIndicator
+import ckgod.snowball.invest.ui.theme.getPhaseBrush
+import ckgod.snowball.invest.ui.theme.getPhaseTrackColor
 import com.ckgod.snowball.model.InvestmentStatusResponse
 
 @Composable
@@ -64,10 +65,10 @@ fun StrategyDashboard(
 
             Spacer(modifier = Modifier.height(8.dp))
 
-            AnimatedProgressIndicator(
+            GradientProgressIndicator(
                 progress = data.tValue.toFloat() / data.totalDivision.toFloat(),
-                color = getPhaseColor(data.phase),
-                trackColor = MaterialTheme.colorScheme.surfaceContainerHighest,
+                brush = getPhaseBrush(data.phase),
+                trackColor = getPhaseTrackColor(data.phase),
                 height = 12.dp,
                 cornerRadius = 6.dp,
                 animationKey = "strategy_dashboard_${data.ticker}"

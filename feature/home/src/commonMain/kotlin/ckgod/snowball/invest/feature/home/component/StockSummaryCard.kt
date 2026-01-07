@@ -22,8 +22,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import ckgod.snowball.invest.ui.component.AnimatedProgressIndicator
+import ckgod.snowball.invest.ui.component.GradientProgressIndicator
 import ckgod.snowball.invest.ui.theme.getPhaseColor
+import ckgod.snowball.invest.ui.theme.getPhaseBrush
+import ckgod.snowball.invest.ui.theme.getPhaseTrackColor
 import ckgod.snowball.invest.ui.theme.getProfitColor
 import ckgod.snowball.invest.ui.extensions.toDisplayPrice
 import ckgod.snowball.invest.ui.extensions.toDisplayProfit
@@ -158,10 +160,10 @@ private fun StrategyProgress(
 ) {
     Column(modifier = Modifier.fillMaxWidth()) {
         val progress = tValue.toFloat() / totalDivision.toFloat()
-        AnimatedProgressIndicator(
+        GradientProgressIndicator(
             progress = progress,
-            color = getPhaseColor(phase),
-            trackColor = MaterialTheme.colorScheme.surfaceVariant,
+            brush = getPhaseBrush(phase),
+            trackColor = getPhaseTrackColor(phase),
             animationEnabled = false
         )
 

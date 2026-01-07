@@ -30,9 +30,23 @@ val ProgressBlueDark = Color(0xFF1976D2)
 val ProgressBlueLight = Color(0xFF64B5F6)
 
 // Phase Colors (전반전/후반전/쿼터모드)
-val PhaseMint = Color(0xFF00E676)
-val PhaseMintDark = Color(0xFF00C853)
-val PhaseMintLight = Color(0xFF69F0AE)
+val PhaseCrystalLightStart = Color(0xFF40C4FF) // Light Blue A200
+val PhaseCrystalLightEnd   = Color(0xFF0288D1) // Light Blue 700
+
+val PhaseCrystalDarkStart  = Color(0xFF80D8FF) // Light Blue A100 (하이라이트)
+val PhaseCrystalDarkEnd    = Color(0xFF00B0FF) // Light Blue A400 (본체)
+
+val PhaseSolarLightStart = Color(0xFFFFD740) // Amber A200 (밝은 금색)
+val PhaseSolarLightEnd   = Color(0xFFFF6D00) // Orange A700 (강렬한 오렌지)
+
+val PhaseSolarDarkStart  = Color(0xFFFFE57F) // Amber A100 (하이라이트)
+val PhaseSolarDarkEnd    = Color(0xFFFF9100) // Orange A400 (네온 오렌지)
+
+val PhaseMagentaLightStart = Color(0xFFEA80FC) // Purple A100 (밝은 보라)
+val PhaseMagentaLightEnd   = Color(0xFFD50000) // Red A700 (피색에 가까운 빨강)
+
+val PhaseMagentaDarkStart  = Color(0xFFFF80AB) // Pink A100 (흰끼 도는 핑크)
+val PhaseMagentaDarkEnd    = Color(0xFFF50057) // Pink A400 (강렬한 핫핑크)
 
 val PhaseAmber = Color(0xFFFFAB00)
 val PhaseAmberDark = Color(0xFFFF9100)

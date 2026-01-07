@@ -194,7 +194,7 @@ fun SummaryHeader(
                     )
                     Spacer(modifier = Modifier.height(4.dp))
                     Text(
-                        text = data.profitAmount.toDisplayPrice(currencyType, exchangeRate),
+                        text = data.profitAmount.toDisplayProfit(currencyType, exchangeRate),
                         style = MaterialTheme.typography.bodyLarge,
                         fontWeight = FontWeight.Bold,
                         color = getProfitColor(data.profitRate)

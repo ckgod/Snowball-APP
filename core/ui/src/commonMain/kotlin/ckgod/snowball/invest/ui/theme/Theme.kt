@@ -5,6 +5,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.darkColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import com.ckgod.snowball.model.TradePhase
 
@@ -120,26 +121,77 @@ fun getProgressColor(isDarkTheme: Boolean = isSystemInDarkTheme()): Color {
     return if (isDarkTheme) ProgressBlueLight else ProgressBlueDark
 }
 
-/**
- * 확장 함수: 전략 단계별 위험도 색상 반환 (전반전 → 후반전 → 쿼터모드)
- */
 @Composable
 fun getPhaseColor(phase: TradePhase, isDarkTheme: Boolean = isSystemInDarkTheme()): Color {
     return when (phase) {
         TradePhase.FIRST_HALF -> {
-            if (isDarkTheme) PhaseMintLight else PhaseMintDark
+            if (isDarkTheme) PhaseCrystalDarkStart else PhaseCrystalLightStart
         }
         TradePhase.BACK_HALF -> {
-            if (isDarkTheme) PhaseAmberLight else PhaseAmberDark
+            if (isDarkTheme) PhaseSolarDarkStart else PhaseSolarLightStart
         }
         TradePhase.QUARTER_MODE,
         TradePhase.EXHAUSTED -> {
-            if (isDarkTheme) PhasePurpleLight else PhasePurpleDark
+            if (isDarkTheme) PhaseMagentaLightEnd else PhaseMagentaDarkEnd
         }
         TradePhase.UNKNOWN -> {
             if (isDarkTheme) OnSurfaceVariantDark else OnSurfaceVariantLight
         }
     }
+}
+
+@Composable
+fun getPhaseBrush(phase: TradePhase, isDarkTheme: Boolean = isSystemInDarkTheme()): Brush {
+    val colors = when (phase) {
+        TradePhase.FIRST_HALF -> {
+             if (isDarkTheme) {
+                 listOf(PhaseCrystalDarkStart, PhaseCrystalDarkEnd)
+             } else {
+                 listOf(PhaseCrystalLightStart, PhaseCrystalLightEnd)
+             }
+        }
+        TradePhase.BACK_HALF -> {
+            if (isDarkTheme) {
+                listOf(PhaseSolarDarkStart, PhaseSolarDarkEnd)
+            } else {
+                listOf(PhaseSolarLightStart, PhaseSolarLightEnd)
+            }
+        }
+        TradePhase.QUARTER_MODE,
+        TradePhase.EXHAUSTED -> {
+            if (isDarkTheme) {
+                listOf(PhaseMagentaDarkStart, PhaseMagentaDarkEnd)
+            } else {
+                listOf(PhaseMagentaLightStart, PhaseMagentaLightEnd)
+            }
+        }
+        TradePhase.UNKNOWN -> {
+            listOf(Color.Gray, Color.DarkGray)
+        }
+    }
+
+    return Brush.horizontalGradient(colors = colors)
+}
+
+@Composable
+fun getPhaseTrackColor(phase: TradePhase, isDarkTheme: Boolean = isSystemInDarkTheme()): Color {
+    val baseColor = when (phase) {
+        TradePhase.FIRST_HALF -> {
+             if (isDarkTheme) PhaseCrystalDarkEnd else PhaseCrystalLightEnd
+        }
+        TradePhase.BACK_HALF -> {
+            if (isDarkTheme) PhaseSolarDarkEnd else PhaseSolarLightEnd
+        }
+        TradePhase.QUARTER_MODE,
+        TradePhase.EXHAUSTED -> {
+            if (isDarkTheme) PhaseMagentaDarkEnd else PhaseMagentaLightEnd
+        }
+        TradePhase.UNKNOWN -> {
+            Color.Gray
+        }
+    }
+
+    return baseColor.copy(alpha = 0.15f)
 }
 
 /**
