@@ -28,6 +28,7 @@ import ckgod.snowball.invest.ui.theme.getProfitColor
 import ckgod.snowball.invest.ui.extensions.toDisplayPrice
 import ckgod.snowball.invest.ui.extensions.toDisplayProfit
 import ckgod.snowball.invest.ui.extensions.toDisplayProfitRate
+import ckgod.snowball.invest.ui.extensions.withFixedHeight
 import com.ckgod.snowball.model.CurrencyType
 import com.ckgod.snowball.model.InvestmentStatusResponse
 import com.ckgod.snowball.model.TradePhase
@@ -133,14 +134,16 @@ private fun StockBasicInfo(
         Column(horizontalAlignment = Alignment.End) {
             Text(
                 text = currentPrice,
-                style = MaterialTheme.typography.titleMedium,
-                fontWeight = FontWeight.SemiBold
+                style = MaterialTheme.typography.titleMedium.withFixedHeight(),
+                fontWeight = FontWeight.SemiBold,
+                maxLines = 1
             )
             Text(
                 text = dailyChangeRate,
-                style = MaterialTheme.typography.bodyMedium,
+                style = MaterialTheme.typography.bodyMedium.withFixedHeight(),
                 color = getProfitColor(dailyChangeRate),
-                fontWeight = FontWeight.Medium
+                fontWeight = FontWeight.Medium,
+                maxLines = 1
             )
         }
     }
@@ -207,28 +210,32 @@ private fun AccountProfit(
         Column {
             Text(
                 text = "평단 $avgPrice",
-                style = MaterialTheme.typography.bodyMedium,
-                color = MaterialTheme.colorScheme.onSurfaceVariant
+                style = MaterialTheme.typography.bodyMedium.withFixedHeight(),
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                maxLines = 1
             )
             Text(
                 text = "보유 ${quantity}주",
-                style = MaterialTheme.typography.bodyMedium,
-                color = MaterialTheme.colorScheme.onSurfaceVariant
+                style = MaterialTheme.typography.bodyMedium.withFixedHeight(),
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                maxLines = 1
             )
         }
 
         Column(horizontalAlignment = Alignment.End) {
             Text(
                 text = profitRate,
-                style = MaterialTheme.typography.headlineSmall,
+                style = MaterialTheme.typography.headlineSmall.withFixedHeight(),
                 color = getProfitColor(profitRate),
-                fontWeight = FontWeight.Bold
+                fontWeight = FontWeight.Bold,
+                maxLines = 1
             )
             Text(
                 text = profitAmount,
-                style = MaterialTheme.typography.bodyLarge,
+                style = MaterialTheme.typography.bodyLarge.withFixedHeight(),
                 color = getProfitColor(profitAmount),
-                fontWeight = FontWeight.Medium
+                fontWeight = FontWeight.Medium,
+                maxLines = 1
             )
         }
     }
@@ -248,22 +255,25 @@ fun AccountHistory(
         Column {
             Text(
                 text = "1회 매수액 $oneTimeAmount",
-                style = MaterialTheme.typography.bodyMedium,
-                color = MaterialTheme.colorScheme.onSurfaceVariant
+                style = MaterialTheme.typography.bodyMedium.withFixedHeight(),
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                maxLines = 1
             )
             Text(
                 text = "매수 누적 $totalInvested",
-                style = MaterialTheme.typography.bodyMedium,
-                color = MaterialTheme.colorScheme.onSurfaceVariant
+                style = MaterialTheme.typography.bodyMedium.withFixedHeight(),
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                maxLines = 1
             )
         }
 
         Column(horizontalAlignment = Alignment.End) {
             Text(
                 text = "실현 손익: $realizedProfit",
-                style = MaterialTheme.typography.bodyLarge,
+                style = MaterialTheme.typography.bodyLarge.withFixedHeight(),
                 color = getProfitColor(realizedProfit),
-                fontWeight = FontWeight.Bold
+                fontWeight = FontWeight.Bold,
+                maxLines = 1
             )
         }
     }

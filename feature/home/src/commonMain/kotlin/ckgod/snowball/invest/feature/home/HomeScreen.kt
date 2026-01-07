@@ -30,6 +30,7 @@ import ckgod.snowball.invest.feature.home.model.HomeState
 import ckgod.snowball.invest.ui.component.CurrencyToggleSwitch
 import ckgod.snowball.invest.ui.component.CustomPullToRefresh
 import ckgod.snowball.invest.ui.extensions.toDisplayProfit
+import ckgod.snowball.invest.ui.extensions.withFixedHeight
 import ckgod.snowball.invest.ui.theme.getProfitColor
 
 @Composable
@@ -161,9 +162,10 @@ private fun TotalProfitHeader(
             ) {
                 Text(
                     text = formattedProfit,
-                    style = MaterialTheme.typography.headlineMedium,
+                    style = MaterialTheme.typography.headlineMedium.withFixedHeight(),
                     color = getProfitColor(formattedProfit),
-                    fontWeight = FontWeight.Bold
+                    fontWeight = FontWeight.Bold,
+                    maxLines = 1
                 )
 
                 CurrencyToggleSwitch(
