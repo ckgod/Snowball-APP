@@ -55,7 +55,7 @@ fun Double.toDisplayProfit(
 }
 
 fun Double.toDisplayProfitRate(): String {
-    val isProfit = this >= 0
+    val isProfit = this > 0
     return "${if (isProfit) "+" else ""}${this.formatDecimal()}%"
 }
 

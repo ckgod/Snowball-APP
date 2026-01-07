@@ -93,7 +93,8 @@ class DefaultHomeComponent(
                             data = response,
                             isLoading = false,
                             isRefreshing = false,
-                            error = null
+                            error = null,
+                            exchangeRate = response.statusList.firstOrNull()?.exchangeRate ?: 0.0
                         )
                     }
                 }
