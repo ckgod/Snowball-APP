@@ -27,6 +27,7 @@ import com.ckgod.snowball.model.CurrencyType
 import ckgod.snowball.invest.feature.home.component.StockSummaryCard
 import ckgod.snowball.invest.feature.home.model.HomeEvent
 import ckgod.snowball.invest.feature.home.model.HomeState
+import ckgod.snowball.invest.ui.component.BouncySlidingText
 import ckgod.snowball.invest.ui.component.CurrencyToggleSwitch
 import ckgod.snowball.invest.ui.component.CustomPullToRefresh
 import ckgod.snowball.invest.ui.extensions.toDisplayProfit
@@ -160,13 +161,18 @@ private fun TotalProfitHeader(
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                Text(
+                BouncySlidingText(
                     text = formattedProfit,
                     style = MaterialTheme.typography.headlineMedium.withFixedHeight(),
-                    color = getProfitColor(formattedProfit),
-                    fontWeight = FontWeight.Bold,
-                    maxLines = 1
+//                    color = getProfitColor(formattedProfit)
                 )
+//                Text(
+//                    text = formattedProfit,
+//                    style = MaterialTheme.typography.headlineMedium.withFixedHeight(),
+//                    color = getProfitColor(formattedProfit),
+//                    fontWeight = FontWeight.Bold,
+//                    maxLines = 1
+//                )
 
                 CurrencyToggleSwitch(
                     isKrw = currencyType == CurrencyType.KRW,
