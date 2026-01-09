@@ -166,13 +166,6 @@ private fun TotalProfitHeader(
                     style = MaterialTheme.typography.headlineMedium.withFixedHeight(),
 //                    color = getProfitColor(formattedProfit)
                 )
-//                Text(
-//                    text = formattedProfit,
-//                    style = MaterialTheme.typography.headlineMedium.withFixedHeight(),
-//                    color = getProfitColor(formattedProfit),
-//                    fontWeight = FontWeight.Bold,
-//                    maxLines = 1
-//                )
 
                 CurrencyToggleSwitch(
                     isKrw = currencyType == CurrencyType.KRW,

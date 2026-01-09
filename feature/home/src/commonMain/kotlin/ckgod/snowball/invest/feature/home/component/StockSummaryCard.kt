@@ -22,6 +22,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import ckgod.snowball.invest.ui.component.BouncySlidingText
 import ckgod.snowball.invest.ui.component.GradientProgressIndicator
 import ckgod.snowball.invest.ui.theme.getPhaseColor
 import ckgod.snowball.invest.ui.theme.getPhaseBrush
@@ -134,11 +135,9 @@ private fun StockBasicInfo(
         }
 
         Column(horizontalAlignment = Alignment.End) {
-            Text(
+            BouncySlidingText(
                 text = currentPrice,
                 style = MaterialTheme.typography.titleMedium.withFixedHeight(),
-                fontWeight = FontWeight.SemiBold,
-                maxLines = 1
             )
             Text(
                 text = dailyChangeRate,
