@@ -44,7 +44,7 @@ kotlin {
             implementation(projects.core.ui)
             implementation(projects.navigation)
             implementation(projects.feature.home)
-            implementation(projects.feature.chart)
+            implementation(projects.feature.account)
             implementation(projects.feature.backtest)
             implementation(projects.feature.detail)
 

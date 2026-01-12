@@ -27,7 +27,7 @@ kotlin {
 }
 
 android {
-    namespace = "ckgod.snowball.invest.feature.chart"
+    namespace = "ckgod.snowball.invest.feature.account"
     compileSdk = libs.versions.android.compileSdk.get().toInt()
 
     defaultConfig {

@@ -15,12 +15,12 @@ import com.arkivanov.decompose.extensions.compose.stack.animation.fade
 import com.arkivanov.decompose.extensions.compose.stack.animation.stackAnimation
 import com.arkivanov.decompose.extensions.compose.subscribeAsState
 import ckgod.snowball.invest.feature.backtest.BacktestTab
-import ckgod.snowball.invest.feature.chart.ChartTab
+import ckgod.snowball.invest.feature.account.AccountTab
 import ckgod.snowball.invest.feature.home.HomeScreen
 import org.jetbrains.compose.resources.painterResource
 import snowball.core.ui.generated.resources.Res
 import snowball.core.ui.generated.resources.ic_backtest
-import snowball.core.ui.generated.resources.ic_chart
+import snowball.core.ui.generated.resources.ic_account
 import snowball.core.ui.generated.resources.ic_home
 
 @Composable
@@ -37,7 +37,7 @@ fun MainContent(
                 MainComponent.Tab.entries.forEach { tab ->
                     val isSelected = when (childStack.active.instance) {
                         is MainComponent.Child.Home -> tab == MainComponent.Tab.HOME
-                        is MainComponent.Child.Chart -> tab == MainComponent.Tab.CHART
+                        is MainComponent.Child.Account -> tab == MainComponent.Tab.ACCOUNT
                         is MainComponent.Child.Backtest -> tab == MainComponent.Tab.BACKTEST
                     }
 
@@ -49,7 +49,7 @@ fun MainContent(
                                 painter = painterResource(
                                     when (tab) {
                                         MainComponent.Tab.HOME -> Res.drawable.ic_home
-                                        MainComponent.Tab.CHART -> Res.drawable.ic_chart
+                                        MainComponent.Tab.ACCOUNT -> Res.drawable.ic_account
                                         MainComponent.Tab.BACKTEST -> Res.drawable.ic_backtest
                                     }
                                 ),
@@ -60,7 +60,7 @@ fun MainContent(
                             Text(
                                 when (tab) {
                                     MainComponent.Tab.HOME -> "투자 현황"
-                                    MainComponent.Tab.CHART -> "차트"
+                                    MainComponent.Tab.ACCOUNT -> "잔고"
                                     MainComponent.Tab.BACKTEST -> "백테스트"
                                 }
                             )
@@ -79,7 +79,7 @@ fun MainContent(
         ) { child ->
             when (val instance = child.instance) {
                 is MainComponent.Child.Home -> HomeScreen(component = instance.component)
-                is MainComponent.Child.Chart -> ChartTab()
+                is MainComponent.Child.Account -> AccountTab()
                 is MainComponent.Child.Backtest -> BacktestTab()
             }
         }

@@ -6,7 +6,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.ComposeUIViewController
 import ckgod.snowball.invest.di.appModule
 import ckgod.snowball.invest.feature.backtest.DefaultBacktestComponent
-import ckgod.snowball.invest.feature.chart.DefaultChartComponent
+import ckgod.snowball.invest.feature.account.DefaultAccountComponent
 import ckgod.snowball.invest.feature.home.DefaultHomeComponent
 import ckgod.snowball.invest.navigation.DefaultMainComponent
 import ckgod.snowball.invest.navigation.DefaultRootComponent
@@ -44,8 +44,8 @@ fun MainViewController(): UIViewController {
                         currencyRepository = getKoin().get()
                     )
                 },
-                chartComponentFactory = { chartCtx ->
-                    DefaultChartComponent(chartCtx)
+                accountComponentFactory = { accountCtx ->
+                    DefaultAccountComponent(accountCtx)
                 },
                 backtestComponentFactory = { backtestCtx ->
                     DefaultBacktestComponent(backtestCtx)

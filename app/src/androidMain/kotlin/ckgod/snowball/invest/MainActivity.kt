@@ -7,7 +7,7 @@ import androidx.activity.enableEdgeToEdge
 import com.arkivanov.decompose.defaultComponentContext
 import ckgod.snowball.invest.di.appModule
 import ckgod.snowball.invest.feature.backtest.DefaultBacktestComponent
-import ckgod.snowball.invest.feature.chart.DefaultChartComponent
+import ckgod.snowball.invest.feature.account.DefaultAccountComponent
 import ckgod.snowball.invest.feature.home.DefaultHomeComponent
 import ckgod.snowball.invest.navigation.DefaultRootComponent
 import ckgod.snowball.invest.feature.detail.DefaultStockDetailComponent
@@ -40,8 +40,8 @@ class MainActivity : ComponentActivity() {
                             currencyRepository = get(),
                         )
                     },
-                    chartComponentFactory = { chartContext ->
-                        DefaultChartComponent(chartContext)
+                    accountComponentFactory = { accountContext ->
+                        DefaultAccountComponent(accountContext)
                     },
                     backtestComponentFactory = { backtestContext ->
                         DefaultBacktestComponent(backtestContext)

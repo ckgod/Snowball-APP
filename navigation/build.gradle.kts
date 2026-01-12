@@ -18,7 +18,7 @@ kotlin {
             implementation(projects.core.domain)
             implementation(projects.core.ui)
             implementation(projects.feature.home)
-            implementation(projects.feature.chart)
+            implementation(projects.feature.account)
             implementation(projects.feature.backtest)
             implementation(projects.feature.detail)
 
