@@ -6,12 +6,20 @@ import com.ionspin.kotlin.bignum.decimal.RoundingMode
 import kotlin.math.abs
 
 fun Double.formatDecimal(decimalPlaces: Int = 2): String {
-    return BigDecimal.fromDouble(this)
+    val rounded = BigDecimal.fromDouble(this)
         .roundToDigitPositionAfterDecimalPoint(
             decimalPlaces.toLong(),
             RoundingMode.ROUND_HALF_AWAY_FROM_ZERO
         )
         .toPlainString()
+    val split = rounded.split(".")
+    val integerPart = split.getOrElse(0, { "" }).reversed()
+        .chunked(3)
+        .joinToString(",")
+        .reversed()
+    val decimalPart = split.getOrElse(1, { "" })
+    
+    return "$integerPart${if(decimalPart.isNotEmpty()) ".$decimalPart" else ""}"
 }
 
 fun Double.formatWithComma(): String {
