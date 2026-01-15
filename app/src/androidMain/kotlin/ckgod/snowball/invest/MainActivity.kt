@@ -36,12 +36,15 @@ class MainActivity : ComponentActivity() {
                         DefaultHomeComponent(
                             componentContext = homeContext,
                             onStockSelected = onStockSelected,
-                            portfolioRepository = get(),
                             currencyRepository = get(),
+                            getInvestmentStatusUseCase = get()
                         )
                     },
                     accountComponentFactory = { accountContext ->
-                        DefaultAccountComponent(accountContext)
+                        DefaultAccountComponent(
+                            componentContext = accountContext,
+                            accountRepository = get()
+                        )
                     },
                     backtestComponentFactory = { backtestContext ->
                         DefaultBacktestComponent(backtestContext)
@@ -54,9 +57,7 @@ class MainActivity : ComponentActivity() {
                     componentContext = context,
                     ticker = ticker,
                     onBack = onBack,
-                    stockDetailRepository = get(),
-                    currencyRepository = get(),
-                    groupTradeHistoriesByDateUseCase = get(),
+                    getStockDetailUseCase = get()
                 )
             }
         )

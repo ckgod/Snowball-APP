@@ -20,7 +20,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import ckgod.snowball.invest.feature.detail.model.StockDetailState
+import ckgod.snowball.invest.domain.state.StockDetailState
 import ckgod.snowball.invest.feature.detail.component.CrashProtectionAccordion
 import ckgod.snowball.invest.feature.detail.component.DateHeader
 import ckgod.snowball.invest.feature.detail.component.HistoryItemRow

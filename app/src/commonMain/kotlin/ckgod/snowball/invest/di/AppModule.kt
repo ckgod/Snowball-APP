@@ -8,20 +8,24 @@ import ckgod.snowball.invest.data.repository.PortfolioRepository
 import ckgod.snowball.invest.data.repository.StockDetailRepository
 import ckgod.snowball.invest.data.repository.CurrencyPreferencesRepository
 import ckgod.snowball.invest.data.repository.CurrencyPreferencesRepositoryImpl
-import ckgod.snowball.invest.domain.usecase.GroupTradeHistoriesByDateUseCase
+import ckgod.snowball.invest.data.repository.AccountRepository
+import ckgod.snowball.invest.data.repository.AccountRepositoryImpl
+import ckgod.snowball.invest.domain.usecase.GetCurrencyInfoUseCase
+import ckgod.snowball.invest.domain.usecase.GetInvestmentStatusUseCase
+import ckgod.snowball.invest.domain.usecase.GetStockDetailUseCase
 import org.koin.dsl.module
 
 val appModule = module {
-    // Repositories
-    single<CurrencyPreferencesRepository> {
-        CurrencyPreferencesRepositoryImpl()
-    }
-
     single {
         HttpClientFactory.create(
             baseUrl = AppConfig.API_BASE_URL,
             apiKey = AppConfig.API_KEY
         )
+    }
+
+    // Repositories
+    single<CurrencyPreferencesRepository> {
+        CurrencyPreferencesRepositoryImpl()
     }
 
     single<PortfolioRepository> {
@@ -36,8 +40,30 @@ val appModule = module {
         )
     }
 
+    single<AccountRepository> {
+        AccountRepositoryImpl(
+            httpClient = get()
+        )
+    }
+
     // UseCases
     factory {
-        GroupTradeHistoriesByDateUseCase()
+        GetCurrencyInfoUseCase(
+            currencyPreferencesRepository = get()
+        )
+    }
+
+    factory {
+        GetInvestmentStatusUseCase(
+            currencyPreferencesRepository = get(),
+            portfolioRepository = get()
+        )
+    }
+
+    factory {
+        GetStockDetailUseCase(
+            currencyInfoUseCase = get(),
+            stockDetailRepository = get()
+        )
     }
 }

@@ -40,12 +40,15 @@ fun MainViewController(): UIViewController {
                     DefaultHomeComponent(
                         componentContext = homeCtx,
                         onStockSelected = onStockSelected,
-                        portfolioRepository = getKoin().get(),
-                        currencyRepository = getKoin().get()
+                        currencyRepository = getKoin().get(),
+                        getInvestmentStatusUseCase = getKoin().get()
                     )
                 },
                 accountComponentFactory = { accountCtx ->
-                    DefaultAccountComponent(accountCtx)
+                    DefaultAccountComponent(
+                        componentContext = accountCtx,
+                        accountRepository = getKoin().get()
+                    )
                 },
                 backtestComponentFactory = { backtestCtx ->
                     DefaultBacktestComponent(backtestCtx)
@@ -58,9 +61,7 @@ fun MainViewController(): UIViewController {
                 componentContext = ctx,
                 ticker = ticker,
                 onBack = onBack,
-                stockDetailRepository = getKoin().get(),
-                currencyRepository = getKoin().get(),
-                groupTradeHistoriesByDateUseCase = getKoin().get()
+                getStockDetailUseCase = getKoin().get()
             )
         }
     )

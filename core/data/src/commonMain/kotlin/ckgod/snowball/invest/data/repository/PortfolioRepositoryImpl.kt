@@ -9,13 +9,7 @@ class PortfolioRepositoryImpl(
     private val httpClient: HttpClient
 ) : PortfolioRepository {
 
-    override suspend fun getPortfolioStatus(): Result<HomeTabResponse> {
-        return try {
-            val response = httpClient.get("/sb/home/status").body<HomeTabResponse>()
-
-            Result.success(response)
-        } catch (e: Exception) {
-            Result.failure(e)
-        }
+    override suspend fun getPortfolioStatus(): HomeTabResponse {
+        return httpClient.get("/sb/home/status").body<HomeTabResponse>()
     }
 }

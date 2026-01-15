@@ -1,12 +1,9 @@
-package ckgod.snowball.invest.feature.home.model
+package ckgod.snowball.invest.domain.state
 
 import com.ckgod.snowball.model.CurrencyType
 import com.ckgod.snowball.model.HomeTabResponse
 
-/**
- * 홈 화면의 UI 상태
- */
-data class HomeState(
+data class InvestmentStatusState(
     val data: HomeTabResponse? = null,
     val isLoading: Boolean = false,
     val error: String? = null,

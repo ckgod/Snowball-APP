@@ -5,5 +5,7 @@ import kotlinx.coroutines.flow.StateFlow
 
 interface CurrencyPreferencesRepository {
     val currencyType: StateFlow<CurrencyType>
+    val exchangeRate: StateFlow<Double>
     fun setCurrencyType(type: CurrencyType)
+    fun setExchangeRate(exchangeRate: Double)
 }

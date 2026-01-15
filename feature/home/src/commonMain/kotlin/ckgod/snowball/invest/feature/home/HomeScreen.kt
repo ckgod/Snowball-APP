@@ -21,18 +21,16 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.ckgod.snowball.model.CurrencyType
 import ckgod.snowball.invest.feature.home.component.StockSummaryCard
 import ckgod.snowball.invest.feature.home.model.HomeEvent
-import ckgod.snowball.invest.feature.home.model.HomeState
+import ckgod.snowball.invest.domain.state.InvestmentStatusState
 import ckgod.snowball.invest.ui.component.BouncySlidingText
 import ckgod.snowball.invest.ui.component.CurrencyToggleSwitch
 import ckgod.snowball.invest.ui.component.CustomPullToRefresh
 import ckgod.snowball.invest.ui.extensions.toDisplayProfit
 import ckgod.snowball.invest.ui.extensions.withFixedHeight
-import ckgod.snowball.invest.ui.theme.getProfitColor
 
 @Composable
 fun HomeScreen(
@@ -54,7 +52,7 @@ fun HomeScreen(
 
 @Composable
 internal fun HomeScreenContent(
-    state: HomeState,
+    state: InvestmentStatusState,
     onEvent: (HomeEvent) -> Unit,
     onStockClick: (String) -> Unit,
     onCurrencySwitch: (CurrencyType) -> Unit,
@@ -91,37 +89,39 @@ internal fun HomeScreenContent(
                         )
                         Spacer(modifier = Modifier.height(8.dp))
                         Text(
-                            text = state.error,
+                            text = state.error ?: "",
                             style = MaterialTheme.typography.bodyMedium,
                             color = MaterialTheme.colorScheme.onSurfaceVariant
                         )
                     }
                 }
 
-                state.data != null -> {
-                    LazyColumn(
-                        modifier = Modifier.fillMaxSize(),
-                        contentPadding = PaddingValues(16.dp),
-                        verticalArrangement = Arrangement.spacedBy(16.dp)
-                    ) {
-                        item {
-                            TotalProfitHeader(
-                                formattedProfit = state.data.totalProfit.toDisplayProfit(currencyType, exchangeRate),
-                                currencyType = state.currencyType,
-                                onCurrencySwitch = onCurrencySwitch
-                            )
-                        }
+                else -> {
+                    state.data?.let { data ->
+                        LazyColumn(
+                            modifier = Modifier.fillMaxSize(),
+                            contentPadding = PaddingValues(16.dp),
+                            verticalArrangement = Arrangement.spacedBy(16.dp)
+                        ) {
+                            item {
+                                TotalProfitHeader(
+                                    formattedProfit = data.totalProfit.toDisplayProfit(currencyType, exchangeRate),
+                                    currencyType = state.currencyType,
+                                    onCurrencySwitch = onCurrencySwitch
+                                )
+                            }
 
-                        items(
-                            items = state.data.statusList,
-                            key = { it.ticker }
-                        ) { stock ->
-                            StockSummaryCard(
-                                data = stock,
-                                currencyType = currencyType,
-                                exchangeRate = exchangeRate
-                            ) {
-                                onStockClick(stock.ticker)
+                            items(
+                                items = data.statusList,
+                                key = { it.ticker }
+                            ) { stock ->
+                                StockSummaryCard(
+                                    data = stock,
+                                    currencyType = currencyType,
+                                    exchangeRate = exchangeRate
+                                ) {
+                                    onStockClick(stock.ticker)
+                                }
                             }
                         }
                     }

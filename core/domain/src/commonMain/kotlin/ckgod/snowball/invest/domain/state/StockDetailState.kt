@@ -1,4 +1,4 @@
-package ckgod.snowball.invest.feature.detail.model
+package ckgod.snowball.invest.domain.state
 
 import com.ckgod.snowball.model.CurrencyType
 import com.ckgod.snowball.model.InvestmentStatusResponse

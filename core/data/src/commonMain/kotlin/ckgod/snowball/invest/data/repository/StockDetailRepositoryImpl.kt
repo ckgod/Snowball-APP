@@ -9,17 +9,11 @@ class StockDetailRepositoryImpl(
     private val httpClient: HttpClient
 ) : StockDetailRepository {
 
-    override suspend fun getStockDetail(ticker: String): Result<StockDetailResponse> {
-        return try {
-            val response = httpClient.get("sb/stock/detail") {
-                url {
-                    parameters.append("ticker", ticker)
-                }
-            }.body<StockDetailResponse>()
-
-            Result.success(response)
-        } catch (e: Exception) {
-            Result.failure(e)
-        }
+    override suspend fun getStockDetail(ticker: String): StockDetailResponse {
+        return httpClient.get("sb/stock/detail") {
+            url {
+                parameters.append("ticker", ticker)
+            }
+        }.body<StockDetailResponse>()
     }
 }

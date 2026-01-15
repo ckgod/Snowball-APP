@@ -13,6 +13,7 @@ kotlin {
 
     sourceSets {
         commonMain.dependencies {
+            implementation(projects.core.data)
             api(projects.snowballModels)
 
             implementation(libs.kotlinx.coroutines.core)
