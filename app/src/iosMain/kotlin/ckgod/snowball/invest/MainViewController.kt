@@ -47,7 +47,7 @@ fun MainViewController(): UIViewController {
                 accountComponentFactory = { accountCtx ->
                     DefaultAccountComponent(
                         componentContext = accountCtx,
-                        accountRepository = getKoin().get()
+                        getAccountUseCase = getKoin().get()
                     )
                 },
                 backtestComponentFactory = { backtestCtx ->

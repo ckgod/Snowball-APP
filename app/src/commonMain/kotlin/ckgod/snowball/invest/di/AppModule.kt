@@ -10,6 +10,7 @@ import ckgod.snowball.invest.data.repository.CurrencyPreferencesRepository
 import ckgod.snowball.invest.data.repository.CurrencyPreferencesRepositoryImpl
 import ckgod.snowball.invest.data.repository.AccountRepository
 import ckgod.snowball.invest.data.repository.AccountRepositoryImpl
+import ckgod.snowball.invest.domain.usecase.GetAccountUseCase
 import ckgod.snowball.invest.domain.usecase.GetCurrencyInfoUseCase
 import ckgod.snowball.invest.domain.usecase.GetInvestmentStatusUseCase
 import ckgod.snowball.invest.domain.usecase.GetStockDetailUseCase
@@ -64,6 +65,13 @@ val appModule = module {
         GetStockDetailUseCase(
             currencyInfoUseCase = get(),
             stockDetailRepository = get()
+        )
+    }
+
+    factory {
+        GetAccountUseCase(
+            currencyPreferencesRepository = get(),
+            accountRepository = get()
         )
     }
 }

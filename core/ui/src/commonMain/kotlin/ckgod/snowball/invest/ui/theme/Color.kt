@@ -13,12 +13,6 @@ val Grey60 = Color(0xFF757575)
 val Grey50 = Color(0xFF616161)
 val Grey40 = Color(0xFF424242)
 
-// Stock-specific Colors (미국 주식 기준)
-// 상승/수익: 초록색
-val ProfitGreen = Color(0xFF4CAF50)
-val ProfitGreenDark = Color(0xFF388E3C)
-val ProfitGreenLight = Color(0xFF81C784)
-
 // 하락/손실: 빨간색
 val LossRed = Color(0xFFF44336)
 val LossRedDark = Color(0xFFD32F2F)
@@ -47,14 +41,6 @@ val PhaseMagentaLightEnd   = Color(0xFFD50000) // Red A700 (피색에 가까운 
 
 val PhaseMagentaDarkStart  = Color(0xFFFF80AB) // Pink A100 (흰끼 도는 핑크)
 val PhaseMagentaDarkEnd    = Color(0xFFF50057) // Pink A400 (강렬한 핫핑크)
-
-val PhaseAmber = Color(0xFFFFAB00)
-val PhaseAmberDark = Color(0xFFFF9100)
-val PhaseAmberLight = Color(0xFFFFD740)
-
-val PhasePurple = Color(0xFFD500F9)
-val PhasePurpleDark = Color(0xFFAA00FF)
-val PhasePurpleLight = Color(0xFFE040FB)
 
 // Trading Side Colors (한국 주식시장 컨벤션)
 // 매수: 빨간색
@@ -100,3 +86,14 @@ val OnBackgroundLight = Color(0xFF212121)     // 라이트모드 텍스트
 
 val OnSurfaceVariantDark = Color(0xFFBDBDBD)  // 보조 텍스트 (다크)
 val OnSurfaceVariantLight = Color(0xFF757575) // 보조 텍스트 (라이트)
+
+val PortfolioColors = listOf(
+    Color(0xFF2196F3), // 파란색
+    Color(0xFF9C27B0), // 보라색
+    Color(0xFF4CAF50), // 초록색
+    Color(0xFFFF9800), // 주황색
+    Color(0xFFE91E63), // 핑크색
+    Color(0xFF00BCD4), // 청록색
+    Color(0xFFFFEB3B), // 노란색
+    Color(0xFF795548), // 갈색
+)
