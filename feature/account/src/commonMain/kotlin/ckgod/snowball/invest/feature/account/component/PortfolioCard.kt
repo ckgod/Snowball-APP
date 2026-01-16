@@ -48,13 +48,13 @@ fun PortfolioCard(
 
     val stockRatios = remember(data.holdingStocks, totalCapital) {
         if (totalCapital > 0) {
-            data.holdingStocks.map { stock ->
+            data.holdingStocks.mapIndexed { index, stock ->
                 StockRatio(
                     stock = stock,
                     ratio = (stock.capital / totalCapital * 100).toInt(),
-                    color = PortfolioColors[data.holdingStocks.indexOf(stock) % PortfolioColors.size]
+                    color = PortfolioColors[index % PortfolioColors.size]
                 )
-            }
+            }.sortedByDescending { it.ratio }
         } else {
             emptyList()
         }
