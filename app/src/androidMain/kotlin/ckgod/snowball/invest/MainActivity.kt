@@ -43,7 +43,7 @@ class MainActivity : ComponentActivity() {
                     accountComponentFactory = { accountContext ->
                         DefaultAccountComponent(
                             componentContext = accountContext,
-                            accountRepository = get()
+                            getAccountUseCase = get()
                         )
                     },
                     backtestComponentFactory = { backtestContext ->
