@@ -16,6 +16,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -31,6 +32,12 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import ckgod.snowball.invest.ui.theme.Grey50
+import ckgod.snowball.invest.ui.theme.Grey70
+import ckgod.snowball.invest.ui.theme.Grey80
+import ckgod.snowball.invest.ui.theme.OnSurfaceVariantLight
+import ckgod.snowball.invest.ui.theme.SurfaceContainerHighDark
+import ckgod.snowball.invest.ui.theme.SurfaceContainerHighLight
 
 @Composable
 fun CurrencyToggleSwitch(
@@ -40,10 +47,12 @@ fun CurrencyToggleSwitch(
 ) {
     var isKrwSelected by remember(isKrw) { mutableStateOf(isKrw) }
 
-    val backgroundColor = Color(0xFF2C2C2E)
-    val indicatorColor = Color(0xFF636366)
-    val selectedTextColor = Color.White
-    val unselectedTextColor = Color(0xFF8E8E93)
+    val isDarkTheme = isSystemInDarkTheme()
+
+    val backgroundColor = if (isDarkTheme) SurfaceContainerHighDark else SurfaceContainerHighLight
+    val indicatorColor = if (isDarkTheme) Grey50 else Grey80
+    val selectedTextColor = if (isDarkTheme) Color.White else Color.Black
+    val unselectedTextColor = if (isDarkTheme) Grey70 else OnSurfaceVariantLight
 
     val animatedBias by animateFloatAsState(
         targetValue = if (!isKrwSelected) -1f else 1f,
