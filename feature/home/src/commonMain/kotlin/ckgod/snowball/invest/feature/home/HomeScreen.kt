@@ -31,6 +31,7 @@ import ckgod.snowball.invest.ui.component.CurrencyToggleSwitch
 import ckgod.snowball.invest.ui.component.CustomPullToRefresh
 import ckgod.snowball.invest.ui.extensions.toDisplayProfit
 import ckgod.snowball.invest.ui.extensions.withFixedHeight
+import ckgod.snowball.invest.ui.theme.getProfitColor
 
 @Composable
 fun HomeScreen(
@@ -164,7 +165,7 @@ private fun TotalProfitHeader(
                 BouncySlidingText(
                     text = formattedProfit,
                     style = MaterialTheme.typography.headlineMedium.withFixedHeight(),
-//                    color = getProfitColor(formattedProfit)
+                    color = getProfitColor(formattedProfit)
                 )
 
                 CurrencyToggleSwitch(
