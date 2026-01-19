@@ -8,6 +8,7 @@ import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.IntOffset
 import kotlin.math.abs
@@ -16,7 +17,8 @@ import kotlin.math.abs
 fun BouncySlidingText(
     text: String,
     modifier: Modifier = Modifier,
-    style: TextStyle = LocalTextStyle.current
+    style: TextStyle = LocalTextStyle.current,
+    color: Color = LocalTextStyle.current.color
 ) {
     Row(modifier = modifier) {
         val length = text.length
@@ -63,6 +65,7 @@ fun BouncySlidingText(
                         Text(
                             text = targetChar.toString(),
                             style = style,
+                            color = color,
                             softWrap = false
                         )
                     }
@@ -70,6 +73,7 @@ fun BouncySlidingText(
                     Text(
                         text = char.toString(),
                         style = style,
+                        color = color,
                         softWrap = false
                     )
                 }

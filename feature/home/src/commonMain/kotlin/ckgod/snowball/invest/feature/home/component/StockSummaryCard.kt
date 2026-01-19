@@ -269,13 +269,22 @@ fun AccountHistory(
         }
 
         Column(horizontalAlignment = Alignment.End) {
-            Text(
-                text = "실현 손익: $realizedProfit",
-                style = MaterialTheme.typography.bodyLarge.withFixedHeight(),
-                color = getProfitColor(realizedProfit),
-                fontWeight = FontWeight.Bold,
-                maxLines = 1
-            )
+            Row {
+                Text(
+                    text = "실현 손익: ",
+                    style = MaterialTheme.typography.bodyLarge.withFixedHeight(),
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    fontWeight = FontWeight.Bold,
+                    maxLines = 1
+                )
+                Text(
+                    text = realizedProfit,
+                    style = MaterialTheme.typography.bodyLarge.withFixedHeight(),
+                    color = getProfitColor(realizedProfit),
+                    fontWeight = FontWeight.Bold,
+                    maxLines = 1
+                )
+            }
         }
     }
 }

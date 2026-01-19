@@ -50,7 +50,7 @@ fun SummaryHeader(
 
             Text(
                 text = data.realizedProfit.toDisplayProfit(currencyType, exchangeRate),
-                style = MaterialTheme.typography.displaySmall,
+                style = MaterialTheme.typography.headlineMedium,
                 fontWeight = FontWeight.Bold,
                 color = getProfitColor(data.realizedProfit)
             )
