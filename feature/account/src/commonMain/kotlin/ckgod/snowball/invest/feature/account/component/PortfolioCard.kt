@@ -23,10 +23,15 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.font.FontWeight.Companion.Bold
+import androidx.compose.ui.text.font.FontWeight.Companion.SemiBold
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import ckgod.snowball.invest.ui.component.InvestmentProgressBar
 import ckgod.snowball.invest.ui.extensions.formatDecimal
+import ckgod.snowball.invest.ui.extensions.toDisplayPercent
+import ckgod.snowball.invest.ui.extensions.toDisplayPrice
 import ckgod.snowball.invest.ui.theme.PortfolioColors
 import com.ckgod.snowball.model.AccountStatusResponse
 import com.ckgod.snowball.model.CurrencyType
@@ -91,7 +96,7 @@ fun PortfolioCard(
                     Text(
                         text = "포트폴리오 배분",
                         style = MaterialTheme.typography.titleMedium,
-                        fontWeight = FontWeight.Bold,
+                        fontWeight = Bold,
                         color = MaterialTheme.colorScheme.onSurface
                     )
                 }
@@ -131,6 +136,29 @@ fun PortfolioCard(
                     )
                 }
             }
+
+            Spacer(modifier = Modifier.height(12.dp))
+
+            Text(
+                text = "종목별 계획 진행률",
+                style = MaterialTheme.typography.labelMedium,
+                color = MaterialTheme.colorScheme.onSurfaceVariant
+            )
+
+            Spacer(modifier = Modifier.height(12.dp))
+
+            Column(
+                modifier = Modifier.fillMaxWidth(),
+                verticalArrangement = Arrangement.spacedBy(16.dp)
+            ) {
+                stockRatios.forEach {
+                    StockStatusBar(
+                        data = it,
+                        currencyType = currencyType,
+                        exchangeRate = exchangeRate
+                    )
+                }
+            }
         }
     }
 
@@ -162,7 +190,7 @@ private fun PortfolioRatioBar(
                     Text(
                         text = stockRatio.stock.ticker,
                         style = MaterialTheme.typography.labelMedium,
-                        fontWeight = FontWeight.Bold,
+                        fontWeight = Bold,
                         color = Color.White,
                         maxLines = 1,
                         overflow = TextOverflow.Ellipsis
@@ -190,13 +218,68 @@ private fun LegendItem(
         Box(
             modifier = Modifier
                 .size(10.dp)
-                .background(color = color, shape = CircleShape)
+                .background(color = color, shape = RoundedCornerShape(2.dp))
         )
         Spacer(modifier = Modifier.width(4.dp))
         Text(
             text = "$ticker (${ratio}%)",
             style = MaterialTheme.typography.labelMedium,
             color = MaterialTheme.colorScheme.onSurfaceVariant
+        )
+    }
+}
+
+@Composable
+private fun StockStatusBar(
+    data: StockRatio,
+    currencyType: CurrencyType,
+    exchangeRate: Double
+) {
+    Column(
+        modifier = Modifier.fillMaxWidth()
+    ) {
+        Row(
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Box(
+                modifier = Modifier
+                    .size(8.dp)
+                    .background(color = data.color, shape = CircleShape)
+            )
+            Spacer(modifier = Modifier.width(6.dp))
+            Text(
+                text = data.stock.ticker,
+                style = MaterialTheme.typography.titleSmall,
+                color = MaterialTheme.colorScheme.onSurface,
+                fontWeight = Bold
+            )
+            Spacer(modifier = Modifier.width(6.dp))
+            Text(
+                text = "${data.stock.investedAmount.toDisplayPrice(currencyType, exchangeRate)} / ${data.stock.capital.toDisplayPrice(currencyType, exchangeRate)}",
+                style = MaterialTheme.typography.labelMedium,
+                color = MaterialTheme.colorScheme.onSurfaceVariant
+            )
+
+            Text(
+                modifier = Modifier.weight(1f),
+                text = "${(data.stock.investedAmount / data.stock.capital).toDisplayPercent()}% 투입",
+                style = MaterialTheme.typography.labelMedium,
+                color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.9f),
+                fontWeight = SemiBold,
+                textAlign = TextAlign.End
+            )
+        }
+
+        Spacer(modifier = Modifier.height(6.dp))
+
+        InvestmentProgressBar(
+            totalPlan = data.stock.capital,
+            investedCash = data.stock.investedAmount,
+            evaluatedCash = data.stock.currentPrice * data.stock.quantity,
+            color = data.color,
+            barHeight = 20.dp,
+            cornerRadius = 4.dp,
+            remainText = (data.stock.capital - data.stock.investedAmount).toDisplayPrice(currencyType, exchangeRate)
         )
     }
 }

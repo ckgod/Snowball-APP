@@ -3,6 +3,7 @@ package ckgod.snowball.invest.ui.component
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.CornerRadius
@@ -14,39 +15,42 @@ import androidx.compose.ui.graphics.drawscope.DrawScope
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.graphics.drawscope.clipPath
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.text.TextMeasurer
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.drawText
+import androidx.compose.ui.text.rememberTextMeasurer
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import ckgod.snowball.invest.ui.theme.PortfolioColors
 
 @Composable
 fun InvestmentProgressBar(
     totalPlan: Double,
     investedCash: Double,
-    currentValue: Double,
-    remainCash: Double,
+    evaluatedCash: Double,
     modifier: Modifier = Modifier,
+    color: Color = PortfolioColors[0],
+    stripeColor: Color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.2f),
+    backgroundColor: Color = MaterialTheme.colorScheme.surfaceContainer,
     barHeight: Dp = 48.dp,
-    cornerRadius: Dp = 12.dp
+    cornerRadius: Dp = 12.dp,
+    remainText: String? = null,
+    remainTextStyle: TextStyle = MaterialTheme.typography.labelMedium,
+    remainTextColor: Color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.8f)
 ) {
-    val profitColor = Color(0xFFFF4757)          // 수익 - 빨간색
-    val lossColor = Color(0xFF3B82F6)            // 손실 - 파란색
-    val emptySpaceColor = Color(0xFF1A1A2E)      // 빈 공간 (손실 영역) - 어두운 배경
-    val ammoBackgroundColor = Color(0x4D1E2337)  // 빗금 배경 (alpha 30%)
-    val ammoStripeColor = Color(0x992D3A5C)      // 빗금 라인 (alpha 60%)
-    val ammoBorderColor = Color(0x992D3A5C)      // 빗금 테두리 (라인과 동일)
-
     val density = LocalDensity.current
+    val textMeasurer = rememberTextMeasurer()
 
-    val stripeWidth = with(density) { 10.dp.toPx() }
-    val stripeSpacing = with(density) { 8.dp.toPx() }
+    val stripeWidth = with(density) { 8.dp.toPx() }
+    val stripeSpacing = with(density) { 10.dp.toPx() }
     val borderWidth = with(density) { 1.dp.toPx() }
     val cornerRadiusPx = with(density) { cornerRadius.toPx() }
 
-    val costRatio = if (totalPlan > 0) (investedCash / totalPlan).coerceIn(0.0, 1.0) else 0.0
-    val currentRatio = if (totalPlan > 0) (currentValue / totalPlan).coerceIn(0.0, 1.0) else 0.0
-    val ammoRatio = if (totalPlan > 0) (remainCash / totalPlan).coerceIn(0.0, 1.0) else 0.0
+    val investedRatio = if (totalPlan > 0) (investedCash / totalPlan).coerceIn(0.0, 1.0) else 0.0
+    val evaluatedRatio = if (totalPlan > 0) (evaluatedCash / totalPlan).coerceIn(0.0, 1.0) else 0.0
+    val remainRatio = if (totalPlan > 0) ((totalPlan - investedCash) / totalPlan).coerceIn(0.0, 1.0) else 0.0
 
-    val isProfit = currentValue >= investedCash
-    val valueColor = if (isProfit) profitColor else lossColor
+    val isGain = evaluatedCash >= investedCash
 
     Canvas(
         modifier = modifier
@@ -56,50 +60,62 @@ fun InvestmentProgressBar(
         val totalWidth = size.width
         val totalHeight = size.height
 
-        val costEndX = (totalWidth * costRatio).toFloat()
-        val currentEndX = (totalWidth * currentRatio).toFloat()
-        val ammoStartX = costEndX
-        val ammoWidth = (totalWidth * ammoRatio).toFloat()
+        val investedEndX = (totalWidth * investedRatio).toFloat()
+        val evaluatedEndX = (totalWidth * evaluatedRatio).toFloat()
+        val remainStartX = investedEndX
+        val remainWidth = (totalWidth * remainRatio).toFloat()
 
-        if (!isProfit && currentEndX < costEndX) {
+        if (!isGain && evaluatedEndX < investedEndX) {
             drawRect(
-                color = emptySpaceColor,
-                topLeft = Offset(currentEndX, 0f),
-                size = Size(costEndX - currentEndX, totalHeight)
+                color = backgroundColor,
+                topLeft = Offset(evaluatedEndX, 0f),
+                size = Size(investedEndX - evaluatedEndX, totalHeight)
             )
         }
 
-        if (currentEndX > 0) {
-            drawCurrentValueArea(
-                endX = currentEndX,
+        if (remainWidth > 0) {
+            drawRemainArea(
+                startX = remainStartX,
+                width = remainWidth,
                 totalWidth = totalWidth,
                 totalHeight = totalHeight,
                 cornerRadius = cornerRadiusPx,
-                color = valueColor,
-                coversFullWidth = ammoWidth == 0f
-            )
-        }
-
-        if (ammoWidth > 0) {
-            drawAmmoArea(
-                startX = ammoStartX,
-                width = ammoWidth,
-                totalWidth = totalWidth,
-                totalHeight = totalHeight,
-                cornerRadius = cornerRadiusPx,
-                backgroundColor = ammoBackgroundColor,
-                stripeColor = ammoStripeColor,
-                borderColor = ammoBorderColor,
+                backgroundColor = backgroundColor,
+                stripeColor = stripeColor,
+                borderColor = stripeColor,
                 stripeWidth = stripeWidth,
                 stripeSpacing = stripeSpacing,
                 borderWidth = borderWidth,
-                isFullWidth = costRatio == 0.0
+                isFullWidth = investedRatio == 0.0
+            )
+
+            if (remainText != null) {
+                drawRemainText(
+                    text = remainText,
+                    textMeasurer = textMeasurer,
+                    textStyle = remainTextStyle,
+                    textColor = remainTextColor,
+                    startX = remainStartX,
+                    width = remainWidth,
+                    totalHeight = totalHeight
+                )
+            }
+        }
+
+        if (evaluatedEndX > 0) {
+            drawEvaluatedArea(
+                endX = evaluatedEndX,
+                totalWidth = totalWidth,
+                totalHeight = totalHeight,
+                cornerRadius = cornerRadiusPx,
+                color = color,
+                coversFullWidth = remainWidth == 0f
             )
         }
     }
 }
 
-private fun DrawScope.drawCurrentValueArea(
+private fun DrawScope.drawEvaluatedArea(
     endX: Float,
     totalWidth: Float,
     totalHeight: Float,
@@ -112,25 +128,25 @@ private fun DrawScope.drawCurrentValueArea(
 
         if (coversFullWidth && endX >= totalWidth - cornerRadius) {
             lineTo(totalWidth - cornerRadius, 0f)
-            quadraticBezierTo(totalWidth, 0f, totalWidth, cornerRadius)
+            quadraticTo(totalWidth, 0f, totalWidth, cornerRadius)
             lineTo(totalWidth, totalHeight - cornerRadius)
-            quadraticBezierTo(totalWidth, totalHeight, totalWidth - cornerRadius, totalHeight)
+            quadraticTo(totalWidth, totalHeight, totalWidth - cornerRadius, totalHeight)
         } else {
             lineTo(endX, 0f)
             lineTo(endX, totalHeight)
         }
 
         lineTo(cornerRadius, totalHeight)
-        quadraticBezierTo(0f, totalHeight, 0f, totalHeight - cornerRadius)
+        quadraticTo(0f, totalHeight, 0f, totalHeight - cornerRadius)
         lineTo(0f, cornerRadius)
-        quadraticBezierTo(0f, 0f, cornerRadius, 0f)
+        quadraticTo(0f, 0f, cornerRadius, 0f)
         close()
     }
 
-    drawPath(path = path, color = color)
+    drawPath(path = path, color = color.copy(0.8f))
 }
 
-private fun DrawScope.drawAmmoArea(
+private fun DrawScope.drawRemainArea(
     startX: Float,
     width: Float,
     totalWidth: Float,
@@ -146,7 +162,7 @@ private fun DrawScope.drawAmmoArea(
 ) {
     val endX = startX + width
 
-    val ammoPath = Path().apply {
+    val remainPath = Path().apply {
         if (isFullWidth) {
             addRoundRect(
                 androidx.compose.ui.geometry.RoundRect(
@@ -162,9 +178,9 @@ private fun DrawScope.drawAmmoArea(
 
             if (endX >= totalWidth - cornerRadius) {
                 lineTo(totalWidth - cornerRadius, 0f)
-                quadraticBezierTo(totalWidth, 0f, totalWidth, cornerRadius)
+                quadraticTo(totalWidth, 0f, totalWidth, cornerRadius)
                 lineTo(totalWidth, totalHeight - cornerRadius)
-                quadraticBezierTo(totalWidth, totalHeight, totalWidth - cornerRadius, totalHeight)
+                quadraticTo(totalWidth, totalHeight, totalWidth - cornerRadius, totalHeight)
             } else {
                 lineTo(endX, 0f)
                 lineTo(endX, totalHeight)
@@ -175,7 +191,7 @@ private fun DrawScope.drawAmmoArea(
         }
     }
 
-    clipPath(ammoPath) {
+    clipPath(remainPath) {
         drawRect(
             color = backgroundColor,
             topLeft = Offset(startX, 0f),
@@ -193,10 +209,39 @@ private fun DrawScope.drawAmmoArea(
     }
 
     drawPath(
-        path = ammoPath,
+        path = remainPath,
         color = borderColor,
         style = Stroke(width = borderWidth)
     )
+}
+
+private fun DrawScope.drawRemainText(
+    text: String,
+    textMeasurer: TextMeasurer,
+    textStyle: TextStyle,
+    textColor: Color,
+    startX: Float,
+    width: Float,
+    totalHeight: Float
+) {
+    val textLayoutResult = textMeasurer.measure(
+        text = text,
+        style = textStyle.copy(color = textColor)
+    )
+
+    val textWidth = textLayoutResult.size.width
+    val textHeight = textLayoutResult.size.height
+    val padding = 8f
+
+    if (textWidth + padding * 2 <= width) {
+        val textX = startX + (width - textWidth) / 2
+        val textY = (totalHeight - textHeight) / 2
+
+        drawText(
+            textLayoutResult = textLayoutResult,
+            topLeft = Offset(textX, textY)
+        )
+    }
 }
 
 private fun DrawScope.drawStripePattern(
