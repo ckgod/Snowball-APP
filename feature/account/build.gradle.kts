@@ -25,10 +25,13 @@ kotlin {
             implementation(libs.compose.ui)
             implementation(libs.compose.components.resources)
             implementation(libs.compose.ui.tooling.preview)
-            implementation(libs.compose.ui.tooling)
 
             implementation(libs.decompose)
             implementation(libs.kotlinx.coroutines.core)
+        }
+
+        androidMain.dependencies {
+            implementation(libs.compose.ui.tooling)
         }
     }
 }

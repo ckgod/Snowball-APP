@@ -47,8 +47,8 @@ private fun AccountScreenPreview() {
                 name = "NVIDIA Corporation",
                 quantity = 20,
                 avgPrice = 400.0,
-                currentPrice = 450.0,
-                profitRate = 12.5,
+                currentPrice = 300.0,
+                profitRate = -25.0,
                 investedAmount = 8000.0,
                 capital = 14850.0
             )
