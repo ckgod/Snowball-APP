@@ -17,17 +17,25 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.font.FontWeight.Companion.Bold
 import androidx.compose.ui.unit.dp
+import ckgod.snowball.invest.ui.component.BouncySlidingText
 import ckgod.snowball.invest.ui.extensions.toDisplayPrice
 import ckgod.snowball.invest.ui.extensions.toDisplayProfit
 import ckgod.snowball.invest.ui.extensions.toDisplayProfitRate
 import ckgod.snowball.invest.ui.theme.getProfitColor
-import com.ckgod.snowball.model.AccountStatusResponse
 import com.ckgod.snowball.model.CurrencyType
+import com.ckgod.snowball.model.TotalAssetResponse
+import com.ckgod.snowball.model.orderableCashUsd
+import com.ckgod.snowball.model.totalAssetValueUsd
+import com.ckgod.snowball.model.totalEvalValueUsd
+import com.ckgod.snowball.model.totalProfitRate
+import com.ckgod.snowball.model.totalProfitUsd
+import com.ckgod.snowball.model.rpAmountUsd
 
 @Composable
 fun SummaryHeader(
-    data: AccountStatusResponse,
+    data: TotalAssetResponse,
     currencyType: CurrencyType = CurrencyType.USD,
     exchangeRate: Double = 1400.0
 ) {
@@ -51,10 +59,11 @@ fun SummaryHeader(
                 )
             }
             Spacer(modifier = Modifier.height(4.dp))
-            Text(
+            BouncySlidingText(
                 text = data.totalAssetValueUsd.toDisplayPrice(currencyType, exchangeRate),
-                style = MaterialTheme.typography.headlineMedium,
-                fontWeight = FontWeight.Bold,
+                style = MaterialTheme.typography.headlineMedium.copy(
+                    fontWeight = Bold
+                ),
                 color = MaterialTheme.colorScheme.onPrimaryContainer
             )
             Spacer(modifier = Modifier.height(4.dp))
@@ -134,6 +143,24 @@ fun SummaryHeader(
                     Spacer(modifier = Modifier.height(4.dp))
                     Text(
                         text = data.orderableCashUsd.toDisplayPrice(currencyType, exchangeRate),
+                        style = MaterialTheme.typography.titleMedium,
+                        fontWeight = FontWeight.Bold,
+                        color = MaterialTheme.colorScheme.onPrimaryContainer
+                    )
+                }
+
+                Column(
+                    modifier = Modifier.weight(1f, fill = true),
+                    horizontalAlignment = Alignment.Start
+                ) {
+                    Text(
+                        text = "외화 RP",
+                        style = MaterialTheme.typography.labelMedium,
+                        color = MaterialTheme.colorScheme.onPrimaryContainer.copy(alpha = 0.9f)
+                    )
+                    Spacer(modifier = Modifier.height(4.dp))
+                    Text(
+                        text = data.rpAmountUsd.toDisplayPrice(currencyType, exchangeRate),
                         style = MaterialTheme.typography.titleMedium,
                         fontWeight = FontWeight.Bold,
                         color = MaterialTheme.colorScheme.onPrimaryContainer

@@ -33,7 +33,7 @@ import ckgod.snowball.invest.ui.extensions.formatDecimal
 import ckgod.snowball.invest.ui.extensions.toDisplayPercent
 import ckgod.snowball.invest.ui.extensions.toDisplayPrice
 import ckgod.snowball.invest.ui.theme.PortfolioColors
-import com.ckgod.snowball.model.AccountStatusResponse
+import com.ckgod.snowball.model.TotalAssetResponse
 import com.ckgod.snowball.model.CurrencyType
 import com.ckgod.snowball.model.HoldingStockResponse
 import org.jetbrains.compose.resources.painterResource
@@ -43,7 +43,7 @@ import snowball.core.ui.generated.resources.ic_pie_chart
 @Composable
 fun PortfolioCard(
     modifier: Modifier = Modifier,
-    data: AccountStatusResponse,
+    data: TotalAssetResponse,
     currencyType: CurrencyType = CurrencyType.USD,
     exchangeRate: Double = 1400.0
 ) {

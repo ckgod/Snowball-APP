@@ -1,10 +1,10 @@
 package ckgod.snowball.invest.domain.state
 
-import com.ckgod.snowball.model.AccountStatusResponse
+import com.ckgod.snowball.model.TotalAssetResponse
 import com.ckgod.snowball.model.CurrencyType
 
 data class AccountState(
-    val data: AccountStatusResponse? = null,
+    val data: TotalAssetResponse? = null,
     val isLoading: Boolean = true,
     val isRefreshing: Boolean = false,
     val error: String? = null,

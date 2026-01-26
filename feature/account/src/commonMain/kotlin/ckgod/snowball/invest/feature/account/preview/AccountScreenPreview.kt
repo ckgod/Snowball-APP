@@ -4,7 +4,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.tooling.preview.Preview
 import ckgod.snowball.invest.feature.account.AccountContent
 import ckgod.snowball.invest.ui.theme.SnowballTheme
-import com.ckgod.snowball.model.AccountStatusResponse
+import com.ckgod.snowball.model.AssetItemResponse
+import com.ckgod.snowball.model.AssetType
+import com.ckgod.snowball.model.TotalAssetResponse
 import com.ckgod.snowball.model.CurrencyType
 import com.ckgod.snowball.model.HoldingStockResponse
 
@@ -12,15 +14,36 @@ import com.ckgod.snowball.model.HoldingStockResponse
 @Composable
 private fun AccountScreenPreview() {
 
-    val sampleData = AccountStatusResponse(
-        totalAssetValueUsd = 33000.0,
-        totalBuyingValueUsd = 30000.0,
-        totalEvalValueUsd = 33000.0,
-        totalProfitUsd = 3000.0,
-        totalProfitRate = 10.0,
-        totalCashUsd = 5000.0,
-        orderableCashUsd = 5000.0,
-        lockedCashUsd = 0.0,
+    val sampleData = TotalAssetResponse(
+        assets = listOf(
+            AssetItemResponse(
+                type = AssetType.OVERSEAS_STOCKS,
+                purchaseAmount = 14500.0,
+                evaluationAmount = 15950.0,
+                evaluationProfitLoss = 1450.0,
+                creditLoanAmount = 0.0,
+                realNetAssetAmount = 15950.0,
+                wholeWeightRate = 48.33
+            ),
+            AssetItemResponse(
+                type = AssetType.FOREIGN_CURRENCY,
+                purchaseAmount = 0.0,
+                evaluationAmount = 5000.0,
+                evaluationProfitLoss = 0.0,
+                creditLoanAmount = 0.0,
+                realNetAssetAmount = 5000.0,
+                wholeWeightRate = 15.15
+            ),
+            AssetItemResponse(
+                type = AssetType.TOTAL,
+                purchaseAmount = 30000.0,
+                evaluationAmount = 33000.0,
+                evaluationProfitLoss = 3000.0,
+                creditLoanAmount = 0.0,
+                realNetAssetAmount = 33000.0,
+                wholeWeightRate = 100.0
+            )
+        ),
         holdingStocks = listOf(
             HoldingStockResponse(
                 ticker = "TQQQ",
@@ -52,7 +75,8 @@ private fun AccountScreenPreview() {
                 investedAmount = 8000.0,
                 capital = 14850.0
             )
-        )
+        ),
+        exchangeRate = 1450.0
     )
 
     SnowballTheme(darkTheme = true) {

@@ -24,7 +24,7 @@ import ckgod.snowball.invest.feature.account.component.PortfolioCard
 import ckgod.snowball.invest.feature.account.component.StockCapitalCard
 import ckgod.snowball.invest.feature.account.component.SummaryHeader
 import ckgod.snowball.invest.ui.component.CustomPullToRefresh
-import com.ckgod.snowball.model.AccountStatusResponse
+import com.ckgod.snowball.model.TotalAssetResponse
 import com.ckgod.snowball.model.CurrencyType
 
 @Composable
@@ -90,7 +90,7 @@ fun AccountScreen(
 @Composable
 internal fun AccountContent(
     modifier: Modifier = Modifier,
-    accountStatus: AccountStatusResponse,
+    accountStatus: TotalAssetResponse,
     currencyType: CurrencyType,
     exchangeRate: Double
 ) {
