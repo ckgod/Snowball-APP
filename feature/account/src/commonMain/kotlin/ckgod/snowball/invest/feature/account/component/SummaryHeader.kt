@@ -32,6 +32,8 @@ import com.ckgod.snowball.model.totalEvalValueUsd
 import com.ckgod.snowball.model.totalProfitRate
 import com.ckgod.snowball.model.totalProfitUsd
 import com.ckgod.snowball.model.rpAmountUsd
+import com.ckgod.snowball.model.totalRPProfitUsd
+import com.ckgod.snowball.model.totalStockProfitUsd
 
 @Composable
 fun SummaryHeader(
@@ -123,10 +125,10 @@ fun SummaryHeader(
                         )
 
                         Text(
-                            text = "(${data.totalProfitUsd.toDisplayProfit(currencyType, exchangeRate)})",
+                            text = "(${data.totalStockProfitUsd.toDisplayProfit(currencyType, exchangeRate)})",
                             style = MaterialTheme.typography.titleMedium,
                             fontWeight = FontWeight.SemiBold,
-                            color = getProfitColor(data.totalProfitUsd)
+                            color = getProfitColor(data.totalStockProfitUsd)
                         )
                     }
                 }
@@ -159,12 +161,24 @@ fun SummaryHeader(
                         color = MaterialTheme.colorScheme.onPrimaryContainer.copy(alpha = 0.9f)
                     )
                     Spacer(modifier = Modifier.height(4.dp))
-                    Text(
-                        text = data.rpAmountUsd.toDisplayPrice(currencyType, exchangeRate),
-                        style = MaterialTheme.typography.titleMedium,
-                        fontWeight = FontWeight.Bold,
-                        color = MaterialTheme.colorScheme.onPrimaryContainer
-                    )
+                    FlowRow(
+                        horizontalArrangement = Arrangement.spacedBy(4.dp),
+                        verticalArrangement = Arrangement.spacedBy(2.dp)
+                    ) {
+                        Text(
+                            text = data.rpAmountUsd.toDisplayPrice(currencyType, exchangeRate),
+                            style = MaterialTheme.typography.titleMedium,
+                            fontWeight = FontWeight.Bold,
+                            color = MaterialTheme.colorScheme.onPrimaryContainer
+                        )
+
+                        Text(
+                            text = "(${data.totalRPProfitUsd.toDisplayProfit(currencyType, exchangeRate)})",
+                            style = MaterialTheme.typography.titleMedium,
+                            fontWeight = FontWeight.SemiBold,
+                            color = getProfitColor(data.totalRPProfitUsd)
+                        )
+                    }
                 }
             }
         }
