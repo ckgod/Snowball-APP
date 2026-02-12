@@ -2,14 +2,12 @@ package ckgod.snowball.invest.feature.account.component
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -20,6 +18,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.font.FontWeight.Companion.Bold
 import androidx.compose.ui.unit.dp
 import ckgod.snowball.invest.ui.component.BouncySlidingText
+import ckgod.snowball.invest.ui.component.SectionCard
 import ckgod.snowball.invest.ui.extensions.toDisplayPrice
 import ckgod.snowball.invest.ui.extensions.toDisplayProfit
 import ckgod.snowball.invest.ui.extensions.toDisplayProfitRate
@@ -41,15 +40,7 @@ fun SummaryHeader(
     currencyType: CurrencyType = CurrencyType.USD,
     exchangeRate: Double = 1400.0
 ) {
-    Box(
-        modifier = Modifier
-            .fillMaxWidth()
-            .background(
-                color = MaterialTheme.colorScheme.primaryContainer,
-                shape = MaterialTheme.shapes.medium
-            )
-            .padding(16.dp)
-    ) {
+    SectionCard {
         Column {
             Row(
                 verticalAlignment = Alignment.CenterVertically

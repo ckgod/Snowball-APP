@@ -1,6 +1,5 @@
 package ckgod.snowball.invest.feature.home
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -28,6 +27,7 @@ import ckgod.snowball.invest.feature.home.model.HomeEvent
 import ckgod.snowball.invest.domain.state.InvestmentStatusState
 import ckgod.snowball.invest.ui.component.BouncySlidingText
 import ckgod.snowball.invest.ui.component.CurrencyToggleSwitch
+import ckgod.snowball.invest.ui.component.SectionCard
 import ckgod.snowball.invest.ui.component.CustomPullToRefresh
 import ckgod.snowball.invest.ui.extensions.toDisplayProfit
 import ckgod.snowball.invest.ui.extensions.withFixedHeight
@@ -138,15 +138,7 @@ private fun TotalProfitHeader(
     currencyType: CurrencyType,
     onCurrencySwitch: (CurrencyType) -> Unit
 ) {
-    Box(
-        modifier = Modifier
-            .fillMaxWidth()
-            .background(
-                color = MaterialTheme.colorScheme.primaryContainer,
-                shape = MaterialTheme.shapes.medium
-            )
-            .padding(16.dp)
-    ) {
+    SectionCard {
         Column(
             modifier = Modifier
                 .fillMaxWidth()

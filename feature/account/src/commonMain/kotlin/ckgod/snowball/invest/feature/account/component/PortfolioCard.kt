@@ -29,6 +29,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import ckgod.snowball.invest.ui.component.InvestmentProgressBar
+import ckgod.snowball.invest.ui.component.SectionCard
 import ckgod.snowball.invest.ui.extensions.formatDecimal
 import ckgod.snowball.invest.ui.extensions.toDisplayPercent
 import ckgod.snowball.invest.ui.extensions.toDisplayPrice
@@ -65,15 +66,7 @@ fun PortfolioCard(
         }
     }
 
-    Box(
-        modifier = Modifier
-            .fillMaxWidth()
-            .background(
-                color = MaterialTheme.colorScheme.primaryContainer,
-                shape = MaterialTheme.shapes.medium
-            )
-            .padding(16.dp)
-    ) {
+    SectionCard {
         Column(
             modifier = Modifier
                 .fillMaxWidth()
