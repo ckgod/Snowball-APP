@@ -51,7 +51,11 @@ fun MainViewController(): UIViewController {
                     )
                 },
                 backtestComponentFactory = { backtestCtx ->
-                    DefaultBacktestComponent(backtestCtx)
+                    DefaultBacktestComponent(
+                        componentContext = backtestCtx,
+                        getStockPriceHistoryUseCase = getKoin().get(),
+                        runBacktestUseCase = getKoin().get()
+                    )
                 },
                 output = output
             )

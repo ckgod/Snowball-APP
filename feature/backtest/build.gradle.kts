@@ -15,6 +15,9 @@ kotlin {
     sourceSets {
         commonMain.dependencies {
             implementation(projects.core.ui)
+            implementation(projects.core.data)
+            implementation(projects.snowballModels)
+            implementation(projects.core.domain)
 
             implementation(libs.compose.runtime)
             implementation(libs.compose.foundation)
@@ -22,6 +25,8 @@ kotlin {
             implementation(libs.compose.ui)
 
             implementation(libs.decompose)
+            implementation(libs.kotlinx.coroutines.core)
+            implementation(libs.kotlinx.datetime)
         }
     }
 }

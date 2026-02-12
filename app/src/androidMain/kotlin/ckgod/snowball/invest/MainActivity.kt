@@ -47,7 +47,11 @@ class MainActivity : ComponentActivity() {
                         )
                     },
                     backtestComponentFactory = { backtestContext ->
-                        DefaultBacktestComponent(backtestContext)
+                        DefaultBacktestComponent(
+                            componentContext = backtestContext,
+                            getStockPriceHistoryUseCase = get(),
+                            runBacktestUseCase = get()
+                        )
                     },
                     output = output
                 )

@@ -14,7 +14,7 @@ import com.arkivanov.decompose.extensions.compose.stack.Children
 import com.arkivanov.decompose.extensions.compose.stack.animation.fade
 import com.arkivanov.decompose.extensions.compose.stack.animation.stackAnimation
 import com.arkivanov.decompose.extensions.compose.subscribeAsState
-import ckgod.snowball.invest.feature.backtest.BacktestTab
+import ckgod.snowball.invest.feature.backtest.BacktestScreen
 import ckgod.snowball.invest.feature.account.AccountScreen
 import ckgod.snowball.invest.feature.home.HomeScreen
 import org.jetbrains.compose.resources.painterResource
@@ -80,7 +80,7 @@ fun MainContent(
             when (val instance = child.instance) {
                 is MainComponent.Child.Home -> HomeScreen(component = instance.component)
                 is MainComponent.Child.Account -> AccountScreen(component = instance.component)
-                is MainComponent.Child.Backtest -> BacktestTab()
+                is MainComponent.Child.Backtest -> BacktestScreen(component = instance.component)
             }
         }
     }

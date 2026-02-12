@@ -10,10 +10,14 @@ import ckgod.snowball.invest.data.repository.CurrencyPreferencesRepository
 import ckgod.snowball.invest.data.repository.CurrencyPreferencesRepositoryImpl
 import ckgod.snowball.invest.data.repository.AccountRepository
 import ckgod.snowball.invest.data.repository.AccountRepositoryImpl
+import ckgod.snowball.invest.data.repository.BacktestRepository
+import ckgod.snowball.invest.data.repository.BacktestRepositoryImpl
 import ckgod.snowball.invest.domain.usecase.GetAccountUseCase
 import ckgod.snowball.invest.domain.usecase.GetCurrencyInfoUseCase
 import ckgod.snowball.invest.domain.usecase.GetInvestmentStatusUseCase
 import ckgod.snowball.invest.domain.usecase.GetStockDetailUseCase
+import ckgod.snowball.invest.domain.usecase.GetStockPriceHistoryUseCase
+import ckgod.snowball.invest.domain.usecase.RunBacktestUseCase
 import org.koin.dsl.module
 
 val appModule = module {
@@ -47,6 +51,12 @@ val appModule = module {
         )
     }
 
+    single<BacktestRepository> {
+        BacktestRepositoryImpl(
+            httpClient = get()
+        )
+    }
+
     // UseCases
     factory {
         GetCurrencyInfoUseCase(
@@ -72,6 +82,18 @@ val appModule = module {
         GetAccountUseCase(
             currencyPreferencesRepository = get(),
             accountRepository = get()
+        )
+    }
+
+    factory {
+        GetStockPriceHistoryUseCase(
+            backtestRepository = get()
+        )
+    }
+
+    factory {
+        RunBacktestUseCase(
+            backtestRepository = get()
         )
     }
 }
