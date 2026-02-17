@@ -2,6 +2,7 @@ package ckgod.snowball.invest.navigation
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import ckgod.snowball.invest.feature.backtest.BacktestResultContent
 import ckgod.snowball.invest.feature.detail.StockDetailContent
 import com.arkivanov.decompose.extensions.compose.stack.Children
 
@@ -21,6 +22,7 @@ fun RootContent(
         when (val instance = child.instance) {
             is RootComponent.Child.Main -> MainContent(component = instance.component)
             is RootComponent.Child.StockDetail -> StockDetailContent(component = instance.component)
+            is RootComponent.Child.BacktestResult -> BacktestResultContent(component = instance.component)
         }
     }
 }

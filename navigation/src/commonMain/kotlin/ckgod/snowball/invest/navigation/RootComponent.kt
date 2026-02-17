@@ -1,5 +1,6 @@
 package ckgod.snowball.invest.navigation
 
+import ckgod.snowball.invest.feature.backtest.BacktestResultComponent
 import ckgod.snowball.invest.feature.detail.StockDetailComponent
 import com.arkivanov.decompose.ComponentContext
 import com.arkivanov.decompose.router.stack.ChildStack
@@ -9,6 +10,7 @@ import com.arkivanov.decompose.router.stack.pop
 import com.arkivanov.decompose.router.stack.push
 import com.arkivanov.decompose.value.Value
 import com.arkivanov.essenty.backhandler.BackHandlerOwner
+import com.ckgod.snowball.model.BacktestResponse
 import kotlinx.serialization.Serializable
 
 interface RootComponent : BackHandlerOwner {
@@ -19,6 +21,7 @@ interface RootComponent : BackHandlerOwner {
     sealed interface Child {
         data class Main(val component: MainComponent) : Child
         data class StockDetail(val component: StockDetailComponent) : Child
+        data class BacktestResult(val component: BacktestResultComponent) : Child
     }
 }
 
@@ -26,9 +29,12 @@ class DefaultRootComponent(
     componentContext: ComponentContext,
     private val mainComponentFactory: (ComponentContext, (MainComponent.Output) -> Unit) -> MainComponent,
     private val stockDetailComponentFactory: (ComponentContext, String, () -> Unit) -> StockDetailComponent,
+    private val backtestResultComponentFactory: (ComponentContext, BacktestResponse?, () -> Unit) -> BacktestResultComponent,
 ) : RootComponent, ComponentContext by componentContext {
 
     private val navigation = StackNavigation<Config>()
+
+    private var latestBacktestResponse: BacktestResponse? = null
 
     override val childStack: Value<ChildStack<*, RootComponent.Child>> =
         childStack(
@@ -58,12 +64,29 @@ class DefaultRootComponent(
                     ::onStockDetailOutput
                 )
             )
+
+            is Config.BacktestResult -> {
+                val response = latestBacktestResponse
+                latestBacktestResponse = null
+                RootComponent.Child.BacktestResult(
+                    component = backtestResultComponentFactory(
+                        componentContext,
+                        response,
+                        { navigation.pop() }
+                    )
+                )
+            }
         }
 
     private fun onMainOutput(output: MainComponent.Output) {
         when (output) {
             is MainComponent.Output.NavigateToStockDetail -> {
                 navigation.push(Config.StockDetail(output.ticker))
+            }
+
+            is MainComponent.Output.NavigateToBacktestResult -> {
+                latestBacktestResponse = output.response
+                navigation.push(Config.BacktestResult)
             }
         }
     }
@@ -83,5 +106,8 @@ class DefaultRootComponent(
 
         @Serializable
         data class StockDetail(val ticker: String) : Config
+
+        @Serializable
+        data object BacktestResult : Config
     }
 }

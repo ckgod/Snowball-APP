@@ -9,6 +9,7 @@ import com.arkivanov.decompose.router.stack.bringToFront
 import com.arkivanov.decompose.router.stack.childStack
 import com.arkivanov.decompose.value.Value
 import ckgod.snowball.invest.feature.home.HomeComponent
+import com.ckgod.snowball.model.BacktestResponse
 import kotlinx.serialization.Serializable
 
 interface MainComponent {
@@ -28,6 +29,7 @@ interface MainComponent {
 
     sealed interface Output {
         data class NavigateToStockDetail(val ticker: String) : Output
+        data class NavigateToBacktestResult(val response: BacktestResponse) : Output
     }
 }
 
@@ -35,7 +37,7 @@ class DefaultMainComponent(
     componentContext: ComponentContext,
     private val homeComponentFactory: (ComponentContext, (String) -> Unit) -> HomeComponent,
     private val accountComponentFactory: (ComponentContext) -> AccountComponent,
-    private val backtestComponentFactory: (ComponentContext) -> BacktestComponent,
+    private val backtestComponentFactory: (ComponentContext, (BacktestResponse) -> Unit) -> BacktestComponent,
     private val output: (MainComponent.Output) -> Unit
 ) : MainComponent, ComponentContext by componentContext {
 
@@ -67,7 +69,9 @@ class DefaultMainComponent(
             )
 
             Config.Backtest -> MainComponent.Child.Backtest(
-                component = backtestComponentFactory(componentContext)
+                component = backtestComponentFactory(componentContext) { response ->
+                    output(MainComponent.Output.NavigateToBacktestResult(response))
+                }
             )
         }
 

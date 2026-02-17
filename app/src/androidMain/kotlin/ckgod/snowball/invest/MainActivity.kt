@@ -7,6 +7,7 @@ import androidx.activity.enableEdgeToEdge
 import com.arkivanov.decompose.defaultComponentContext
 import ckgod.snowball.invest.di.appModule
 import ckgod.snowball.invest.feature.backtest.DefaultBacktestComponent
+import ckgod.snowball.invest.feature.backtest.DefaultBacktestResultComponent
 import ckgod.snowball.invest.feature.account.DefaultAccountComponent
 import ckgod.snowball.invest.feature.home.DefaultHomeComponent
 import ckgod.snowball.invest.navigation.DefaultRootComponent
@@ -46,11 +47,12 @@ class MainActivity : ComponentActivity() {
                             getAccountUseCase = get()
                         )
                     },
-                    backtestComponentFactory = { backtestContext ->
+                    backtestComponentFactory = { backtestContext, onBacktestCompleted ->
                         DefaultBacktestComponent(
                             componentContext = backtestContext,
                             getStockPriceHistoryUseCase = get(),
-                            runBacktestUseCase = get()
+                            runBacktestUseCase = get(),
+                            onBacktestCompleted = onBacktestCompleted
                         )
                     },
                     output = output
@@ -62,6 +64,13 @@ class MainActivity : ComponentActivity() {
                     ticker = ticker,
                     onBack = onBack,
                     getStockDetailUseCase = get()
+                )
+            },
+            backtestResultComponentFactory = { context, response, onBack ->
+                DefaultBacktestResultComponent(
+                    componentContext = context,
+                    response = response,
+                    onBack = onBack
                 )
             }
         )

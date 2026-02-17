@@ -6,6 +6,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.ComposeUIViewController
 import ckgod.snowball.invest.di.appModule
 import ckgod.snowball.invest.feature.backtest.DefaultBacktestComponent
+import ckgod.snowball.invest.feature.backtest.DefaultBacktestResultComponent
 import ckgod.snowball.invest.feature.account.DefaultAccountComponent
 import ckgod.snowball.invest.feature.home.DefaultHomeComponent
 import ckgod.snowball.invest.navigation.DefaultMainComponent
@@ -50,11 +51,12 @@ fun MainViewController(): UIViewController {
                         getAccountUseCase = getKoin().get()
                     )
                 },
-                backtestComponentFactory = { backtestCtx ->
+                backtestComponentFactory = { backtestCtx, onBacktestCompleted ->
                     DefaultBacktestComponent(
                         componentContext = backtestCtx,
                         getStockPriceHistoryUseCase = getKoin().get(),
-                        runBacktestUseCase = getKoin().get()
+                        runBacktestUseCase = getKoin().get(),
+                        onBacktestCompleted = onBacktestCompleted
                     )
                 },
                 output = output
@@ -66,6 +68,13 @@ fun MainViewController(): UIViewController {
                 ticker = ticker,
                 onBack = onBack,
                 getStockDetailUseCase = getKoin().get()
+            )
+        },
+        backtestResultComponentFactory = { ctx, response, onBack ->
+            DefaultBacktestResultComponent(
+                componentContext = ctx,
+                response = response,
+                onBack = onBack
             )
         }
     )

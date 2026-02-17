@@ -7,6 +7,7 @@ import ckgod.snowball.invest.domain.usecase.RunBacktestUseCase
 import com.arkivanov.decompose.ComponentContext
 import com.arkivanov.essenty.lifecycle.doOnDestroy
 import com.ckgod.snowball.model.BacktestRequest
+import com.ckgod.snowball.model.BacktestResponse
 import com.ckgod.snowball.model.StarMode
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -35,7 +36,8 @@ interface BacktestComponent {
 class DefaultBacktestComponent(
     componentContext: ComponentContext,
     private val getStockPriceHistoryUseCase: GetStockPriceHistoryUseCase,
-    private val runBacktestUseCase: RunBacktestUseCase
+    private val runBacktestUseCase: RunBacktestUseCase,
+    private val onBacktestCompleted: (BacktestResponse) -> Unit
 ) : BacktestComponent, ComponentContext by componentContext {
 
     private val scope = CoroutineScope(SupervisorJob() + Dispatchers.Main.immediate)
@@ -150,11 +152,13 @@ class DefaultBacktestComponent(
                             isRunningBacktest = true,
                             error = null
                         )
-                        is Result.Success -> currentState.copy(
-                            backtestResult = result.data,
-                            isRunningBacktest = false,
-                            error = null
-                        )
+                        is Result.Success -> {
+                            onBacktestCompleted(result.data)
+                            currentState.copy(
+                                isRunningBacktest = false,
+                                error = null
+                            )
+                        }
                         is Result.Error -> currentState.copy(
                             isRunningBacktest = false,
                             error = result.exception.message
