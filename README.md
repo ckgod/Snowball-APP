@@ -8,7 +8,15 @@ Android/iOS 투자 관리 앱 — Kotlin Multiplatform 기반
 
 ## Screenshots
 
+### 일반
+
 <img src="./docs/home_screenshot.png" width="250" alt="Home"> <img src="./docs/account_screenshot.png" width="250" alt="Account"> <img src="./docs/backtest_screenshot.png" width="250" alt="Backtest">
+
+### 폴더블
+
+펼친 화면에서는 왼쪽에 목록, 오른쪽에 상세를 나란히 보여줍니다. 접은 화면은 일반과 동일합니다.
+
+<img src="./docs/foldable_two_pane_screenshot.png" width="760" alt="폴더블 2-pane">
 
 ## Module Structure
 
