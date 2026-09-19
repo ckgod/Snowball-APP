@@ -36,10 +36,14 @@ import org.jetbrains.compose.resources.painterResource
 import snowball.core.ui.generated.resources.Res
 import snowball.core.ui.generated.resources.ic_arrow_back
 
+/**
+ * @param showBackButton 2-pane 에서는 false. 왼쪽에 목록이 그대로 남아 있어 돌아갈 곳이 없다.
+ */
 @Composable
 fun StockDetailContent(
     component: StockDetailComponent,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    showBackButton: Boolean = true
 ) {
     val state by component.state.collectAsState()
 
@@ -52,7 +56,8 @@ fun StockDetailContent(
         },
         modifier = modifier,
         currencyType = state.currencyType,
-        exchangeRate = state.exchangeRate
+        exchangeRate = state.exchangeRate,
+        showBackButton = showBackButton
     )
 }
 
@@ -63,7 +68,8 @@ fun StockDetailScreen(
     onEvent: (StockDetailEvent) -> Unit,
     modifier: Modifier = Modifier,
     currencyType: CurrencyType,
-    exchangeRate: Double
+    exchangeRate: Double,
+    showBackButton: Boolean = true
 ) {
     Scaffold(
         modifier = modifier.fillMaxSize(),
@@ -77,11 +83,13 @@ fun StockDetailScreen(
                     )
                 },
                 navigationIcon = {
-                    IconButton(onClick = { onEvent(StockDetailEvent.BackClick) }) {
-                        Icon(
-                            painter = painterResource(Res.drawable.ic_arrow_back),
-                            contentDescription = "Back"
-                        )
+                    if (showBackButton) {
+                        IconButton(onClick = { onEvent(StockDetailEvent.BackClick) }) {
+                            Icon(
+                                painter = painterResource(Res.drawable.ic_arrow_back),
+                                contentDescription = "Back"
+                            )
+                        }
                     }
                 },
                 colors = TopAppBarDefaults.topAppBarColors(
