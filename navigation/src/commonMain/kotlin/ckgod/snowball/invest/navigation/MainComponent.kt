@@ -30,6 +30,9 @@ interface MainComponent {
     sealed interface Output {
         data class NavigateToStockDetail(val ticker: String) : Output
         data class NavigateToBacktestResult(val response: BacktestResponse) : Output
+
+        /** 종목 상세와 상관없는 탭으로 옮겨갔다. 2-pane 이면 우측 패널을 비워야 한다. */
+        data object StockDetailNoLongerRelevant : Output
     }
 }
 
@@ -86,6 +89,10 @@ class DefaultMainComponent(
             MainComponent.Tab.BACKTEST -> Config.Backtest
         }
         navigation.bringToFront(config)
+
+        if (tab != MainComponent.Tab.HOME) {
+            output(MainComponent.Output.StockDetailNoLongerRelevant)
+        }
     }
 
     @Serializable
