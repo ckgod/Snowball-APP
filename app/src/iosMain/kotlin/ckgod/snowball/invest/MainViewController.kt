@@ -67,7 +67,8 @@ fun MainViewController(): UIViewController {
                 componentContext = ctx,
                 ticker = ticker,
                 onBack = onBack,
-                getStockDetailUseCase = getKoin().get()
+                getStockDetailUseCase = getKoin().get(),
+                manageOpenOrdersUseCase = getKoin().get()
             )
         },
         backtestResultComponentFactory = { ctx, response, onBack ->

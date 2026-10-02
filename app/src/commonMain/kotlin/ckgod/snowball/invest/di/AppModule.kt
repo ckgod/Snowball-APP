@@ -18,6 +18,9 @@ import ckgod.snowball.invest.domain.usecase.GetInvestmentStatusUseCase
 import ckgod.snowball.invest.domain.usecase.GetStockDetailUseCase
 import ckgod.snowball.invest.domain.usecase.GetStockPriceHistoryUseCase
 import ckgod.snowball.invest.domain.usecase.RunBacktestUseCase
+import ckgod.snowball.invest.domain.usecase.ManageOpenOrdersUseCase
+import ckgod.snowball.invest.data.repository.OrderRepository
+import ckgod.snowball.invest.data.repository.OrderRepositoryImpl
 import org.koin.dsl.module
 
 val appModule = module {
@@ -48,6 +51,13 @@ val appModule = module {
     single<AccountRepository> {
         AccountRepositoryImpl(
             httpClient = get()
+        )
+    }
+
+    single<OrderRepository> {
+        OrderRepositoryImpl(
+            httpClient = get(),
+            orderKey = AppConfig.ORDER_API_KEY
         )
     }
 
@@ -88,6 +98,12 @@ val appModule = module {
     factory {
         GetStockPriceHistoryUseCase(
             backtestRepository = get()
+        )
+    }
+
+    factory {
+        ManageOpenOrdersUseCase(
+            orderRepository = get()
         )
     }
 

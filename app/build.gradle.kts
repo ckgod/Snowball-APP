@@ -18,6 +18,7 @@ val localProperties = Properties().apply {
 
 val apiBaseUrl: String = localProperties.getProperty("api.base.url") ?: "http://0.0.0.0:8080"
 val apiKey: String = localProperties.getProperty("api.key") ?: ""
+val orderApiKey: String = localProperties.getProperty("api.order.key") ?: ""
 
 kotlin {
     androidTarget {
@@ -95,6 +96,7 @@ android {
 
         buildConfigField("String", "API_BASE_URL", "\"$apiBaseUrl\"")
         buildConfigField("String", "API_KEY", "\"$apiKey\"")
+        buildConfigField("String", "ORDER_API_KEY", "\"$orderApiKey\"")
     }
 
     buildFeatures {
