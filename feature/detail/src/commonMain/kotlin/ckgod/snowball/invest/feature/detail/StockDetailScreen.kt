@@ -169,11 +169,13 @@ private fun StockDetailList(
 
             items(
                 items = listItems,
+                // 주문번호가 아니라 DB id 로 키를 잡는다. 거부(REJECTED) 주문은 주문번호가 빈 문자열이라
+                // 여러 건이면 키가 겹쳐 LazyColumn 이 죽는다.
                 key = { listItem ->
                     when (listItem) {
-                        is HistoryListItem.Single -> listItem.item.orderNo
+                        is HistoryListItem.Single -> "history_${listItem.item.id}"
                         is HistoryListItem.CrashProtectionGroup ->
-                            "crash_group_${listItem.items.first().orderNo}"
+                            "crash_group_${listItem.items.first().id}"
                     }
                 }
             ) { listItem ->
