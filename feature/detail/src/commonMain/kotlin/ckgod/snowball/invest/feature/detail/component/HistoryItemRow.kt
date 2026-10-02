@@ -27,6 +27,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import ckgod.snowball.invest.ui.extensions.toDisplayPercent
@@ -110,6 +111,19 @@ fun HistoryItemRow(
             }
 
             PriceFlowText(data, sideColor, currencyType, exchangeRate)
+
+            if (data.tradeStatus == TradeStatus.REJECTED) {
+                Text(
+                    text = data.failReason ?: "주문이 접수되지 않았습니다",
+                    style = TextStyle(
+                        fontSize = 11.sp,
+                        lineHeight = 14.sp
+                    ),
+                    color = MaterialTheme.colorScheme.error,
+                    maxLines = 2,
+                    overflow = TextOverflow.Ellipsis
+                )
+            }
         }
 
         Spacer(modifier = Modifier.width(8.dp))
@@ -200,7 +214,7 @@ private fun PriceFlowText(data: TradeHistoryResponse, sideColor: Color, currency
                 )
             }
         }
-        TradeStatus.CANCELED -> {
+        TradeStatus.CANCELED, TradeStatus.REJECTED -> {
             Row(
                 horizontalArrangement = Arrangement.spacedBy(2.dp),
                 verticalAlignment = Alignment.CenterVertically
@@ -241,6 +255,7 @@ private fun CompactStatusBadge(data: TradeHistoryResponse, sideColor: Color) {
         TradeStatus.FILLED -> "체결" to sideColor
         TradeStatus.CANCELED -> "취소" to MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.5f)
         TradeStatus.PARTIAL -> "부분" to sideColor
+        TradeStatus.REJECTED -> "거부" to MaterialTheme.colorScheme.error
     }
 
     Surface(
