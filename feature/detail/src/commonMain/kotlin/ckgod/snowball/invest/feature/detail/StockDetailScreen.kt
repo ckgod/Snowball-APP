@@ -1,5 +1,10 @@
 package ckgod.snowball.invest.feature.detail
 
+import ckgod.snowball.invest.feature.detail.component.OpenOrdersCard
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.material3.SnackbarHostState
+import androidx.compose.material3.SnackbarHost
 import androidx.compose.animation.Crossfade
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.layout.Arrangement
@@ -54,6 +59,9 @@ fun StockDetailContent(
         onEvent = { event ->
             when (event) {
                 StockDetailEvent.BackClick -> component.onBackClick()
+                is StockDetailEvent.CancelOrder -> component.onCancelOrder(event.orderNo)
+                is StockDetailEvent.ModifyOrder -> component.onModifyOrder(event.orderNo, event.price, event.quantity)
+                StockDetailEvent.OrderMessageShown -> component.onOrderMessageShown()
             }
         },
         modifier = modifier,
@@ -73,8 +81,16 @@ fun StockDetailScreen(
     exchangeRate: Double,
     showBackButton: Boolean = true
 ) {
+    val snackbarHostState = remember { SnackbarHostState() }
+    LaunchedEffect(state.orderMessage) {
+        val message = state.orderMessage ?: return@LaunchedEffect
+        snackbarHostState.showSnackbar(message)
+        onEvent(StockDetailEvent.OrderMessageShown)
+    }
+
     Scaffold(
         modifier = modifier.fillMaxSize(),
+        snackbarHost = { SnackbarHost(snackbarHostState) },
         topBar = {
             TopAppBar(
                 title = {
@@ -118,7 +134,8 @@ fun StockDetailScreen(
                 StockDetailList(
                     state = state,
                     currencyType = currencyType,
-                    exchangeRate = exchangeRate
+                    exchangeRate = exchangeRate,
+                    onEvent = onEvent
                 )
             }
         }
@@ -133,6 +150,7 @@ private fun StockDetailList(
     state: StockDetailState,
     currencyType: CurrencyType,
     exchangeRate: Double,
+    onEvent: (StockDetailEvent) -> Unit,
     modifier: Modifier = Modifier
 ) {
     LazyColumn(
@@ -150,6 +168,19 @@ private fun StockDetailList(
 
         item(key = "strategy_dashboard") {
             StrategyDashboard(data = state.stockDetail)
+        }
+
+        if (state.openOrders.isNotEmpty()) {
+            item(key = "open_orders") {
+                OpenOrdersCard(
+                    orders = state.openOrders,
+                    isActionRunning = state.isOrderActionRunning,
+                    onCancel = { orderNo -> onEvent(StockDetailEvent.CancelOrder(orderNo)) },
+                    onModify = { orderNo, price, quantity ->
+                        onEvent(StockDetailEvent.ModifyOrder(orderNo, price, quantity))
+                    }
+                )
+            }
         }
 
         item(key = "order_plan_card") {
