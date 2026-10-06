@@ -153,6 +153,12 @@ private fun StockDetailList(
     onEvent: (StockDetailEvent) -> Unit,
     modifier: Modifier = Modifier
 ) {
+    // 그리는 도중(LazyColumn 빌더)에 묶으면 매번 새 리스트가 생겨 폭락대비 묶음이 스킵되지 않는다.
+    // 내역이 바뀔 때만 다시 묶는다.
+    val groupedHistory = remember(state.historyItems) {
+        state.historyItems.mapValues { (_, historyList) -> historyList.toHistoryListItems() }
+    }
+
     LazyColumn(
         modifier = modifier.fillMaxSize(),
         contentPadding = PaddingValues(16.dp),
@@ -191,12 +197,10 @@ private fun StockDetailList(
             )
         }
 
-        state.historyItems.entries.forEach { (date, historyList) ->
+        groupedHistory.forEach { (date, listItems) ->
             stickyHeader(key = "header_$date") {
                 DateHeader(date)
             }
-
-            val listItems = historyList.toHistoryListItems()
 
             items(
                 items = listItems,
