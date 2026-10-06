@@ -23,6 +23,13 @@ kotlin {
 
             // Serialization
             implementation(libs.kotlinx.serialization.json)
+            implementation(libs.kotlinx.datetime)
+            // 주문 요청 HMAC 서명 (Android·iOS 공용 순수 Kotlin 구현)
+            implementation(libs.kotlincrypto.hmac.sha2)
+        }
+
+        commonTest.dependencies {
+            implementation(libs.kotlin.test)
         }
 
         androidMain.dependencies {
