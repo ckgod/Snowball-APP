@@ -32,6 +32,10 @@ object HttpClientFactory {
             install(Logging) {
                 logger = Logger.SIMPLE
                 level = LogLevel.ALL
+                // 로그캣에 키가 그대로 찍히지 않게 가린다 (주문 키는 실주문을 바꿀 수 있다)
+                sanitizeHeader { name ->
+                    name.equals("x-api-key", ignoreCase = true) || name.equals("X-Order-Key", ignoreCase = true)
+                }
             }
         }
     }

@@ -58,7 +58,8 @@ class MainActivity : ComponentActivity() {
                         componentContext = context,
                         ticker = ticker,
                         onBack = onBack,
-                        getStockDetailUseCase = get()
+                        getStockDetailUseCase = get(),
+                        manageOpenOrdersUseCase = get()
                     )
                 },
                 backtestResultComponentFactory = { context, response, onBack ->

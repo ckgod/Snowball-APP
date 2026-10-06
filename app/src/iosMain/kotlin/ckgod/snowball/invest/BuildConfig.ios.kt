@@ -10,4 +10,8 @@ actual object AppConfig {
     actual val API_KEY: String
         get() = NSBundle.mainBundle.objectForInfoDictionaryKey("API_KEY") as? String
             ?: "exit"
+
+    actual val ORDER_API_KEY: String
+        get() = NSBundle.mainBundle.objectForInfoDictionaryKey("ORDER_API_KEY") as? String
+            ?: ""
 }

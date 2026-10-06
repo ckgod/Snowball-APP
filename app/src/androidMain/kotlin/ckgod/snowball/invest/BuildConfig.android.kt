@@ -7,4 +7,6 @@ actual object AppConfig {
         get() = GeneratedBuildConfig.API_BASE_URL
     actual val API_KEY: String
         get() = GeneratedBuildConfig.API_KEY
+    actual val ORDER_API_KEY: String
+        get() = GeneratedBuildConfig.ORDER_API_KEY
 }
