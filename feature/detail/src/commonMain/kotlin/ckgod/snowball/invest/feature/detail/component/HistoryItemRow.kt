@@ -108,6 +108,25 @@ fun HistoryItemRow(
                         color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
                 }
+
+                // 앱에서 직접 넣은 주문. 자동매매 주문과 섞여 있어도 구분되게 한다.
+                if (data.isManual) {
+                    Surface(
+                        shape = RoundedCornerShape(2.dp),
+                        color = MaterialTheme.colorScheme.primary.copy(alpha = 0.15f)
+                    ) {
+                        Text(
+                            text = "수동",
+                            modifier = Modifier.padding(horizontal = 5.dp, vertical = 2.dp),
+                            style = TextStyle(
+                                fontSize = 10.sp,
+                                lineHeight = 10.sp,
+                                fontWeight = FontWeight.Bold
+                            ),
+                            color = MaterialTheme.colorScheme.primary
+                        )
+                    }
+                }
             }
 
             PriceFlowText(data, sideColor, currencyType, exchangeRate)

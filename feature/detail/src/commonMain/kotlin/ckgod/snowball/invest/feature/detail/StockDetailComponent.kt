@@ -5,6 +5,10 @@ import ckgod.snowball.invest.domain.state.StockDetailState
 import ckgod.snowball.invest.domain.usecase.GetStockDetailUseCase
 import ckgod.snowball.invest.domain.usecase.ManageOpenOrdersUseCase
 import com.ckgod.snowball.model.OrderActionResponse
+import com.ckgod.snowball.model.OrderSide
+import com.ckgod.snowball.model.OrderType
+import com.ckgod.snowball.model.PlaceOrderRequest
+import kotlinx.coroutines.Job
 import com.arkivanov.decompose.ComponentContext
 import com.arkivanov.essenty.lifecycle.doOnDestroy
 import kotlinx.coroutines.CoroutineScope
@@ -27,6 +31,8 @@ interface StockDetailComponent {
 
     fun onModifyOrder(orderNo: String, price: Double, quantity: Int)
 
+    fun onPlaceOrder(side: OrderSide, type: OrderType, price: Double, quantity: Int)
+
     fun onOrderMessageShown()
 }
 
@@ -39,6 +45,7 @@ class DefaultStockDetailComponent(
 ) : StockDetailComponent, ComponentContext by componentContext, KoinComponent {
 
     private val scope = CoroutineScope(SupervisorJob() + Dispatchers.Main.immediate)
+    private var detailJob: Job? = null
 
     private val _state = MutableStateFlow(
         StockDetailState(
@@ -52,11 +59,21 @@ class DefaultStockDetailComponent(
             scope.cancel()
         }
 
-        scope.launch {
+        loadDetail()
+        loadOpenOrders()
+    }
+
+    /** 상세(현황·내역) 구독. 주문 후 다시 부르면 이전 구독을 끊고 새로 받는다. */
+    private fun loadDetail() {
+        detailJob?.cancel()
+        detailJob = scope.launch {
             getStockDetailUseCase(ticker).collect { result ->
                 _state.update { currentState ->
                     when(result) {
-                        is Result.Loading -> currentState.copy(isLoading = true)
+                        // 주문 후 다시 받을 때는 스켈레톤으로 깜빡이지 않게 기존 화면을 유지한다
+                        is Result.Loading ->
+                            if (currentState.stockDetail.ticker.isNotEmpty()) currentState
+                            else currentState.copy(isLoading = true)
                         is Result.Error -> currentState.copy(error = result.exception.message)
                         // 상세 데이터가 다시 와도 미체결 목록·안내 문구는 유지한다
                         is Result.Success -> result.data.copy(
@@ -68,8 +85,6 @@ class DefaultStockDetailComponent(
                 }
             }
         }
-
-        loadOpenOrders()
     }
 
     override fun onBackClick() {
@@ -82,6 +97,18 @@ class DefaultStockDetailComponent(
 
     override fun onModifyOrder(orderNo: String, price: Double, quantity: Int) = runOrderAction {
         manageOpenOrdersUseCase.modify(orderNo, price, quantity)
+    }
+
+    override fun onPlaceOrder(side: OrderSide, type: OrderType, price: Double, quantity: Int) = runOrderAction {
+        manageOpenOrdersUseCase.place(
+            PlaceOrderRequest(
+                ticker = ticker,
+                orderSide = side,
+                orderType = type,
+                price = price,
+                quantity = quantity
+            )
+        )
     }
 
     override fun onOrderMessageShown() {
@@ -103,6 +130,7 @@ class DefaultStockDetailComponent(
             val result = action()
             _state.update { it.copy(isOrderActionRunning = false, orderMessage = result.message) }
             loadOpenOrders()
+            if (result.success) loadDetail()  // 내역에 새 주문(수동·정정)이 보이게
         }
     }
 }

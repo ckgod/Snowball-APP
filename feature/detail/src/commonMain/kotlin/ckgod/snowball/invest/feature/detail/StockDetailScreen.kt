@@ -1,6 +1,10 @@
 package ckgod.snowball.invest.feature.detail
 
 import ckgod.snowball.invest.feature.detail.component.OpenOrdersCard
+import ckgod.snowball.invest.feature.detail.component.PlaceOrderSheet
+import androidx.compose.material3.TextButton
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.material3.SnackbarHostState
@@ -61,6 +65,7 @@ fun StockDetailContent(
                 StockDetailEvent.BackClick -> component.onBackClick()
                 is StockDetailEvent.CancelOrder -> component.onCancelOrder(event.orderNo)
                 is StockDetailEvent.ModifyOrder -> component.onModifyOrder(event.orderNo, event.price, event.quantity)
+                is StockDetailEvent.PlaceOrder -> component.onPlaceOrder(event.side, event.type, event.price, event.quantity)
                 StockDetailEvent.OrderMessageShown -> component.onOrderMessageShown()
             }
         },
@@ -87,6 +92,7 @@ fun StockDetailScreen(
         snackbarHostState.showSnackbar(message)
         onEvent(StockDetailEvent.OrderMessageShown)
     }
+    var showOrderSheet by remember { mutableStateOf(false) }
 
     Scaffold(
         modifier = modifier.fillMaxSize(),
@@ -108,6 +114,14 @@ fun StockDetailScreen(
                                 contentDescription = "Back"
                             )
                         }
+                    }
+                },
+                actions = {
+                    TextButton(
+                        onClick = { showOrderSheet = true },
+                        enabled = state.stockDetail.ticker.isNotEmpty() && !state.isOrderActionRunning
+                    ) {
+                        Text("주문하기", fontWeight = FontWeight.Bold)
                     }
                 },
                 colors = TopAppBarDefaults.topAppBarColors(
@@ -139,6 +153,19 @@ fun StockDetailScreen(
                 )
             }
         }
+    }
+
+    if (showOrderSheet) {
+        PlaceOrderSheet(
+            ticker = state.stockDetail.ticker,
+            currentPrice = state.stockDetail.currentPrice,
+            holdingQuantity = state.stockDetail.quantity,
+            onDismiss = { showOrderSheet = false },
+            onSubmit = { side, type, price, quantity ->
+                showOrderSheet = false
+                onEvent(StockDetailEvent.PlaceOrder(side, type, price, quantity))
+            }
+        )
     }
 }
 
